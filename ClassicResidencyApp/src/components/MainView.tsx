@@ -1,7 +1,9 @@
 import {
   ActivityIndicator,
   Image,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,22 +24,29 @@ const MainView = (props: any) => {
   //   const isLoading = useAppSelector(state => state.userReducer.loading);
   return (
     <View style={styles.container}>
-      {props.children}
-      {false && (
+      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.white} />
+
         <View
-          style={{
-            position: 'absolute',
-            flex: 1,
-            paddingTop: SIZES.height * 0.55,
-            paddingLeft: SIZES.width * 0.45,
-          }}>
-          <ActivityIndicator
-            style={{alignSelf: 'center'}}
-            size={'large'}
-            color={COLORS.primary}
-          />
+          style={{flex: 1, paddingTop: Platform.OS == 'ios' ? '15%' : '5%'}}>
+          {props.children}
         </View>
-      )}
+        {false && (
+          <View
+            style={{
+              position: 'absolute',
+              flex: 1,
+              paddingTop: SIZES.height * 0.55,
+              paddingLeft: SIZES.width * 0.45,
+            }}>
+            <ActivityIndicator
+              style={{alignSelf: 'center'}}
+              size={'large'}
+              color={COLORS.primary}
+            />
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -49,8 +58,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: SIZES.height,
     width: SIZES.width,
-
-    // backgroundColor: 'red',
+    backgroundColor: COLORS.white,
   },
   loginBtn: {
     padding: 10,
