@@ -28,6 +28,7 @@
 		C5B52CE36F764E97B2D37AB0 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DE276A49DC84A0EBDAE955A /* Poppins-Regular.ttf */; };
 		D60033D3B6684C63A6931E8A /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6113151865944E9483256912 /* Poppins-LightItalic.ttf */; };
 		E3822DAFA65E46DEA478ABEC /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A660EAA46C04B9792D64140 /* Poppins-MediumItalic.ttf */; };
+		EE9FB4F82A50DDC7008B72BA /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = EE9FB4F72A50DDC7008B72BA /* Fonts */; };
 		F03E634DA5BE4C4C8C75C10C /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F50B3A48C654F8185DA4BE9 /* Poppins-BlackItalic.ttf */; };
 		F1B46DE8051843F281CCBC87 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9ADBEDA9BB64D61A7C9CDD1 /* Poppins-SemiBold.ttf */; };
 		F2E9296B172D4320BF2E8F5E /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E16D972559744F28C662EF7 /* Poppins-Thin.ttf */; };
@@ -81,6 +82,7 @@
 		CED345CCB86C40679737F1AB /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../src/assets/fonts/OFL.txt; sourceTree = "<group>"; };
 		EADD71F7340542FFB2BBD486 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EE9FB4F72A50DDC7008B72BA /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		F9ADBEDA9BB64D61A7C9CDD1 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,6 +156,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				EE9FB4F72A50DDC7008B72BA /* Fonts */,
 				13B07FAE1A68108700A75B9A /* ClassicResidencyApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* ClassicResidencyAppTests */,
@@ -318,6 +321,7 @@
 				11BEE5843F38492D8A0031A9 /* Poppins-ExtraLight.ttf in Resources */,
 				320477D666E84FD5A5BFF7E5 /* Poppins-ExtraLightItalic.ttf in Resources */,
 				70ECECC301FD455DB808083D /* Poppins-Italic.ttf in Resources */,
+				EE9FB4F82A50DDC7008B72BA /* Fonts in Resources */,
 				3AFE94735A3E45798C704C21 /* Poppins-Light.ttf in Resources */,
 				D60033D3B6684C63A6931E8A /* Poppins-LightItalic.ttf in Resources */,
 				4F4926D70A52473FA82CD6C7 /* Poppins-Medium.ttf in Resources */,

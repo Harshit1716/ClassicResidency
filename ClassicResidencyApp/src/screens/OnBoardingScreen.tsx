@@ -13,6 +13,7 @@ import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {COLORS, FONTS, SIZES} from '../resources';
 import MainView from '../components/MainView';
+import {SHADOW_PRIMARY} from '../resources/Theme';
 
 const {height} = Dimensions.get('window');
 
@@ -24,6 +25,7 @@ const OnBoardingScreen = ({navigation}: any) => {
     <MainView>
       <View
         style={{
+          paddingTop: '20%',
           backgroundColor: COLORS.white,
           height: SIZES.height,
           width: SIZES.width,
@@ -81,17 +83,11 @@ const OnBoardingScreen = ({navigation}: any) => {
             onPress={() => navigation.navigate('Login')}
             style={{
               backgroundColor: COLORS.primary,
-              paddingVertical: SIZES.spacing * 1.5,
+              paddingVertical: SIZES.spacing * 1,
               paddingHorizontal: SIZES.spacing * 2,
               width: '48%',
               borderRadius: SIZES.spacing,
-              shadowColor: COLORS.primary,
-              shadowOffset: {
-                width: 0,
-                height: SIZES.spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: SIZES.spacing,
+              ...SHADOW_PRIMARY,
             }}>
             <Text
               style={{
@@ -105,7 +101,7 @@ const OnBoardingScreen = ({navigation}: any) => {
           <TouchableOpacity
             // onPress={() => navigate('Register')}
             style={{
-              paddingVertical: SIZES.spacing * 1.5,
+              paddingVertical: SIZES.spacing * 1,
               paddingHorizontal: SIZES.spacing * 2,
               width: '48%',
               borderRadius: SIZES.spacing,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,11 +15,14 @@ import {
   Platform,
 } from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {ICONS, COLORS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
+import Banner from '../components/Banners';
+import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
 const places = [
   {
@@ -53,6 +56,16 @@ const places = [
 ];
 
 const HomeScreen = ({navigation}: any) => {
+  const [list, setList] = useState(places);
+  const [input, setInput] = useState('');
+
+  useEffect(() => {
+    let ar = places.filter(item =>
+      item.name.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
+    );
+    setList(ar);
+  }, [input]);
+
   const categoryIcons = [
     <Image
       style={{height: 30, width: 30, tintColor: COLORS.primary}}
@@ -71,23 +84,63 @@ const HomeScreen = ({navigation}: any) => {
       source={ICONS.BILL_ICON}
     />,
   ];
+  const categoryList = [
+    {
+      title: 'Notice',
+      Icon: (
+        <Image
+          style={{height: 30, width: 30, tintColor: COLORS.primary}}
+          source={ICONS.NOTICE_ICON}
+        />
+      ),
+    },
+    {
+      title: 'Members',
+      Icon: (
+        <Image
+          style={{height: 30, width: 30, tintColor: COLORS.primary}}
+          source={ICONS.MEMBERS_ICON}
+        />
+      ),
+    },
+    {
+      title: 'Bill',
+      Icon: (
+        <Image
+          style={{height: 50, width: 50, tintColor: COLORS.primary}}
+          source={ICONS.BILL_ICON}
+        />
+      ),
+    },
+    {
+      title: 'SOS',
+      Icon: (
+        <Image
+          style={{height: 30, width: 30, tintColor: COLORS.primary}}
+          source={ICONS.EVENT_ICON}
+        />
+      ),
+    },
+  ];
 
   const ListCategories = () => {
     return (
       <View style={style.categoryContainer}>
-        {categoryIcons.map((icon, index) => (
+        {categoryList.map((item, index) => (
           <TouchableOpacity>
             <View key={index} style={style.iconContainer}>
-              {icon}
+              {item.Icon}
             </View>
-            <Text style={{marginTop: 15, ...FONTS.body8}}>Category</Text>
+            <Text style={{marginTop: 15, ...FONTS.body7, textAlign: 'center'}}>
+              {item.title}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
     );
   };
 
-  const Card = ({place}) => {
+  const Card = ({place}: any) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -133,46 +186,70 @@ const HomeScreen = ({navigation}: any) => {
 
   const RecommendedCard = ({place}) => {
     return (
-      <ImageBackground style={style.rmCardImage} source={place.image}>
-        <Text
-          style={{
-            color: COLORS.white,
-            fontSize: 22,
-            fontWeight: 'bold',
-            marginTop: 10,
-          }}>
-          {place.name}
-        </Text>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}>
-          <View style={{width: '100%', flexDirection: 'row', marginTop: 10}}>
-            <View style={{flexDirection: 'row'}}>
-              <Image
-                style={{height: 30, width: 30}}
-                source={ICONS.MEMBERS_ICON}
-              />
+      <View style={style.rmCardImage}>
+        <LinearGradient
+          colors={['#606c88', '#3f4c6b']}
+          style={{flex: 1}}
+          start={{x: 0, y: 0.5}}
+          end={{x: 1, y: 0.5}}
+          locations={[0, 0.7]}>
+          <View
+            style={{
+              flex: 1,
+              padding: 15,
+            }}>
+            <Text
+              style={{
+                color: COLORS.white,
+                ...FONTS.h2,
+                marginTop: 10,
+              }}>
+              {place.name}
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+              }}>
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  marginTop: 10,
+                  marginBottom: 5,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{height: 25, width: 25, tintColor: COLORS.white}}
+                  source={ICONS.MEMBERS_ICON}
+                />
+                <Text
+                  style={{
+                    color: COLORS.white,
+                    ...FONTS.h3,
+                    marginLeft: 10,
+                    marginTop: 5,
+                  }}>
+                  {place.location}
+                </Text>
+              </View>
 
-              <Text style={{color: COLORS.white, marginLeft: 5}}>
-                {place.location}
+              {/* </View> */}
+              <Text
+                numberOfLines={3}
+                style={{color: COLORS.white, ...FONTS.body6}}>
+                {place.details}
               </Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Image
-                style={{height: 30, width: 30}}
-                source={ICONS.MEMBERS_ICON}
-              />
-              <Text style={{color: COLORS.white, marginLeft: 5}}>5.0</Text>
+              <TouchableOpacity>
+                <Text style={{marginTop: 10, ...FONTS.h4, color: COLORS.white}}>
+                  Click to read...
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <Text style={{color: COLORS.white, fontSize: 13}}>
-            {place.details}
-          </Text>
-        </View>
-      </ImageBackground>
+        </LinearGradient>
+      </View>
     );
   };
 
@@ -181,13 +258,14 @@ const HomeScreen = ({navigation}: any) => {
     <View style={{flex: 1}}>
       <View style={{flex: 1, backgroundColor: COLORS.white}}>
         <StatusBar translucent={false} backgroundColor={COLORS.primary} />
+
         <View style={style.header}>
           <LinearGradient
             colors={[COLORS.primary, '#396afc']}
             style={{flex: 1}}
             start={{x: 0, y: 0.5}}
             end={{x: 1, y: 0.5}}
-            locations={[0, 0.7, 0.9]}>
+            locations={[0, 0.7]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -220,7 +298,7 @@ const HomeScreen = ({navigation}: any) => {
             style={{flex: 1}}
             start={{x: 0, y: 0.5}}
             end={{x: 1, y: 0.5}}
-            locations={[0, 0.7, 0.9]}>
+            locations={[0, 0.7]}>
             <View style={{paddingHorizontal: 20}}>
               <Text style={style.headerTitle}>Explore your</Text>
               <Text style={style.headerTitle}>Classic Residency</Text>
@@ -240,26 +318,17 @@ const HomeScreen = ({navigation}: any) => {
             Services
           </Text>
           <ListCategories />
-          <Text style={style.sectionTitle}>Places</Text>
           <View>
-            <FlatList
-              contentContainerStyle={{paddingLeft: 20}}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={places}
-              renderItem={({item}) => <Card place={item} />}
-            />
-            <Text style={style.sectionTitle}>Recommended</Text>
-            <FlatList
-              snapToInterval={width - 20}
-              contentContainerStyle={{paddingLeft: 20, paddingBottom: 20}}
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={places}
-              renderItem={({item}) => <RecommendedCard place={item} />}
-            />
+            <Text style={style.sectionTitle}>Ads and offers</Text>
+            <Banner data={places} />
+            <Text style={style.sectionTitle}>Notice Board</Text>
+            {list.map(item => (
+              <View style={{paddingLeft: 20, paddingBottom: 20}}>
+                <RecommendedCard place={item} />
+              </View>
+            ))}
           </View>
-          <View style={{height: SIZES.height * 0.45}}></View>
+          <View style={{height: SIZES.height * 0.25}}></View>
           {/* </ScrollView> */}
         </ScrollView>
       </View>
@@ -276,7 +345,13 @@ const HomeScreen = ({navigation}: any) => {
             style={{height: 30, width: 30, marginRight: 10}}
             source={ICONS.SEARCH_ICON}
           />
-          <TextInput placeholder="Search place" style={{color: COLORS.gray}} />
+          <TextInput
+            onChangeText={txt => {
+              setInput(txt);
+            }}
+            placeholder="Search notice .."
+            style={{color: COLORS.gray, width: '100%'}}
+          />
         </View>
       </View>
     </View>
@@ -327,8 +402,7 @@ const style = StyleSheet.create({
   sectionTitle: {
     marginHorizontal: 20,
     marginVertical: 20,
-    fontWeight: 'bold',
-    fontSize: 20,
+    ...FONTS.h2,
   },
   cardImage: {
     height: 220,
@@ -340,11 +414,9 @@ const style = StyleSheet.create({
   },
   rmCardImage: {
     width: width - 40,
-    height: 200,
     marginRight: 20,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: 'hidden',
-    padding: 10,
   },
 });
 export default HomeScreen;

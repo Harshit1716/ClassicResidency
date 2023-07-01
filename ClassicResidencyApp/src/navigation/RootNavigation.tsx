@@ -2,9 +2,11 @@ import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home, Login} from '../screens';
+import {Home, Login, OnBoardingScreen} from '../screens';
 import {useAppSelector} from '../stateManagemer/Store';
 import WelcomeScreen from '../screens/OnBoardingScreen';
+import {BottomTabBar} from '@react-navigation/bottom-tabs';
+import BottomRouter from './BottomTabs';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -35,7 +37,7 @@ const RootNavigation = () => {
               headerShown: false,
             }}
             name="Welcome"
-            component={WelcomeScreen}
+            component={OnBoardingScreen}
           />
         )}
         {true && (
@@ -53,7 +55,7 @@ const RootNavigation = () => {
               headerShown: false,
             }}
             name="Home"
-            component={Home}
+            component={BottomRouter}
           />
         )}
       </RootStack.Navigator>
