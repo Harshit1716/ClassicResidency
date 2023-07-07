@@ -1,6 +1,7 @@
 import {
   Dimensions,
   ImageBackground,
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -19,13 +20,17 @@ const {height} = Dimensions.get('window');
 
 const OnBoardingScreen = ({navigation}: any) => {
   return (
-    // <SafeAreaView>
-
-    // <StatusBar backgroundColor={COLORS.primary} />
     <MainView>
       <View
         style={{
-          paddingTop: '20%',
+          paddingTop:
+            Platform.OS == 'android'
+              ? SIZES.height > 640
+                ? '15%'
+                : '5%'
+              : SIZES.height >= 812
+              ? '15%'
+              : '0%',
           backgroundColor: COLORS.white,
           height: SIZES.height,
           width: SIZES.width,

@@ -1,11 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon, {Icons} from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
 import {COLORS} from '../resources';
 import {Home, Profile} from '../screens';
-import {SHADOW_PRIMARY} from '../resources/Theme';
+import {SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 
 const TabArr = [
   {
@@ -112,7 +112,14 @@ export default function Bottoms() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: [
+          styles.tabBar,
+          Platform.OS == 'ios'
+            ? SIZES.height >= 812
+              ? {height: 70}
+              : {height: 60}
+            : {height: 60},
+        ],
       }}>
       {TabArr.map((item, index) => {
         return (
@@ -133,14 +140,13 @@ export default function Bottoms() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
+    marginTop: Platform.OS == 'ios' ? (SIZES.height >= 812 ? 15 : 0) : 10,
     flex: 1,
     justifyContent: 'center',
+    // marginBottom: '20%',
     alignItems: 'center',
   },
   tabBar: {
-    // height: 80,
-    // backgroundColor: COLORS.black,
     position: 'absolute',
     bottom: 20,
     right: 16,
@@ -154,6 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 4,
     borderColor: COLORS.white,
+    marginVertical: 10,
     // backgroundColor: COLORS.white,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -22,6 +23,14 @@ const LoginScreen = () => {
     <MainView>
       <View
         style={{
+          paddingTop:
+            Platform.OS == 'android'
+              ? SIZES.height > 640
+                ? '15%'
+                : '5%'
+              : SIZES.height >= 812
+              ? '15%'
+              : 0,
           height: SIZES.height,
           width: SIZES.width,
           backgroundColor: 'white',

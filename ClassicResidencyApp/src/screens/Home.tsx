@@ -23,6 +23,7 @@ import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
 import Banner from '../components/Banners';
 import Icon, {Icons} from '../components/Icons';
+import SearchBar from '../components/SearchBar';
 const {width} = Dimensions.get('screen');
 const places = [
   {
@@ -127,7 +128,7 @@ const HomeScreen = ({navigation}: any) => {
     return (
       <View style={style.categoryContainer}>
         {categoryList.map((item, index) => (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate(item.title)}>
             <View key={index} style={style.iconContainer}>
               {item.Icon}
             </View>
@@ -137,50 +138,6 @@ const HomeScreen = ({navigation}: any) => {
           </TouchableOpacity>
         ))}
       </View>
-    );
-  };
-
-  const Card = ({place}: any) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => navigation.navigate('DetailsScreen', place)}>
-        <ImageBackground style={style.cardImage} source={place.image}>
-          <Text
-            style={{
-              color: COLORS.white,
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginTop: 10,
-            }}>
-            {place.name}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-            }}>
-            <View style={{flexDirection: 'row'}}>
-              <Image
-                style={{height: 30, width: 30}}
-                source={ICONS.MEMBERS_ICON}
-              />
-              <Text style={{marginLeft: 5, color: COLORS.white}}>
-                {place.location}
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Image
-                style={{height: 30, width: 30}}
-                source={ICONS.MEMBERS_ICON}
-              />
-              <Text style={{marginLeft: 5, color: COLORS.white}}>5.0</Text>
-            </View>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
     );
   };
 
@@ -269,19 +226,25 @@ const HomeScreen = ({navigation}: any) => {
             <View
               style={{
                 flexDirection: 'row',
-                paddingTop: Platform.OS == 'ios' ? 45 : 15,
-                paddingVertical: 10,
+                paddingTop:
+                  Platform.OS == 'ios' ? (SIZES.height > 812 ? 45 : 35) : 15,
+                paddingBottom: 10,
                 paddingHorizontal: 20,
                 justifyContent: 'space-between',
               }}>
               <Image
                 resizeMode="contain"
-                style={{height: 50, width: 50, borderRadius: 20}}
+                style={{height: 35, width: 35, borderRadius: 35}}
                 source={ICONS.PROFILE_MEMBER_ICON}
               />
               <TouchableOpacity>
                 <Image
-                  style={{height: 40, width: 40, tintColor: COLORS.white}}
+                  style={{
+                    height: 35,
+                    width: 35,
+                    marginRight: 10,
+                    tintColor: COLORS.white,
+                  }}
                   source={ICONS.NOTIFICATION_ICON}
                 />
               </TouchableOpacity>
@@ -312,7 +275,7 @@ const HomeScreen = ({navigation}: any) => {
           <Text
             style={{
               marginHorizontal: 20,
-              marginTop: 50,
+              marginTop: 35,
               ...FONTS.h2,
             }}>
             Services
@@ -338,21 +301,14 @@ const HomeScreen = ({navigation}: any) => {
           position: 'absolute',
           width: '90%',
           alignSelf: 'center',
-          marginTop: Platform.OS == 'ios' ? 150 : 120,
+          marginTop: Platform.OS == 'ios' ? (SIZES.height > 812 ? 80 : 70) : 70,
         }}>
-        <View style={style.inputContainer}>
-          <Image
-            style={{height: 30, width: 30, marginRight: 10}}
-            source={ICONS.SEARCH_ICON}
-          />
-          <TextInput
-            onChangeText={txt => {
-              setInput(txt);
-            }}
-            placeholder="Search notice .."
-            style={{color: COLORS.gray, width: '100%'}}
-          />
-        </View>
+        <SearchBar
+          value={input}
+          placeholder="Search notice ..."
+          onChangeText={text => setInput(text)}
+          searchStyle={{top: 90}}
+        />
       </View>
     </View>
 
@@ -373,12 +329,11 @@ const style = StyleSheet.create({
   },
   inputContainer: {
     zIndex: 1,
-    height: 60,
+    // height: 50,
+    padding: '5%',
     width: '100%',
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    marginTop: '-15%',
-    top: 90,
     flexDirection: 'row',
     paddingHorizontal: 20,
     alignItems: 'center',

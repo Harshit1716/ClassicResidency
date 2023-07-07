@@ -90,6 +90,16 @@ export const SHADOW_PRIMARY = {
   shadowRadius: SIZES.spacing,
   elevation: 20,
 };
+export const SHADOW_PRIMARY_LIGHT = {
+  shadowColor: COLORS.primary,
+  shadowOffset: {
+    width: 0,
+    height: 5,
+  },
+  shadowOpacity: 0.1,
+  shadowRadius: SIZES.spacing,
+  elevation: 10,
+};
 
 const appTheme = {COLORS, SIZES, FONTS, SHADOW};
 

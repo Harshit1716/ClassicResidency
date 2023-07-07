@@ -1,59 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   View,
   Text,
-  TextInput,
-  ImageBackground,
-  FlatList,
   Dimensions,
   TouchableOpacity,
   Image,
   Platform,
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {ICONS, COLORS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
-import Banner from '../components/Banners';
 import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
-const places = [
-  {
-    id: '1',
-    name: 'Lago di Braies, Braies',
-    location: 'Italy',
-    image: require('../assets/location1.jpg'),
-    details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
-  },
-  {
-    id: '2',
-    name: 'Siargao island',
-    location: 'Philippines',
-    image: require('../assets/location2.jpg'),
-    details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
-  },
-  {
-    id: '3',
-    name: 'Manarola',
-    location: 'Italy',
-    image: require('../assets/location3.jpg'),
-    details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
-  },
-  {
-    id: '4',
-    name: 'Perhentian Islands',
-    location: 'Malaysia',
-    image: require('../assets/location4.jpg'),
-    details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
-  },
-];
 
 const TabArr = [
   {
@@ -113,7 +76,6 @@ const Profile = ({navigation}: any) => {
                 paddingTop: Platform.OS == 'ios' ? 55 : 25,
                 paddingVertical: 10,
                 height: SIZES.height * 0.2,
-
                 paddingHorizontal: 20,
                 justifyContent: 'space-between',
               }}>
@@ -154,15 +116,14 @@ const Profile = ({navigation}: any) => {
           style={{flex: 1, backgroundColor: COLORS.lightGray1}}
           //   showsVerticalScrollIndicator={false}
         >
-          <View style={{height: SIZES.height * 0.08}}></View>
+          <View style={{height: SIZES.height * 0.07}}></View>
           <View
             style={{
               width: '95%',
               borderRadius: 20,
               backgroundColor: COLORS.white,
-
               alignSelf: 'center',
-              marginBottom: SIZES.height * 0.15,
+              marginBottom: SIZES.height * 0.18,
               padding: '5%',
               ...SHADOW,
             }}>
@@ -207,9 +168,15 @@ const Profile = ({navigation}: any) => {
           alignSelf: 'center',
           //   marginTop: '25%',
 
-          marginTop: Platform.OS == 'ios' ? 100 : 90,
+          marginTop:
+            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 90,
         }}>
-        <TouchableOpacity activeOpacity={0.9} style={style.inputContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}
+          activeOpacity={0.9}
+          style={style.inputContainer}>
           <Image
             style={{
               height: 30,
@@ -243,24 +210,21 @@ const style = StyleSheet.create({
   header: {
     flexDirection: 'row',
     backgroundColor: COLORS.primary,
-    // borderBottomLeftRadius: 40,
-    // borderBottomRightRadius: 40,
-    // overflow: 'hidden',
   },
   headerTitle: {
     color: COLORS.white,
     ...FONTS.h2,
   },
   inputContainer: {
+    marginTop: 10,
     zIndex: 1,
-    width: '100%',
+    width: Platform.OS == 'ios' ? (SIZES.height > 812 ? '90%' : '85%') : '90%',
+    alignSelf: 'center',
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    marginTop: '-15%',
-    top: 90,
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: Platform.OS == 'ios' ? (SIZES.height > 812 ? 15 : 12) : 15,
     alignItems: 'center',
     ...SHADOW_PRIMARY,
   },

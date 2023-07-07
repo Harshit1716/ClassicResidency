@@ -7,6 +7,9 @@ import {useAppSelector} from '../stateManagemer/Store';
 import WelcomeScreen from '../screens/OnBoardingScreen';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
 import BottomRouter from './BottomTabs';
+import ProfileDetail from '../screens/ProfileDetail';
+import Notice from '../screens/Notice';
+import NoticeDetail from '../components/NoticeDetail';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -56,6 +59,33 @@ const RootNavigation = () => {
             }}
             name="Home"
             component={BottomRouter}
+          />
+        )}
+        {true && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="Profile"
+            component={ProfileDetail}
+          />
+        )}
+        {true && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="Notice"
+            component={Notice}
+          />
+        )}
+        {true && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="NoticeDetail"
+            component={NoticeDetail}
           />
         )}
       </RootStack.Navigator>

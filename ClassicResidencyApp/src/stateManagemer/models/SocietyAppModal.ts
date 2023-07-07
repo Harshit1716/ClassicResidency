@@ -1,20 +1,35 @@
 export interface FlatType {
   id: string;
   block: string;
+  flatType: string;
   flatNumber: string;
   ownerName: string;
-  tenantName?: string;
-  flatType: string;
   phoneNumber: string;
-  //   fcmTokens: string[];
+  // imageUrl: string;
+
+  tenantName?: string;
+
   complaints: ComplaintType[];
-  adminComplaints?: ComplaintType[];
   isAdmin: boolean;
   loading: boolean;
   isAOA: boolean;
+
+  //   fcmTokens: string[];
+  adminComplaints?: ComplaintType[];
   notice: Notice[];
   error: any;
   members: Members[];
+}
+
+export interface AddedMember {
+  name: string;
+  phoneNumber: string;
+  id: string;
+  isTenant: string;
+  isAddedMember: true;
+  age: number;
+  gender: 'MALE' | 'FEMALE' | 'OTHERS';
+  // imageUrl: string;
 }
 
 export interface Notice {

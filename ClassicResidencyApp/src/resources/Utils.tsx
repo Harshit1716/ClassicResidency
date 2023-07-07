@@ -2,6 +2,9 @@
 // import {Alert} from 'react-native';
 // import storage from '@react-native-firebase/storage';
 
+import {Platform} from 'react-native';
+import {SIZES} from './Theme';
+
 // export const storeData = async (key: string, value: any) => {
 //   try {
 //     const jsonValue = JSON.stringify(value);
@@ -70,3 +73,13 @@
 // //   let dateNew = new Date(date);
 // //   return date;
 // // };
+
+export const isDeviceLarge = () => {
+  return Platform.OS === 'android'
+    ? SIZES.height > 640
+      ? true
+      : false
+    : SIZES.height >= 812
+    ? true
+    : false;
+};
