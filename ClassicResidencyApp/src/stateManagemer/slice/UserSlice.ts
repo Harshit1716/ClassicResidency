@@ -2,8 +2,8 @@
 // import type {PayloadAction} from '@reduxjs/toolkit';
 // import URLManager from '../../networkLayer/URLManager';
 // import {Alert} from 'react-native';
-// import {HomeInterface} from '../../stateManagemer/models/HomeScreenModel';
-// import {UserType, OrderType, AddOrderType} from '../models/UserProfileModel';
+
+// // import {UserType, OrderType, AddOrderType} from '../models/UserProfileModel';
 // import {
 //   ComplaintType,
 //   FlatType,
@@ -12,7 +12,7 @@
 // } from '../models/SocietyAppModal';
 // import firestore from '@react-native-firebase/firestore';
 // import storage from '@react-native-firebase/storage';
-// import {Utils} from '../../resources';
+// // import {Utils} from '../../resources';
 
 // // method for userlogin
 // export const login = createAsyncThunk(

@@ -4,12 +4,18 @@ import {COLORS, FONTS, SIZES} from '../resources';
 import {SHADOW_PRIMARY} from '../resources/Theme';
 import {useNavigation} from '@react-navigation/native';
 
-const AppButton = () => {
+interface AppBtnProps {
+  title: string;
+  onPress: () => void;
+  disabled: boolean;
+}
+const AppButton = (props: AppBtnProps) => {
   const navigation = useNavigation();
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Home')}
+        disabled={props.disabled}
+        onPress={props.onPress}
         style={{
           width: '90%',
           alignSelf: 'center',
@@ -25,7 +31,7 @@ const AppButton = () => {
             textAlign: 'center',
             ...FONTS.h3,
           }}>
-          Sign in
+          {props.title}
         </Text>
       </TouchableOpacity>
     </View>

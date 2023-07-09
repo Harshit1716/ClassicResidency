@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import firestore from '@react-native-firebase/firestore';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {COLORS, FONTS, SIZES} from '../resources';
@@ -104,7 +105,7 @@ const OnBoardingScreen = ({navigation}: any) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            // onPress={() => navigate('Register')}
+            onPress={() => navigation.navigate('Register')}
             style={{
               paddingVertical: SIZES.spacing * 1,
               paddingHorizontal: SIZES.spacing * 2,

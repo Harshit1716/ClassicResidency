@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -16,10 +16,26 @@ import AppTextInput from '../components/AppTextInput';
 import {COLORS, FONTS, ICONS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import AppButton from '../components/AppButton';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {createUser, login} from '../stateManagemer/slice/ServiceSlice';
 
 const LoginScreen = () => {
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(state => state.userReducer.loading);
+  async function handleCreateAccount() {
+    const data = {
+      flatNumber: '702',
+      flatType: 'H1',
+      block: 'I',
+      name: 'Harshit Tyagi',
+      email: 'harshit@yopmail.com',
+      phoneNumber: '9355209292',
+    };
+    dispatch(createUser({...data}));
+  }
+  const [number, setNumber] = useState('');
+  const [password, setPasssword] = useState('');
   return (
-    // <SafeAreaView>
     <MainView>
       <View
         style={{
@@ -77,8 +93,22 @@ const LoginScreen = () => {
           style={{
             marginVertical: SIZES.spacing * 3,
           }}>
-          <AppTextInput placeholder="Email" />
-          <AppTextInput placeholder="Password" />
+          <AppTextInput
+            editable={!isLoading}
+            placeholder="number"
+            value={number}
+            onChangeText={(text: string) => {
+              setNumber(text);
+            }}
+          />
+          <AppTextInput
+            editable={!isLoading}
+            placeholder="Password"
+            value={password}
+            onChangeText={(text: string) => {
+              setPasssword(text);
+            }}
+          />
         </View>
 
         <TouchableOpacity>
@@ -91,9 +121,17 @@ const LoginScreen = () => {
             Forgot your password ?
           </Text>
         </TouchableOpacity>
-        <AppButton />
+        <AppButton
+          title="Login"
+          onPress={() => {
+            dispatch(
+              login({phoneNumber: '9355209292', password: '2929025539'}),
+            );
+          }}
+          disabled={isLoading}
+        />
         <TouchableOpacity
-          // onPress={() => navigate('Register')}
+          onPress={() => handleCreateAccount()}
           style={{
             padding: SIZES.spacing,
           }}>
@@ -107,7 +145,6 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
     </MainView>
-    // </SafeAreaView>
   );
 };
 

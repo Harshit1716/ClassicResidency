@@ -16,6 +16,7 @@ interface HeaderProps {
   title: string;
   rightIconType?: 'EDIT' | 'FILTER' | 'CREATE' | 'NONE';
   iconPress?: () => void;
+  hideBackIcon?: boolean;
 }
 const Header = (props: HeaderProps) => {
   const navigation = useNavigation();
@@ -82,14 +83,15 @@ const Header = (props: HeaderProps) => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 if (navigation.canGoBack()) navigation.goBack();
               }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
-              }}>
+              }}> */}
+            {!props?.hideBackIcon ? (
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon
                   type={Icons.FontAwesome}
@@ -97,7 +99,15 @@ const Header = (props: HeaderProps) => {
                   color={COLORS.white}
                 />
               </TouchableOpacity>
-            </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  height: 30,
+                  width: 30,
+                  backgroundColor: 'transparent',
+                }}></View>
+            )}
+            {/* </TouchableOpacity> */}
 
             <Text style={[styles.headerTitle]}>{props.title}</Text>
 

@@ -6,6 +6,9 @@ import * as Animatable from 'react-native-animatable';
 import {COLORS} from '../resources';
 import {Home, Profile} from '../screens';
 import {SHADOW_PRIMARY, SIZES} from '../resources/Theme';
+import ComplaintsList from '../screens/ComplaintsList';
+import ShopsList from '../screens/ShopsList';
+import Engage from '../screens/Engage';
 
 const TabArr = [
   {
@@ -16,25 +19,25 @@ const TabArr = [
     component: Home,
   },
   {
-    route: 'Search',
-    label: 'Search',
-    type: Icons.MaterialIcons,
-    icon: 'search',
-    component: Home,
+    route: 'Engage',
+    label: 'Engage',
+    type: Icons.FontAwesome,
+    icon: 'building',
+    component: Engage,
   },
   {
     route: 'Add',
     label: 'Complaints',
     type: Icons.MaterialIcons,
     icon: 'add',
-    component: Home,
+    component: ComplaintsList,
   },
   {
-    route: 'Like',
-    label: 'Like',
-    type: Icons.AntDesign,
-    icon: 'heart',
-    component: Home,
+    route: 'Shop',
+    label: 'Shops',
+    type: Icons.MaterialCommunityIcons,
+    icon: 'shopping-outline',
+    component: ShopsList,
   },
   {
     route: 'Account',
@@ -94,6 +97,7 @@ const TabButton = (props: any) => {
         <View style={styles.btn}>
           <Animatable.View ref={circleRef} style={styles.circle} />
           <Icon
+            size={(item.lable = 'Engage' ? 20 : 25)}
             type={item.type}
             name={item.icon}
             color={focused ? COLORS.white : COLORS.primary}

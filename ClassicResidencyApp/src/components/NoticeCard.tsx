@@ -1,15 +1,22 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
 import {useNavigation} from '@react-navigation/native';
 import {SHADOW_PRIMARY, SHADOW_PRIMARY_LIGHT} from '../resources/Theme';
+import {Notice} from '../stateManagemer/models/SocietyAppModal';
 
-const NoticeCard = () => {
+const NoticeCard = ({item, index}: {item: Notice; index: number}) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
         navigation.navigate('NoticeDetail');
       }}
@@ -37,7 +44,7 @@ const NoticeCard = () => {
               ...FONTS.h2,
               marginTop: 10,
             }}>
-            Notice title
+            {item.title}
           </Text>
           <View
             style={{
@@ -63,15 +70,13 @@ const NoticeCard = () => {
                   marginLeft: 10,
                   marginTop: 5,
                 }}>
-                dasdasda
+                {item.subject}
               </Text>
             </View>
             <Text
               numberOfLines={3}
               style={{color: COLORS.white, ...FONTS.body6}}>
-              asdasdasd;knas;kvnadf;kjvasmdokasmdoasdmaosdmakmsaoskcmaoscnaos
-              dfa;kvaksmdoasdmasodmaosdnaodmoaskdmaoskdmaosdmaoskdmaskdmaosdkmaosdmoaskdmaskdmaom
-              kfjav;dasdkmaosdmasodfkmasdofmasodfmdaosfmaosmdoaskmdoasmdkvjn;kfnvas;kdcasdcl;ksadm
+              {item.description}
             </Text>
             <TouchableOpacity style={{alignSelf: 'flex-end'}}>
               <Text
@@ -82,7 +87,7 @@ const NoticeCard = () => {
           </View>
         </View>
       </LinearGradient>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

@@ -10,6 +10,7 @@ interface InputProps {
   placeholder: string;
   disabled: boolean;
   textArea?: boolean;
+  keybordType?: string;
 }
 
 const ProfileTextInput = (props: InputProps) => {
@@ -23,7 +24,8 @@ const ProfileTextInput = (props: InputProps) => {
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       onChangeText={props.onChangeText}
-      placeholderTextColor={COLORS.darkText}
+      keyboardType={props.keybordType == 'phone' ? 'phone-pad' : 'default'}
+      placeholderTextColor={COLORS.gray}
       style={[
         {
           width: '90%',

@@ -24,14 +24,16 @@ import AppButton from './AppButton';
 import CustomBtn from './CustomBtn';
 import UploadImageModal from './UploadImageModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {createNotice} from '../stateManagemer/slice/ServiceSlice';
+import {createMember, createNotice} from '../stateManagemer/slice/ServiceSlice';
+import SelectCategoryModal from './SelectCategoryModal';
 
-const CreateNoticeModal = ({isVisible, onClose}: any) => {
+const CreateMemberModal = ({isVisible, onClose}: any) => {
   const [title, setTitle] = useState('');
   const [description, setDecsription] = useState('');
   const [subject, setSubject] = useState('');
 
   const [open, setOpen] = useState(false);
+  const [openCatrgory, setOpenCategory] = useState(false);
   const [imageFile, setImageFile] = React.useState<any>(null);
   const dispatch = useAppDispatch();
   const userId = useAppSelector(state => state.userReducer.id);
@@ -41,7 +43,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
       <View style={{}}>
         <View style={styles.headerContainer}>
           <View style={{marginRight: -40, ...styles.headingContainer}}>
-            <Text style={styles.headerTitle}>Create Notice</Text>
+            <Text style={styles.headerTitle}>Add Member</Text>
           </View>
           <TouchableOpacity
             style={{
@@ -78,12 +80,11 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
   function handleSubmit() {
     if (validate()) {
       dispatch(
-        createNotice({
-          title: title,
-          des: description,
-          subject: subject,
+        createMember({
+          name: title,
+          number: subject,
+          type: description,
           image: imageFile,
-          user: userId,
         }),
       );
       onClose();
@@ -95,7 +96,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
     return (
       <View style={styles.footerContainer}>
         <TouchableOpacity onPress={handleSubmit} style={styles.buyButton}>
-          <Text style={styles.buyText}>Create</Text>
+          <Text style={styles.buyText}>Add</Text>
         </TouchableOpacity>
       </View>
     );
@@ -132,7 +133,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 20}}>Title</Text>
+              <Text style={{...FONTS.h3, marginLeft: 25}}>Name</Text>
               <ProfileTextInput
                 title={title}
                 disabled={false}
@@ -140,25 +141,38 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                 placeholder="Title"
               />
 
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
-                Subject
+              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+                Contact Number
               </Text>
               <ProfileTextInput
                 title={subject}
                 disabled={false}
                 onChangeText={text => setSubject(text)}
-                placeholder="Subject"
+                placeholder="Contact Number"
+                keybordType="phone"
               />
               <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
-                Description
+                Type
               </Text>
-              <ProfileTextInput
-                textArea={true}
-                title={description}
-                disabled={false}
-                onChangeText={text => setDecsription(text)}
-                placeholder="Subject"
-              />
+              <TouchableOpacity
+                style={{overflow: 'hidden'}}
+                onPress={() => {
+                  setOpenCategory(true);
+                }}>
+                <Text
+                  style={{
+                    width: '90%',
+                    alignSelf: 'center',
+                    ...FONTS.body3,
+                    padding: SIZES.spacing * 1.2,
+                    backgroundColor: COLORS.lightPrimary,
+                    borderRadius: 100,
+                    marginVertical: SIZES.spacing,
+                    color: COLORS.gray,
+                  }}>
+                  {description == '' ? ' Select Type' : description}
+                </Text>
+              </TouchableOpacity>
             </View>
             {imageFile == null && (
               <TouchableOpacity
@@ -232,12 +246,20 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
             onSelect={setImageFile}
           />
         )}
+        {openCatrgory && (
+          <SelectCategoryModal
+            selected={description}
+            isVisible={openCatrgory}
+            onClose={() => setOpenCategory(false)}
+            onSelect={setDecsription}
+          />
+        )}
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
-export default CreateNoticeModal;
+export default CreateMemberModal;
 
 const styles = StyleSheet.create({
   container: {
@@ -317,7 +339,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     paddingVertical: 20,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   buyText: {
     color: COLORS.white,

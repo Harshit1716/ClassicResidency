@@ -10,11 +10,14 @@ import BottomRouter from './BottomTabs';
 import ProfileDetail from '../screens/ProfileDetail';
 import Notice from '../screens/Notice';
 import NoticeDetail from '../components/NoticeDetail';
+import MemberCategory from '../screens/MemberCategory';
+import MembersList from '../screens/MembersList';
+import ComplaintsList from '../screens/ComplaintsList';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
-  //   const email = useAppSelector(state => state.userReducer.id);
-  //   const admin = useAppSelector(state => state.userReducer.isAdmin);
+  const email = useAppSelector(state => state.userReducer.id);
+  const admin = useAppSelector(state => state.userReducer.isAdmin);
 
   return (
     <NavigationContainer>
@@ -25,16 +28,7 @@ const RootNavigation = () => {
             backgroundColor: '#ffedd5',
           },
         }}>
-        {/* {email == '' && (
-          <RootStack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name="OnBoarding"
-            component={OnBoarding}
-          />
-        )} */}
-        {true && (
+        {email == '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -43,7 +37,7 @@ const RootNavigation = () => {
             component={OnBoardingScreen}
           />
         )}
-        {true && (
+        {email == '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -52,7 +46,7 @@ const RootNavigation = () => {
             component={Login}
           />
         )}
-        {true && (
+        {email != '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -61,7 +55,7 @@ const RootNavigation = () => {
             component={BottomRouter}
           />
         )}
-        {true && (
+        {email != '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -70,7 +64,7 @@ const RootNavigation = () => {
             component={ProfileDetail}
           />
         )}
-        {true && (
+        {email != '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -79,13 +73,31 @@ const RootNavigation = () => {
             component={Notice}
           />
         )}
-        {true && (
+        {email != '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
             }}
             name="NoticeDetail"
             component={NoticeDetail}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="Members"
+            component={MemberCategory}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="MembersList"
+            component={MembersList}
           />
         )}
       </RootStack.Navigator>

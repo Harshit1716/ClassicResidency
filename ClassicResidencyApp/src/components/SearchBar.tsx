@@ -34,7 +34,7 @@ const SearchBar = (props: SearchProps) => {
       <TextInput
         value={props.value}
         onChangeText={props.onChangeText}
-        placeholder="Search notice .."
+        placeholder={props.placeholder}
         style={{color: COLORS.gray, width: '100%'}}
       />
     </View>
