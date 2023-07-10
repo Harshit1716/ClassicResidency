@@ -40,8 +40,12 @@ const SHOW_ICON = require('../assets/show.png');
 const CALL_ICON = require('../assets/call.png');
 const DELETE_ICON = require('../assets/delete.png');
 const CANCEL_ICON = require('../assets/cancel.png');
+const BUILDING_ICON = require('../assets/building.png');
+const SHOPS_ICON = require('../assets/shop.png');
 
 export {
+  BUILDING_ICON,
+  SHOPS_ICON,
   CANCEL_ICON,
   ANNOUNCEMENT_ICON,
   DELETE_ICON,

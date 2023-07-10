@@ -308,7 +308,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(login.fulfilled, (state, action) => {
       console.log(action.payload, 'HHHHHHHH');
-      Alert.alert('success', '' + action.payload.ownerName);
+
       state.loading = false;
       state.id = action.payload.id;
       state.block = action.payload.block;
