@@ -22,47 +22,57 @@ const Header = (props: HeaderProps) => {
   const navigation = useNavigation();
 
   const getIcon = () => {
-    return <></>;
-    // return (
-    //   <>
-    //     {props.rightIconType == 'EDIT' && (
-    //       <TouchableOpacity onPress={props.iconPress}>
-    //         <Icon
-    //           type={Icons.MaterialIcons}
-    //           name={'edit'}
-    //           color={COLORS.white}
-    //         />
-    //       </TouchableOpacity>
-    //     )}
-    //     {props.rightIconType == 'FILTER' && (
-    //       <TouchableOpacity onPress={props.iconPress}>
-    //         <Icon
-    //           type={Icons.MaterialCommunityIcons}
-    //           name={'filter'}
-    //           color={COLORS.white}
-    //         />
-    //       </TouchableOpacity>
-    //     )}
-    //     {props.rightIconType == 'CREATE' && (
-    //       <TouchableOpacity onPress={props.iconPress}>
-    //         <Icon
-    //           size={40}
-    //           type={Icons.Ionicons}
-    //           name={'add'}
-    //           color={COLORS.white}
-    //         />
-    //       </TouchableOpacity>
-    //     )}
-    //     {props.rightIconType == 'NONE' && (
-    //       <View
-    //         style={{
-    //           height: 30,
-    //           width: 30,
-    //           backgroundColor: 'transparent',
-    //         }}></View>
-    //     )}
-    //   </>
-    // );
+    return (
+      <>
+        {props.rightIconType == 'EDIT' && (
+          <TouchableOpacity onPress={props.iconPress}>
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+                tintColor: COLORS.white,
+                marginRight: 10,
+              }}
+              source={ICONS.EDIT_ICON}
+            />
+          </TouchableOpacity>
+        )}
+        {props.rightIconType == 'FILTER' && (
+          <TouchableOpacity onPress={props.iconPress}>
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+                tintColor: COLORS.white,
+                marginRight: 10,
+              }}
+              source={ICONS.FILTER_ICON}
+            />
+          </TouchableOpacity>
+        )}
+        {props.rightIconType == 'CREATE' && (
+          <TouchableOpacity onPress={props.iconPress}>
+            <Image
+              style={{
+                height: 25,
+                width: 25,
+                tintColor: COLORS.white,
+                marginRight: 5,
+              }}
+              source={ICONS.ADD_ICON}
+            />
+          </TouchableOpacity>
+        )}
+        {props.rightIconType == 'NONE' && (
+          <View
+            style={{
+              height: 20,
+              width: 20,
+              backgroundColor: 'transparent',
+            }}></View>
+        )}
+      </>
+    );
   };
   return (
     <View style={{}}>
@@ -94,11 +104,14 @@ const Header = (props: HeaderProps) => {
               }}> */}
             {!props?.hideBackIcon ? (
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                {/* <Icon
-                  type={Icons.FontAwesome}
-                  name={'backward'}
-                  color={COLORS.white}
-                /> */}
+                <Image
+                  style={{
+                    height: 30,
+                    width: 30,
+                    tintColor: COLORS.white,
+                  }}
+                  source={ICONS.BACKWARD_ICON}
+                />
               </TouchableOpacity>
             ) : (
               <View

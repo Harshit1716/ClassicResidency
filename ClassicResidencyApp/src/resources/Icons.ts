@@ -42,8 +42,10 @@ const DELETE_ICON = require('../assets/delete.png');
 const CANCEL_ICON = require('../assets/cancel.png');
 const BUILDING_ICON = require('../assets/building.png');
 const SHOPS_ICON = require('../assets/shop.png');
+const EDIT_ICON = require('../assets/edit.png');
 
 export {
+  EDIT_ICON,
   BUILDING_ICON,
   SHOPS_ICON,
   CANCEL_ICON,

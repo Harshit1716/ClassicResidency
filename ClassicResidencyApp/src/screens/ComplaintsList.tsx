@@ -127,12 +127,15 @@ const ComplaintsList = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {/* <Icon
-            size={30}
-            type={Icons.FontAwesome}
-            name={'filter'}
-            color={COLORS.primary}
-          /> */}
+          <Image
+            style={{
+              height: 35,
+              width: 35,
+              tintColor: COLORS.primary,
+              marginRight: 10,
+            }}
+            source={ICONS.FILTER_ICON}
+          />
         </TouchableOpacity>
       </View>
       <FlatList

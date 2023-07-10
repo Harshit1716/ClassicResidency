@@ -1,6 +1,13 @@
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
-import {COLORS} from '../resources';
+import {COLORS, ICONS} from '../resources';
 import {FONTS, SHADOW, SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 // import Icon, {Icons} from './Icons';
@@ -108,6 +115,14 @@ const UploadImageModal = (props: ModalProps) => {
                   name={'close'}
                   color={COLORS.primary}
                 /> */}
+                <Image
+                  style={{
+                    height: 20,
+                    width: 20,
+                    tintColor: COLORS.primary,
+                  }}
+                  source={ICONS.CLOSE_ICON}
+                />
               </TouchableOpacity>
             </View>
           </View>

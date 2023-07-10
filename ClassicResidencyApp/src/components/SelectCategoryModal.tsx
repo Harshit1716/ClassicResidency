@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Image,
   Modal,
   StyleSheet,
   Text,
@@ -7,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {COLORS} from '../resources';
+import {COLORS, ICONS} from '../resources';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 // import Icon, {Icons} from './Icons';
@@ -96,6 +97,14 @@ const SelectCategoryModal = (props: ModalProps) => {
                   name={'close'}
                   color={COLORS.primary}
                 /> */}
+                <Image
+                  style={{
+                    height: 20,
+                    width: 20,
+                    tintColor: COLORS.primary,
+                  }}
+                  source={ICONS.CLOSE_ICON}
+                />
               </TouchableOpacity>
             </View>
           </View>

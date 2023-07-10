@@ -59,11 +59,14 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
               reset();
               onClose();
             }}>
-            {/* <Icon
-              type={Icons.FontAwesome}
-              name={'close'}
-              color={COLORS.primary}
-            /> */}
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+                tintColor: COLORS.primary,
+              }}
+              source={ICONS.CLOSE_ICON}
+            />
           </TouchableOpacity>
         </View>
 

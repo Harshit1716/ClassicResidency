@@ -63,6 +63,14 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
               name={'close'}
               color={COLORS.primary}
             /> */}
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+                tintColor: COLORS.primary,
+              }}
+              source={ICONS.CLOSE_ICON}
+            />
           </TouchableOpacity>
         </View>
 
