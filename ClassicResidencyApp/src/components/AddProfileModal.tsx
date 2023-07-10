@@ -3,6 +3,7 @@ import {
   Text,
   View,
   StyleSheet,
+  ImageBackground,
   Modal,
   Image,
   TextInput,
@@ -16,142 +17,249 @@ import {
 } from 'react-native';
 import {COLORS, FONTS, ICONS, SIZES} from '../resources';
 import ProfileTextInput from './ProfileTextInput';
+import Icon, {Icons} from './Icons';
+import {SHADOW, SHADOW_PRIMARY, SHADOW_PRIMARY_LIGHT} from '../resources/Theme';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import AppButton from './AppButton';
+import CustomBtn from './CustomBtn';
+import UploadImageModal from './UploadImageModal';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {createMember, createNotice} from '../stateManagemer/slice/ServiceSlice';
+import SelectCategoryModal from './SelectCategoryModal';
 
-let isBuyOrder: boolean = false;
+const CreateMemberModal = ({isVisible, onClose}: any) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [email, setEmail] = useState('');
 
-const BuySellBottomSheet = ({isVisible, onClose}: any) => {
-  const regex = /(<([^>]+)>)/gi;
-  const [show, setShow] = useState(false);
-  const [selectedAccount, setSelectedAccount] =
-    useState<string>('Select Account');
-  const [selectedExpiryType, setSelectedExpiryType] = useState<string>('');
-  const [price, setPrice] = useState(0);
-  const [isPriceFieldEditable, setIsPriceFieldEditable] = useState(false);
-  const [selectedPriceBtn, setSelectedPriceBtn] = useState(1);
-  const [quantity, setQuantity] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [selectedQuantityToggle, setSelectedQuantityToggle] = useState(1);
-  const [selectedAccountObj, setSelectedAccountObj] = useState();
-  const [fee, setFee] = useState<number>(0);
-  const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
-  const [valueOfShares, setValueOfShares] = useState<number>(0);
-  const [remAccBalance, setremAccBalance] = useState<number>(0);
-  const [flag, setFlag] = useState(true);
-  const [accountList, setAccountList] = useState<[]>();
-  const [brokerFee, setBrokerFee] = useState(0);
-  // const [equityFee, setEquityFee] = useState<Fee>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [strPrice, setStrPrice] = useState<string>();
-  const [accountTypeIndex, setAccountTypeIndex] = useState<number>();
-  const [replaceOrderData, setReplaceOrderData] = useState();
-  const [replaceOrderDetails, setReplaceOrderDetails] = useState();
-  const [currencyObj, setCurrencyObj] = useState();
-  const [strQuantity, setStrQuantity] = useState<string>();
-  const [strAmount, setStrAmount] = useState<string>();
-  const [saveForLater, setSaveForLater] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [openCatrgory, setOpenCategory] = useState(false);
+  const [imageFile, setImageFile] = React.useState<any>(null);
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector(state => state.userReducer.id);
 
-  // Header Component
-  const RenderBuySellHeader = () => {
+  const header = () => {
     return (
-      <View>
+      <View style={{}}>
         <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={onClose}>
-            <Image
-              source={ICONS.CLOSE_ICON}
-              style={styles.dismissButton}
-              resizeMode="contain"
+          <View style={{marginRight: -40, ...styles.headingContainer}}>
+            <Text style={styles.headerTitle}>Add Member</Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              width: 45,
+              height: 45,
+              backgroundColor: COLORS.white,
+              ...SHADOW,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 10,
+              marginTop: -50,
+              right: -20,
+            }}
+            onPress={onClose}>
+            <Icon
+              type={Icons.FontAwesome}
+              name={'close'}
+              color={COLORS.primary}
             />
           </TouchableOpacity>
-          <View style={styles.headingContainer}>
-            <Text style={styles.stockSymbol}>Add Tenant</Text>
-          </View>
         </View>
+
         <View style={styles.separatorLine} />
       </View>
     );
   };
 
-  // Footer
-  const OrderDetails = () => {
+  function reset() {
+    setName('');
+    setNumber('');
+    setEmail('');
+    deleteImage();
+  }
+
+  function handleSubmit() {
+    if (validate()) {
+      // dispatch(
+      //   createMember({
+      //     name: name,
+      //     number: number,
+      //     type: description,
+      //     image: imageFile,
+      //   }),
+      // );
+      onClose();
+      reset();
+    }
+  }
+
+  const SubmitButton = () => {
     return (
       <View style={styles.footerContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            // agreementCheck(selectedAccountObj?.account_number ?? 0) ?
-            // serverHitForInitatingOrder();
-            //: null;
-          }}
-          style={styles.buyButton}>
-          <Text style={styles.buyText}>{true ? 'ADD' : 'SELL'}</Text>
+        <TouchableOpacity onPress={handleSubmit} style={styles.buyButton}>
+          <Text style={styles.buyText}>Add</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
+  function deleteImage() {
+    setImageFile(null);
+  }
+
+  const validate = () => {
+    if (name.length == 0 || name.length < 3) {
+      Alert.alert('Error', 'Please enter a valid Name ');
+      return false;
+    }
+    if (number.length == 0 || number.length < 3) {
+      Alert.alert('Error', 'Please enter a valid number ');
+      return false;
+    }
+    if (email.length == 0 || email.length < 5) {
+      Alert.alert('Error', 'Please enter a email ');
+      return false;
+    }
+    if (imageFile == null) {
+      Alert.alert('Error', 'Please upload an Image ');
+      return false;
+    }
+    return true;
+  };
+
   return (
-    <Modal animationType={'slide'} transparent={true} visible={isVisible}>
+    <Modal
+      style={{height: 10}}
+      animationType={'slide'}
+      transparent={true}
+      visible={isVisible}>
       <KeyboardAvoidingView style={styles.container}>
         <View style={styles.popupContainer}>
-          <RenderBuySellHeader />
+          {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
+              <Text style={{...FONTS.h3, marginLeft: 25}}>Name</Text>
               <ProfileTextInput
-                title="Email"
+                title={name}
                 disabled={false}
-                onChangeText={text => console.log(text)}
-                placeholder="Email"
+                onChangeText={text => setName(text)}
+                placeholder="Title"
               />
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+
+              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+                Contact Number
+              </Text>
+              <ProfileTextInput
+                title={number}
+                disabled={false}
+                onChangeText={text => setNumber(text)}
+                placeholder="Contact Number"
+                keybordType="phone"
+              />
+              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
                 Email
               </Text>
               <ProfileTextInput
-                title="UserName"
-                disabled={true}
-                onChangeText={text => console.log(text)}
-                placeholder="UserName"
-              />
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
-                Email
-              </Text>
-              <ProfileTextInput
-                title="UserName"
-                disabled={true}
-                onChangeText={text => console.log(text)}
-                placeholder="UserName"
-              />
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
-                Email
-              </Text>
-              <ProfileTextInput
-                title="UserName"
-                disabled={true}
-                onChangeText={text => console.log(text)}
-                placeholder="UserName"
+                title={email}
+                disabled={false}
+                onChangeText={text => setEmail(text)}
+                placeholder="Contact Number"
+                keybordType="email"
               />
             </View>
-            <OrderDetails />
+            {imageFile == null && (
+              <TouchableOpacity
+                style={{marginTop: 20}}
+                onPress={() => {
+                  setOpen(true);
+                }}>
+                <View
+                  style={{
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: COLORS.primary,
+                    backgroundColor: 'transparent',
+                    marginHorizontal: 20,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.primary,
+                      paddingVertical: 12,
+                      textAlign: 'center',
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                    }}>
+                    Upload Image (Optional)
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {imageFile != null && (
+              <View style={{marginTop: 20, alignSelf: 'center'}}>
+                <Text style={{...FONTS.h3, marginTop: 10}}>Image</Text>
+                <ImageBackground
+                  resizeMode="stretch"
+                  style={{
+                    borderRadius: 20,
+                    height: 200,
+                    width: SIZES.width * 0.8,
+                    marginTop: 30,
+                  }}
+                  source={{uri: imageFile.path + ''}}>
+                  <TouchableOpacity
+                    style={{
+                      width: 50,
+                      height: 50,
+                      marginRight: -20,
+                      backgroundColor: 'red',
+                      ...SHADOW,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 10,
+                      marginTop: -30,
+                      alignSelf: 'flex-end',
+                    }}
+                    onPress={() => deleteImage()}>
+                    <Icon
+                      type={Icons.FontAwesome}
+                      name={'close'}
+                      color={COLORS.white}
+                    />
+                  </TouchableOpacity>
+                </ImageBackground>
+              </View>
+            )}
+            <SubmitButton />
           </ScrollView>
         </View>
+        {open && (
+          <UploadImageModal
+            isVisible={open}
+            onClose={() => setOpen(false)}
+            onSelect={setImageFile}
+          />
+        )}
+        {openCatrgory && (
+          <SelectCategoryModal
+            selected={description}
+            isVisible={openCatrgory}
+            onClose={() => setOpenCategory(false)}
+            onSelect={setDecsription}
+          />
+        )}
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
-export default BuySellBottomSheet;
-
-const radiusStyle = {
-  borderWidth: 1,
-  borderColor: COLORS.lightGray1,
-  borderRadius: 5,
-};
+export default CreateMemberModal;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000AA',
     justifyContent: 'flex-end',
-    paddingTop: 120,
+    // paddingTop: 120,
   },
   popupContainer: {
     height: '80%',
@@ -177,11 +285,10 @@ const styles = StyleSheet.create({
   },
   separatorLine: {
     width: '100%',
-    height: 1,
+    height: 2,
     backgroundColor: COLORS.lightGray1,
   },
-  stockSymbol: {
-    fontFamily: 'Poppins-Medium',
+  headerTitle: {
     ...FONTS.h2,
     color: COLORS.primary,
     textAlign: 'center',
@@ -197,41 +304,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
     paddingTop: 25,
   },
-  selectAccountHeader: {
-    color: COLORS.gray,
-    marginBottom: 5,
-    ...FONTS.h2,
-  },
-  selectAccountContainer: {
-    marginBottom: 15,
-  },
-  selectExpiryContainer: {
-    marginBottom: 10,
-  },
-  selectAccountButton: {
-    width: '100%',
-    padding: 10,
-    backgroundColor: COLORS.lightGray,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    ...radiusStyle,
-  },
-  selectAccountButtonOpacity: {
-    width: '100%',
-    padding: 10,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    ...radiusStyle,
-  },
-  selectedAccountText: {
-    flexShrink: 1,
-    marginRight: 10,
-    color: COLORS.gray,
-    ...FONTS.body5,
-  },
+
   priceContainer: {
     width: '100%',
     flexDirection: 'row',
@@ -244,122 +317,25 @@ const styles = StyleSheet.create({
     height: 32,
     marginBottom: 5,
   },
-  priceToggleView: {
-    flexDirection: 'row',
-    width: '100%',
-    marginRight: 15,
-  },
-  priceButtons: {
-    flex: 1,
-    paddingVertical: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...radiusStyle,
-  },
-  quantityText: {
-    ...FONTS.h4,
-  },
-  priceInputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 5,
-    ...radiusStyle,
-  },
-  currencyView: {
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.primary,
-    borderBottomLeftRadius: 5,
-    borderTopLeftRadius: 5,
-    height: '100%',
-  },
-  currencyText: {
-    ...FONTS.h4,
-    color: COLORS.white,
-  },
-  priceInput: {
-    flex: 1,
-    paddingLeft: 5,
-    paddingVertical: 5,
-    color: COLORS.black,
-  },
-  quantityInput: {
-    flex: 1,
-    paddingLeft: 5,
-    paddingVertical: 5,
-    color: COLORS.black,
-  },
-  accInfoContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  quantityAmountView: {
-    width: '100%',
-    marginTop: 5,
-    marginBottom: 15,
-  },
-  accBalanceContainer: {
-    flexDirection: 'row',
-    flex: 2,
-  },
-  estAmountContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  estAmountText: {
-    ...FONTS.h5,
-    color: COLORS.gray,
-    flexShrink: 13,
-  },
-  footerContainer: {
-    marginTop: 20,
-    paddingHorizontal: '10%',
-    // position: 'absolute',
-    flex: 1,
-    width: '100%',
 
-    // bottom: -SIZES.height * 0.3,
+  footerContainer: {
+    marginTop: 30,
+    paddingHorizontal: '5%',
+    marginBottom: 50,
+    flex: 1,
+    width: '100%',
   },
-  orderDetailsContainer: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 5,
-    backgroundColor: COLORS.lightGray,
-    ...radiusStyle,
-    marginBottom: 25,
-  },
-  feeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
+
   buyButton: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingVertical: 10,
-    borderRadius: 5,
+    paddingVertical: 15,
+    borderRadius: 10,
   },
   buyText: {
     color: COLORS.white,
     ...FONTS.h4,
-  },
-  orderDetailsLeftText: {
-    ...FONTS.h5,
-    color: COLORS.gray,
-    marginRight: 20,
-    flex: 1.6,
-  },
-  orderDetailsRightText: {
-    ...FONTS.h4,
-    color: COLORS.gray,
-    flex: 1.4,
-    flexShrink: 1,
-    textAlign: 'right',
   },
 });

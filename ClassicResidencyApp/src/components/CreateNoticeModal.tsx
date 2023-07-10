@@ -53,8 +53,12 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
               justifyContent: 'center',
               borderRadius: 10,
               marginTop: -50,
+              right: -20,
             }}
-            onPress={onClose}>
+            onPress={() => {
+              reset();
+              onClose();
+            }}>
             <Icon
               type={Icons.FontAwesome}
               name={'close'}
@@ -157,7 +161,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                 title={description}
                 disabled={false}
                 onChangeText={text => setDecsription(text)}
-                placeholder="Subject"
+                placeholder="Description"
               />
             </View>
             {imageFile == null && (
@@ -204,7 +208,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                       width: 50,
                       height: 50,
                       marginRight: -20,
-                      backgroundColor: 'red',
+                      backgroundColor: COLORS.white,
                       ...SHADOW,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -216,7 +220,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                     <Icon
                       type={Icons.FontAwesome}
                       name={'close'}
-                      color={COLORS.white}
+                      color={COLORS.primary}
                     />
                   </TouchableOpacity>
                 </ImageBackground>
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     marginTop: 30,
-    paddingHorizontal: '10%',
+    paddingHorizontal: '5%',
     marginBottom: 50,
     flex: 1,
     width: '100%',
@@ -317,7 +321,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     paddingVertical: 20,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   buyText: {
     color: COLORS.white,

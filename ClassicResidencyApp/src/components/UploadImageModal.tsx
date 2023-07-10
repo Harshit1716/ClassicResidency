@@ -1,7 +1,7 @@
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../resources';
-import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
+import {FONTS, SHADOW, SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 import Icon, {Icons} from './Icons';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -92,21 +92,21 @@ const UploadImageModal = (props: ModalProps) => {
               </Text>
               <TouchableOpacity
                 style={{
-                  width: 50,
-                  height: 50,
-                  backgroundColor: 'red',
+                  width: 45,
+                  height: 45,
+                  backgroundColor: COLORS.white,
                   ...SHADOW,
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,
                   marginTop: -80,
-                  right: -110,
+                  right: -SIZES.width * 0.26,
                 }}
                 onPress={props.onClose}>
                 <Icon
                   type={Icons.FontAwesome}
                   name={'close'}
-                  color={COLORS.white}
+                  color={COLORS.primary}
                 />
               </TouchableOpacity>
             </View>

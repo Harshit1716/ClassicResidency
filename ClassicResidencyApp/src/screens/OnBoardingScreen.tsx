@@ -30,8 +30,8 @@ const OnBoardingScreen = ({navigation}: any) => {
                 ? '15%'
                 : '5%'
               : SIZES.height >= 812
-              ? '15%'
-              : '0%',
+              ? '25%'
+              : '10%',
           backgroundColor: COLORS.white,
           height: SIZES.height,
           width: SIZES.width,
@@ -56,7 +56,7 @@ const OnBoardingScreen = ({navigation}: any) => {
               color: COLORS.primary,
               textAlign: 'center',
             }}>
-            Discover Your
+            Welcom To The
           </Text>
           <Text
             style={{
@@ -65,7 +65,7 @@ const OnBoardingScreen = ({navigation}: any) => {
               color: COLORS.primary,
               textAlign: 'center',
             }}>
-            Dream Job here
+            Classic Residency
           </Text>
 
           <Text

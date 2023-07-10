@@ -45,8 +45,8 @@ const LoginScreen = () => {
                 ? '15%'
                 : '5%'
               : SIZES.height >= 812
-              ? '15%'
-              : 0,
+              ? '20%'
+              : '5%',
           height: SIZES.height,
           width: SIZES.width,
           backgroundColor: 'white',

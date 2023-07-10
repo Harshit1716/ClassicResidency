@@ -81,7 +81,7 @@ const MembersList = () => {
         style={{
           padding: '5%',
           backgroundColor: COLORS.white,
-          marginBottom: 10,
+          marginBottom: 15,
           borderRadius: 10,
           ...SHADOW,
           flexDirection: 'row',
@@ -118,6 +118,7 @@ const MembersList = () => {
           marginTop: 20,
           marginHorizontal: 30,
           // position: 'absolute',
+          backgroundColor: COLORS.lightGray1,
           alignSelf: 'center',
           zIndex: 1,
         }}>
@@ -137,7 +138,7 @@ const MembersList = () => {
         <SwipeListView
           showsVerticalScrollIndicator={false}
           data={[1, 2, 3, 4, 5, 6, 7, 8, 81, 213, 321, 142, 142412]}
-          renderItem={({item, index}) => renderMainItem(item, index)}
+          renderItem={({item, index}) => renderMainItem({item, index})}
           renderHiddenItem={(data, rowMap) => renderHiddenItem({data, rowMap})}
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.3}}></View>
@@ -159,35 +160,9 @@ const MembersList = () => {
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.2}}></View>
           )}
-          renderItem={({item, index}) => {
-            return (
-              <View
-                style={{
-                  padding: '5%',
-                  backgroundColor: COLORS.white,
-                  marginBottom: 10,
-                  borderRadius: 10,
-                  ...SHADOW,
-                  flexDirection: 'row',
-                }}>
-                <Image
-                  style={{height: 50, width: 50, borderRadius: 50}}
-                  source={ICONS.PROFILE_ICON}></Image>
-                <View style={{flex: 1, paddingHorizontal: '5%'}}>
-                  <Text style={{...FONTS.h3}}>Name</Text>
-                  <Text style={{...FONTS.body5, color: COLORS.gray}}>
-                    Contact No:- 9355209292
-                  </Text>
-                  <Text style={{...FONTS.body5, color: COLORS.gray}}>AOA</Text>
-                </View>
-                <TouchableOpacity style={{justifyContent: 'center'}}>
-                  <Image
-                    style={{height: 30, width: 30}}
-                    source={ICONS.CALL_ICON}></Image>
-                </TouchableOpacity>
-              </View>
-            );
-          }}></FlatList>
+          renderItem={({item, index}) =>
+            renderMainItem({item, index})
+          }></FlatList>
       )}
       <CreateMemberModal onClose={() => setOpen(false)} isVisible={open} />
     </MainView>

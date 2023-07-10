@@ -44,9 +44,11 @@ const NoticeDetail = () => {
               height: 250,
               width: '100%',
               marginTop: '10%',
+              borderRadius: 10,
+              overflow: 'hidden',
             }}
             source={ICONS.BANNER_ICON2}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{
                 width: 50,
                 height: 50,
@@ -65,7 +67,7 @@ const NoticeDetail = () => {
                 name={'download'}
                 color={COLORS.primary}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </ImageBackground>
 
           <Text

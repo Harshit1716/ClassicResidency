@@ -47,14 +47,15 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
           </View>
           <TouchableOpacity
             style={{
-              width: 50,
-              height: 50,
+              width: 45,
+              height: 45,
               backgroundColor: COLORS.white,
               ...SHADOW,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
               marginTop: -50,
+              right: -20,
             }}
             onPress={onClose}>
             <Icon
@@ -166,7 +167,7 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
                     ...FONTS.body3,
                     padding: SIZES.spacing * 1.2,
                     backgroundColor: COLORS.lightPrimary,
-                    borderRadius: 100,
+                    borderRadius: 10,
                     marginVertical: SIZES.spacing,
                     color: COLORS.gray,
                   }}>
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     marginTop: 30,
-    paddingHorizontal: '10%',
+    paddingHorizontal: '5%',
     marginBottom: 50,
     flex: 1,
     width: '100%',
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingVertical: 20,
+    paddingVertical: 15,
     borderRadius: 10,
   },
   buyText: {

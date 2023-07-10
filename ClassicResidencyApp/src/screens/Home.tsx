@@ -22,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Banner from '../components/Banners';
 import Icon, {Icons} from '../components/Icons';
 import SearchBar from '../components/SearchBar';
-import {useAppDispatch} from '../stateManagemer/Store';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {getAllNotice} from '../stateManagemer/slice/ServiceSlice';
 const {width} = Dimensions.get('screen');
 const places = [
@@ -60,6 +60,7 @@ const HomeScreen = ({navigation}: any) => {
   const [list, setList] = useState(places);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.userReducer);
 
   useEffect(() => {
     dispatch(getAllNotice());
@@ -147,7 +148,9 @@ const HomeScreen = ({navigation}: any) => {
 
   const RecommendedCard = ({place}) => {
     return (
-      <View style={style.rmCardImage}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NoticeDetail')}
+        style={style.rmCardImage}>
         <LinearGradient
           colors={['#606c88', '#3f4c6b']}
           style={{flex: 1}}
@@ -157,7 +160,8 @@ const HomeScreen = ({navigation}: any) => {
           <View
             style={{
               flex: 1,
-              padding: 15,
+              paddingHorizontal: '5%',
+              paddingVertical: '2%',
             }}>
             <Text
               style={{
@@ -210,7 +214,7 @@ const HomeScreen = ({navigation}: any) => {
             </View>
           </View>
         </LinearGradient>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -258,7 +262,8 @@ const HomeScreen = ({navigation}: any) => {
           <View
             style={{
               backgroundColor: COLORS.primary,
-              height: 110,
+              height:
+                Platform.OS == 'ios' ? (SIZES.height > 812 ? 110 : 95) : 110,
             }}>
             <LinearGradient
               colors={[COLORS.primary, '#396afc']}
@@ -267,13 +272,13 @@ const HomeScreen = ({navigation}: any) => {
               end={{x: 1, y: 0.5}}
               locations={[0, 0.7]}>
               <View style={{paddingHorizontal: 20}}>
-                <Text style={style.headerTitle}>Explore your</Text>
-                <Text style={style.headerTitle}>Classic Residency</Text>
+                <Text style={style.headerTitle}>Welcome</Text>
+                <Text style={style.headerTitle}>{user.ownerName}</Text>
               </View>
             </LinearGradient>
           </View>
           <ScrollView
-            style={{backgroundColor: COLORS.white}}
+            style={[{backgroundColor: COLORS.white}]}
             showsVerticalScrollIndicator={false}>
             <View style={{height: SIZES.height * 0.03}}></View>
             <Text
@@ -295,7 +300,7 @@ const HomeScreen = ({navigation}: any) => {
                 </View>
               ))}
             </View>
-            <View style={{height: SIZES.height * 0.25}}></View>
+            <View style={{height: SIZES.height * 0.15}}></View>
             {/* </ScrollView> */}
           </ScrollView>
         </View>
@@ -306,13 +311,14 @@ const HomeScreen = ({navigation}: any) => {
             width: '90%',
             alignSelf: 'center',
             marginTop:
-              Platform.OS == 'ios' ? (SIZES.height > 812 ? 80 : 70) : 70,
+              Platform.OS == 'ios' ? (SIZES.height > 812 ? 80 : 60) : 45,
           }}>
           <SearchBar
             value={input}
             placeholder="Search notice ..."
             onChangeText={text => setInput(text)}
             searchStyle={{top: 90}}
+            shadow={'LIGHT'}
           />
         </View>
       </View>
@@ -329,6 +335,7 @@ const style = StyleSheet.create({
     color: COLORS.white,
     // fontWeight: 'bold',
     ...FONTS.h2,
+    fontSize: 20,
     // fontSize: 23,
   },
   inputContainer: {

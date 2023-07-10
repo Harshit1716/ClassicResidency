@@ -97,7 +97,7 @@ const TabButton = (props: any) => {
         <View style={styles.btn}>
           <Animatable.View ref={circleRef} style={styles.circle} />
           <Icon
-            size={(item.lable = 'Engage' ? 20 : 25)}
+            size={item.route == 'Engage' ? 20 : 25}
             type={item.type}
             name={item.icon}
             color={focused ? COLORS.white : COLORS.primary}
@@ -120,7 +120,7 @@ export default function Bottoms() {
           styles.tabBar,
           Platform.OS == 'ios'
             ? SIZES.height >= 812
-              ? {height: 70}
+              ? {height: 72}
               : {height: 60}
             : {height: 60},
         ],
@@ -144,7 +144,7 @@ export default function Bottoms() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS == 'ios' ? (SIZES.height >= 812 ? 15 : 0) : 10,
+    marginTop: Platform.OS == 'ios' ? (SIZES.height >= 812 ? 15 : 0) : 0,
     flex: 1,
     justifyContent: 'center',
     // marginBottom: '20%',

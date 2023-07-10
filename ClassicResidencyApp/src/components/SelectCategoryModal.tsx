@@ -63,9 +63,11 @@ const SelectCategoryModal = (props: ModalProps) => {
               style={{
                 flexDirection: 'row',
                 paddingHorizontal: 25,
-                paddingVertical: 15,
+                paddingVertical: 10,
                 width: '100%',
                 alignItems: 'center',
+                borderBottomWidth: 1,
+                borderBottomColor: COLORS.lightGray,
               }}>
               <Text
                 style={{
@@ -80,19 +82,19 @@ const SelectCategoryModal = (props: ModalProps) => {
                 style={{
                   width: 40,
                   height: 40,
-                  backgroundColor: 'red',
+                  backgroundColor: COLORS.white,
                   ...SHADOW,
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,
-                  marginTop: -90,
-                  right: -140,
+                  marginTop: -70,
+                  right: -125,
                 }}
                 onPress={props.onClose}>
                 <Icon
                   type={Icons.FontAwesome}
                   name={'close'}
-                  color={COLORS.white}
+                  color={COLORS.primary}
                 />
               </TouchableOpacity>
             </View>
@@ -102,11 +104,12 @@ const SelectCategoryModal = (props: ModalProps) => {
             onChangeText={text => {
               setInput(text);
             }}
-            searchStyle={{width: '90%', alignSelf: 'center'}}
+            searchStyle={{width: '90%', alignSelf: 'center', height: 50}}
             value={input}
             shadow={'LIGHT'}
           />
           <FlatList
+            showsVerticalScrollIndicator={false}
             style={{marginVertical: 20}}
             data={filteredList}
             renderItem={({item, index}) => {

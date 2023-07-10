@@ -169,7 +169,7 @@ const Profile = ({navigation}: any) => {
           //   marginTop: '25%',
 
           marginTop:
-            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 90,
+            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 140,
         }}>
         <TouchableOpacity
           onPress={() => {

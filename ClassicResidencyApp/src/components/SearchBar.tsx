@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, View, Platform} from 'react-native';
 import React from 'react';
 import {COLORS, ICONS} from '../resources';
 import {SHADOW, SHADOW_PRIMARY, SHADOW_PRIMARY_LIGHT} from '../resources/Theme';
@@ -26,7 +26,11 @@ const SearchBar = (props: SearchProps) => {
   }
   return (
     <View
-      style={[styles.inputContainer, {...props.searchStyle, ...getShadow()}]}>
+      style={[
+        styles.inputContainer,
+        {...props.searchStyle, ...getShadow()},
+        Platform.OS == 'android' && {paddingVertical: 0, height: 70},
+      ]}>
       <Image
         style={{height: 25, width: 25, marginRight: 10}}
         source={ICONS.SEARCH_ICON}

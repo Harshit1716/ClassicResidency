@@ -24,7 +24,13 @@ const ProfileTextInput = (props: InputProps) => {
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       onChangeText={props.onChangeText}
-      keyboardType={props.keybordType == 'phone' ? 'phone-pad' : 'default'}
+      keyboardType={
+        props.keybordType == 'phone'
+          ? 'phone-pad'
+          : props.keybordType == 'email'
+          ? 'email-address'
+          : 'default'
+      }
       placeholderTextColor={COLORS.gray}
       style={[
         {

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  Platform,
 } from 'react-native';
 import {COLORS, ICONS, SIZES} from '../resources';
 
@@ -28,8 +29,9 @@ const Banner = ({data}) => {
         // onPress={() => navigation.navigate('DetailsScreen', place)}>
       >
         <ImageBackground
+          resizeMode="stretch"
           style={{
-            height: 220,
+            height: SIZES.height * 0.25,
             width: SIZES.width - SIZES.width * 0.1,
             marginRight: 20,
             marginLeft: 20,

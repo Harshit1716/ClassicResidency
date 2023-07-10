@@ -150,6 +150,10 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
       Alert.alert('Error', 'Please select a preffered slot ');
       return false;
     }
+    if (imageFile == null) {
+      Alert.alert('Error', 'Please upload a an image');
+      return false;
+    }
     return true;
   };
 
@@ -198,7 +202,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                     ...FONTS.body3,
                     padding: SIZES.spacing * 1.2,
                     backgroundColor: COLORS.lightPrimary,
-                    borderRadius: 100,
+                    borderRadius: 10,
                     marginVertical: SIZES.spacing,
                     color: COLORS.gray,
                   }}>
@@ -224,11 +228,15 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                     onPress={() => handleChipPress(chip)}
                     style={[
                       {
-                        backgroundColor: '#e0e0e0',
+                        // backgroundColor: '#e0e0e0',
+                        backgroundColor: COLORS.white,
                         borderRadius: 20,
                         paddingHorizontal: 12,
                         paddingVertical: 8,
                         margin: 4,
+                        ...SHADOW,
+                        borderWidth: 0.5,
+                        borderColor: COLORS.lightGray,
                       },
                       selectedChips.includes(chip) && {
                         backgroundColor: COLORS.primary,
@@ -269,7 +277,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                       fontSize: 16,
                       fontFamily: 'Poppins',
                     }}>
-                    Upload Image (Optional)
+                    Upload Image
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -400,7 +408,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     marginTop: 30,
-    paddingHorizontal: '10%',
+    paddingHorizontal: '5%',
     marginBottom: 50,
     flex: 1,
     width: '100%',
@@ -411,7 +419,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingVertical: 20,
+    paddingVertical: 15,
     borderRadius: 10,
   },
   buyText: {

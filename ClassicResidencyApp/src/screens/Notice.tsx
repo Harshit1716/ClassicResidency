@@ -84,7 +84,7 @@ const NoticeList = () => {
           }}
           onPress={() => closeRow(rowMap, data.item.key)}>
           <Icon
-            size={25}
+            size={20}
             type={Icons.FontAwesome}
             name={'close'}
             color={COLORS.white}
@@ -95,7 +95,7 @@ const NoticeList = () => {
           // onPress={() => deleteRow(rowMap, data.item.key)}
         >
           <Icon
-            size={45}
+            size={40}
             type={Icons.MaterialCommunityIcons}
             name={'delete'}
             color={'red'}

@@ -36,7 +36,8 @@ const NoticeCard = ({item, index}: {item: Notice; index: number}) => {
         <View
           style={{
             flex: 1,
-            padding: 15,
+            paddingHorizontal: '5%',
+            paddingVertical: '2%',
           }}>
           <Text
             style={{

@@ -62,30 +62,29 @@ const ProfileDetail = () => {
           }}>
           <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
           <ProfileTextInput
-            title="Email"
+            title=""
             disabled={false}
             onChangeText={text => console.log(text)}
-            placeholder="Email"
+            placeholder="Name"
           />
           <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
             Email
           </Text>
           <ProfileTextInput
-            title="UserName"
+            title=""
             disabled={true}
             onChangeText={text => console.log(text)}
-            placeholder="UserName"
+            placeholder="Email"
           />
         </View>
         <TouchableOpacity
           onPress={() => setOpen(true)}
           style={{
-            width: '60%',
+            width: '80%',
             padding: '3%',
-            // backgroundColor: COLORS.white,
-            alignSelf: 'center',
 
-            borderRadius: 40,
+            alignSelf: 'center',
+            borderRadius: 10,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
@@ -111,7 +110,7 @@ const ProfileDetail = () => {
           width: '90%',
           alignSelf: 'center',
           //   marginTop: '25%',
-          marginTop: Platform.OS == 'ios' ? (SIZES.height > 812 ? 65 : 65) : 90,
+          marginTop: Platform.OS == 'ios' ? (SIZES.height > 812 ? 65 : 65) : 40,
         }}>
         <Image source={ICONS.PROFILE_ICON} style={styles.profilePicture} />
       </View>
@@ -149,9 +148,9 @@ const styles = StyleSheet.create({
   },
   profilePicture: {
     alignSelf: 'center',
-    width: SIZES.height > 812 ? 150 : 120,
+    width: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 150 : 120,
     marginTop: '10%',
-    height: SIZES.height > 812 ? 150 : 120,
+    height: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 150 : 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 75,
     zIndex: 1,
