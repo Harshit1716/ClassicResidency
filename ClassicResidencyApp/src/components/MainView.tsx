@@ -1,7 +1,10 @@
 import {
   ActivityIndicator,
   Image,
+  Modal,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,6 +14,7 @@ import React from 'react';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {useAppSelector} from '../stateManagemer/Store';
 import {useNavigation} from '@react-navigation/native';
+import Loader from './Loader';
 
 interface MainViewTypes {
   style?: any;
@@ -19,25 +23,15 @@ interface MainViewTypes {
 
 const MainView = (props: any) => {
   const navigation = useNavigation();
-  //   const isLoading = useAppSelector(state => state.userReducer.loading);
+  const isLoading = useAppSelector(state => state.userReducer.loading);
   return (
     <View style={styles.container}>
-      {props.children}
-      {false && (
-        <View
-          style={{
-            position: 'absolute',
-            flex: 1,
-            paddingTop: SIZES.height * 0.55,
-            paddingLeft: SIZES.width * 0.45,
-          }}>
-          <ActivityIndicator
-            style={{alignSelf: 'center'}}
-            size={'large'}
-            color={COLORS.primary}
-          />
-        </View>
-      )}
+      {/* <ScrollView bounces={false} showsVerticalScrollIndicator={false}> */}
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.white} />
+
+      <View style={{flex: 1}}>{props.children}</View>
+      {/* </ScrollView> */}
+      {isLoading && <Loader />}
     </View>
   );
 };
@@ -49,8 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: SIZES.height,
     width: SIZES.width,
-
-    // backgroundColor: 'red',
+    backgroundColor: COLORS.white,
   },
   loginBtn: {
     padding: 10,

@@ -17,11 +17,11 @@ import {COLORS, FONTS, ICONS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import AppButton from '../components/AppButton';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-// import {createUser, login} from '../stateManagemer/slice/ServiceSlice';
+import {createUser, login} from '../stateManagemer/slice/ServiceSlice';
 
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
-  // const isLoading = useAppSelector(state => state.userReducer.loading);
+  const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
     const data = {
       flatNumber: '702',
@@ -31,7 +31,7 @@ const LoginScreen = () => {
       email: 'harshit@yopmail.com',
       phoneNumber: '9355209292',
     };
-    // dispatch(createUser({...data}));
+    dispatch(createUser({...data}));
   }
   const [number, setNumber] = useState('');
   const [password, setPasssword] = useState('');
@@ -94,18 +94,15 @@ const LoginScreen = () => {
             marginVertical: SIZES.spacing * 3,
           }}>
           <AppTextInput
-            // editable={!isLoading}
-
-            placeholder="Number"
+            editable={!isLoading}
+            placeholder="number"
             value={number}
             onChangeText={(text: string) => {
               setNumber(text);
             }}
-            editable={false}
           />
           <AppTextInput
-            editable={false}
-            // editable={!isLoading}
+            editable={!isLoading}
             placeholder="Password"
             value={password}
             onChangeText={(text: string) => {
@@ -127,12 +124,11 @@ const LoginScreen = () => {
         <AppButton
           title="Login"
           onPress={() => {
-            // dispatch(
-            //   login({phoneNumber: '9355209292', password: '2929025539'}),
-            // );
+            dispatch(
+              login({phoneNumber: '9355209292', password: '2929025539'}),
+            );
           }}
-          disabled={false}
-          // disabled={isLoading}
+          disabled={isLoading}
         />
         <TouchableOpacity
           onPress={() => handleCreateAccount()}

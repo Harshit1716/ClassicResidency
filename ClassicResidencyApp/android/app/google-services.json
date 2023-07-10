@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "388681643004",
+    "project_id": "classicresidency-47c3c",
+    "storage_bucket": "classicresidency-47c3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388681643004:android:2c9e91a3d49822955b3879",
+        "android_client_info": {
+          "package_name": "com.classicresidencyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388681643004-vv7f7ahidc1ilk9vmp8gfisbu5b5f4e3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt85Y0Da1eBvcWVcYXqez5_sMUVuINDsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388681643004-vv7f7ahidc1ilk9vmp8gfisbu5b5f4e3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388681643004-mn7c9tuu89mq0vf0jp2cais5h6hhs4u5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.ClassicResidencyApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
