@@ -13,9 +13,10 @@ import * as Animatable from 'react-native-animatable';
 import {COLORS, ICONS} from '../resources';
 import {Home} from '../screens';
 import {SHADOW_PRIMARY, SIZES} from '../resources/Theme';
-// import ComplaintsList from '../screens/ComplaintsList';
-// import ShopsList from '../screens/ShopsList';
-// import Engage from '../screens/Engage';
+import ComplaintsList from '../screens/ComplaintsList';
+import ShopsList from '../screens/ShopsList';
+import Engage from '../screens/Engage';
+import Profile from '../screens/Profile';
 
 const TabArr = [
   {
@@ -30,28 +31,28 @@ const TabArr = [
     label: 'Engage',
     // type: Icons.FontAwesome,
     icon: ICONS.BUILDING_ICON,
-    component: Home,
+    component: Engage,
   },
   {
     route: 'Add',
     label: 'Complaints',
     // type: Icons.MaterialIcons,
     icon: ICONS.ADD_ICON,
-    component: Home,
+    component: ComplaintsList,
   },
   {
     route: 'Shop',
     label: 'Shops',
     // type: Icons.MaterialCommunityIcons,
     icon: ICONS.SHOPS_ICON,
-    component: Home,
+    component: ShopsList,
   },
   {
     route: 'Account',
     label: 'Account',
     // type: Icons.FontAwesome,
     icon: ICONS.ACCOUNT_TAB_ICON,
-    component: Home,
+    component: Profile,
   },
 ];
 

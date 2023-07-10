@@ -6,14 +6,13 @@ import {Home, Login, OnBoardingScreen} from '../screens';
 import {useAppSelector} from '../stateManagemer/Store';
 import WelcomeScreen from '../screens/OnBoardingScreen';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
-import Bottoms from './BottomTabs';
-// import BottomRouter from './BottomTabs';
-// import ProfileDetail from '../screens/ProfileDetail';
-// import Notice from '../screens/Notice';
-// import NoticeDetail from '../components/NoticeDetail';
-// import MemberCategory from '../screens/MemberCategory';
-// import MembersList from '../screens/MembersList';
-// import ComplaintsList from '../screens/ComplaintsList';
+import BottomRouter from './BottomTabs';
+import ProfileDetail from '../screens/ProfileDetail';
+import Notice from '../screens/Notice';
+import NoticeDetail from '../components/NoticeDetail';
+import MemberCategory from '../screens/MemberCategory';
+import MembersList from '../screens/MembersList';
+import ComplaintsList from '../screens/ComplaintsList';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -53,10 +52,10 @@ const RootNavigation = () => {
               headerShown: false,
             }}
             name="Home"
-            component={Bottoms}
+            component={BottomRouter}
           />
         )}
-        {/* {email != '' && (
+        {email != '' && (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -100,7 +99,7 @@ const RootNavigation = () => {
             name="MembersList"
             component={MembersList}
           />
-        )} */}
+        )}
       </RootStack.Navigator>
     </NavigationContainer>
   );
