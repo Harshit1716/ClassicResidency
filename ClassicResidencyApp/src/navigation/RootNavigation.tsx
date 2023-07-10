@@ -2,7 +2,7 @@ import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home} from '../screens';
+import {Home, Login} from '../screens';
 import {useAppSelector} from '../stateManagemer/Store';
 import WelcomeScreen from '../screens/OnBoardingScreen';
 
@@ -43,7 +43,7 @@ const RootNavigation = () => {
               headerShown: false,
             }}
             name="Login"
-            component={Home}
+            component={Login}
           />
         )}
       </RootStack.Navigator>

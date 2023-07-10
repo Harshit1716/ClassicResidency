@@ -1,20 +1,54 @@
 export interface FlatType {
   id: string;
   block: string;
+  flatType: string;
   flatNumber: string;
   ownerName: string;
-  tenantName?: string;
-  flatType: string;
   phoneNumber: string;
-  //   fcmTokens: string[];
+  email: string;
+  imageUrl: string;
+
+  tenantName?: string;
+  tenantEmail?: string;
+  tenantPhoneNumber?: string;
+
   complaints: ComplaintType[];
-  adminComplaints?: ComplaintType[];
+  isTenantAdded: boolean;
   isAdmin: boolean;
   loading: boolean;
   isAOA: boolean;
+  password: string;
+
+  //   fcmTokens: string[];
+  adminComplaints?: ComplaintType[];
   notice: Notice[];
   error: any;
   members: Members[];
+}
+
+export interface AddedMember {
+  id: string;
+  block: string;
+  flatType: string;
+  flatNumber: string;
+  ownerName: string;
+  phoneNumber: string;
+  email: string;
+  imageUrl: string;
+
+  isTenantAdded: boolean;
+  tenantName?: string;
+  tenantEmail?: string;
+  tenantPhoneNumber?: string;
+
+  complaints: ComplaintType[];
+
+  isAdmin: boolean;
+  isAOA: boolean;
+  password: string;
+  //   fcmTokens: string[];
+  adminComplaints?: ComplaintType[];
+  // imageUrl: string;
 }
 
 export interface Notice {
@@ -27,11 +61,11 @@ export interface Notice {
   subject?: string;
 }
 export interface Members {
-  createdAt: string; // Timestamp indicating when the notice was created
-  imageUrl?: string; // Optional image URL for the notice
+  imageUrl?: string;
   name: string;
   phoneNumber: string;
   type: string;
+  assignedComplaints: ComplaintType[];
 }
 
 export interface ComplaintType {
@@ -56,7 +90,7 @@ export type MEMBERTYPE =
   | 'Car Cleaner'
   | 'Others';
 
-export type COMPLAINTSTATUS = 'PENDING' | 'COMPLETED';
+export type COMPLAINTSTATUS = 'PENDING' | 'COMPLETED' | 'IN-PROGRESS';
 
 export const ServiceTypeList: ServiceType[] = [
   'PLUMBER',

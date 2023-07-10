@@ -1,34 +1,45 @@
 import {StyleSheet, Text, TextInput, TextInputProps, View} from 'react-native';
 import React, {useState} from 'react';
 
-import {COLORS, FONTS, SIZES} from '../resources';
+import {COLORS, FONTS, ICONS, SIZES} from '../resources';
+import {SHADOW_PRIMARY} from '../resources/Theme';
+import {Image} from 'react-native-animatable';
 
-const AppTextInput: React.FC<TextInputProps> = ({...otherProps}) => {
+interface InputProps {
+  value: string;
+  placeholder: string;
+  onChangeText: (text: string) => void;
+  editable: boolean;
+}
+
+const AppTextInput = (props: InputProps) => {
   const [focused, setFocused] = useState<boolean>(false);
   return (
     <TextInput
+      keyboardType="number-pad"
+      onChangeText={props.onChangeText}
+      value={props.value}
+      placeholder={props.placeholder}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      placeholderTextColor={COLORS.darkText}
+      placeholderTextColor={COLORS.gray}
       style={[
         {
+          width: '90%',
+          alignSelf: 'center',
           ...FONTS.body3,
-          padding: SIZES.spacing * 2,
+          padding: SIZES.spacing * 1.2,
           backgroundColor: COLORS.lightPrimary,
           borderRadius: SIZES.spacing,
           marginVertical: SIZES.spacing,
+          height: 50,
         },
         focused && {
           borderWidth: 3,
           borderColor: COLORS.primary,
-          shadowOffset: {width: 4, height: SIZES.spacing},
-          shadowColor: COLORS.primary,
-          shadowOpacity: 0.2,
-          shadowRadius: SIZES.spacing,
+          ...SHADOW_PRIMARY,
         },
-      ]}
-      {...otherProps}
-    />
+      ]}></TextInput>
   );
 };
 

@@ -1,4 +1,6 @@
 import {
+  Image,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -6,18 +8,45 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import AppTextInput from '../components/AppTextInput';
-import {COLORS, FONTS, SIZES} from '../resources';
+import {COLORS, FONTS, ICONS, SIZES} from '../resources';
+import MainView from '../components/MainView';
+import AppButton from '../components/AppButton';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+// import {createUser, login} from '../stateManagemer/slice/ServiceSlice';
 
 const LoginScreen = () => {
+  const dispatch = useAppDispatch();
+  // const isLoading = useAppSelector(state => state.userReducer.loading);
+  async function handleCreateAccount() {
+    const data = {
+      flatNumber: '702',
+      flatType: 'H1',
+      block: 'I',
+      name: 'Harshit Tyagi',
+      email: 'harshit@yopmail.com',
+      phoneNumber: '9355209292',
+    };
+    // dispatch(createUser({...data}));
+  }
+  const [number, setNumber] = useState('');
+  const [password, setPasssword] = useState('');
   return (
-    <SafeAreaView>
+    <MainView>
       <View
         style={{
+          paddingTop:
+            Platform.OS == 'android'
+              ? SIZES.height > 640
+                ? '15%'
+                : '5%'
+              : SIZES.height >= 812
+              ? '20%'
+              : '5%',
           height: SIZES.height,
           width: SIZES.width,
           backgroundColor: 'white',
@@ -27,18 +56,24 @@ const LoginScreen = () => {
           style={{
             alignItems: 'center',
           }}>
+          <Image
+            resizeMode="contain"
+            style={{height: 100, width: 100, marginTop: SIZES.spacing}}
+            source={ICONS.LOGO_ICON}
+          />
           <Text
             style={{
               ...FONTS.h1,
               color: COLORS.primary,
               marginVertical: SIZES.spacing * 3,
             }}>
-            Login here
+            Login
           </Text>
 
           <Text
             style={{
               ...FONTS.h3,
+              color: COLORS.black,
               maxWidth: '60%',
               textAlign: 'center',
             }}>
@@ -47,6 +82,7 @@ const LoginScreen = () => {
           <Text
             style={{
               ...FONTS.h3,
+              color: COLORS.black,
               maxWidth: '60%',
               textAlign: 'center',
             }}>
@@ -57,8 +93,25 @@ const LoginScreen = () => {
           style={{
             marginVertical: SIZES.spacing * 3,
           }}>
-          <AppTextInput placeholder="Email" />
-          <AppTextInput placeholder="Password" />
+          <AppTextInput
+            // editable={!isLoading}
+
+            placeholder="Number"
+            value={number}
+            onChangeText={(text: string) => {
+              setNumber(text);
+            }}
+            editable={false}
+          />
+          <AppTextInput
+            editable={false}
+            // editable={!isLoading}
+            placeholder="Password"
+            value={password}
+            onChangeText={(text: string) => {
+              setPasssword(text);
+            }}
+          />
         </View>
 
         <TouchableOpacity>
@@ -71,32 +124,18 @@ const LoginScreen = () => {
             Forgot your password ?
           </Text>
         </TouchableOpacity>
-
+        <AppButton
+          title="Login"
+          onPress={() => {
+            // dispatch(
+            //   login({phoneNumber: '9355209292', password: '2929025539'}),
+            // );
+          }}
+          disabled={false}
+          // disabled={isLoading}
+        />
         <TouchableOpacity
-          style={{
-            padding: SIZES.spacing * 2,
-            backgroundColor: COLORS.primary,
-            marginVertical: SIZES.spacing * 3,
-            borderRadius: SIZES.spacing,
-            shadowColor: COLORS.primary,
-            shadowOffset: {
-              width: 0,
-              height: SIZES.spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: SIZES.spacing,
-          }}>
-          <Text
-            style={{
-              color: COLORS.white,
-              textAlign: 'center',
-              ...FONTS.h3,
-            }}>
-            Sign in
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          // onPress={() => navigate('Register')}
+          onPress={() => handleCreateAccount()}
           style={{
             padding: SIZES.spacing,
           }}>
@@ -109,7 +148,7 @@ const LoginScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </MainView>
   );
 };
 
