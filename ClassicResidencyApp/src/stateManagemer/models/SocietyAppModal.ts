@@ -24,6 +24,8 @@ export interface FlatType {
   notice: Notice[];
   error: any;
   members: Members[];
+
+  currentUser: string;
 }
 
 export interface AddedMember {
@@ -61,6 +63,7 @@ export interface Notice {
   subject?: string;
 }
 export interface Members {
+  id: string;
   imageUrl?: string;
   name: string;
   phoneNumber: string;
@@ -71,14 +74,19 @@ export interface Members {
 export interface ComplaintType {
   id: string;
   flatId: string;
+  flatNo: string;
   title: string;
   description: string;
+  type: string;
+  slots: string[];
+  imageUrl: string;
+  createdOn: string;
+  closedOn?: string;
+  assignedTo: string;
+  by: string;
   status: string;
-  assignedTo?: string;
   review?: string;
-  createdOn: Date;
-  closedOn?: Date;
-  // type:string,
+  hide: boolean;
 }
 
 export type ServiceType = 'PLUMBER' | 'ELECTRICIAN' | 'CARPENTER' | 'AOA';

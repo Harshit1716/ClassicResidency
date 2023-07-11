@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -35,6 +35,10 @@ const LoginScreen = () => {
   }
   const [number, setNumber] = useState('');
   const [password, setPasssword] = useState('');
+  useEffect(() => {
+    setNumber('9355209292');
+    setPasssword('Harry');
+  });
   return (
     <MainView>
       <View
@@ -124,14 +128,12 @@ const LoginScreen = () => {
         <AppButton
           title="Login"
           onPress={() => {
-            dispatch(
-              login({phoneNumber: '9355209292', password: '2929025539'}),
-            );
+            dispatch(login({phoneNumber: number, password: password}));
           }}
           disabled={isLoading}
         />
         <TouchableOpacity
-          onPress={() => handleCreateAccount()}
+          // onPress={() => handleCreateAccount()}
           style={{
             padding: SIZES.spacing,
           }}>

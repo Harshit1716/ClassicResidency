@@ -18,7 +18,7 @@ const NoticeCard = ({item, index}: {item: Notice; index: number}) => {
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('NoticeDetail');
+        navigation.navigate('NoticeDetail', {data: item});
       }}
       style={{
         alignSelf: 'center',

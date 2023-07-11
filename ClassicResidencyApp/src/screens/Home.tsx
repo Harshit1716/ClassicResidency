@@ -23,7 +23,10 @@ import Banner from '../components/Banners';
 // import Icon, {Icons} from '../components/Icons';
 import SearchBar from '../components/SearchBar';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {getAllNotice} from '../stateManagemer/slice/ServiceSlice';
+import {
+  getAllMembers,
+  getAllNotice,
+} from '../stateManagemer/slice/ServiceSlice';
 const {width} = Dimensions.get('screen');
 const places = [
   {
@@ -64,6 +67,7 @@ const HomeScreen = ({navigation}: any) => {
 
   useEffect(() => {
     dispatch(getAllNotice());
+    dispatch(getAllMembers());
   }, []);
   useEffect(() => {
     let ar = places.filter(item =>
@@ -72,24 +76,6 @@ const HomeScreen = ({navigation}: any) => {
     setList(ar);
   }, [input]);
 
-  const categoryIcons = [
-    <Image
-      style={{height: 30, width: 30, tintColor: COLORS.primary}}
-      source={ICONS.EVENT_ICON}
-    />,
-    <Image
-      style={{height: 30, width: 30, tintColor: COLORS.primary}}
-      source={ICONS.MEMBERS_ICON}
-    />,
-    <Image
-      style={{height: 30, width: 30, tintColor: COLORS.primary}}
-      source={ICONS.NOTICE_ICON}
-    />,
-    <Image
-      style={{height: 50, width: 50, tintColor: COLORS.primary}}
-      source={ICONS.BILL_ICON}
-    />,
-  ];
   const categoryList = [
     {
       title: 'Notice',

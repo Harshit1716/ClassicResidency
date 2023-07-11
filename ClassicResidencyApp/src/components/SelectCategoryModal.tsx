@@ -22,7 +22,20 @@ interface ModalProps {
   selected: string;
 }
 
-const list = ['AOA', 'Plumber', 'Guard', 'Maid', 'Electrician'];
+const list = [
+  'AOA',
+  'Plumber',
+  'Electrician',
+  'Guard',
+  'Carpenter',
+  'Painter',
+  'Lift',
+  'Mason',
+  'HouseKeeping',
+  'Intercom',
+  'Gardner',
+  'MainGate',
+];
 const SelectCategoryModal = (props: ModalProps) => {
   const [input, setInput] = React.useState('');
   const [selected, setSelected] = React.useState(props.selected);

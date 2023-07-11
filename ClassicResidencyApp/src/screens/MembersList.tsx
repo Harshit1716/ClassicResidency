@@ -1,7 +1,7 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header';
-import {useAppSelector} from '../stateManagemer/Store';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import SearchBar from '../components/SearchBar';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
@@ -11,23 +11,52 @@ import CreateNoticeModal from '../components/CreateNoticeModal';
 import CreateMemberModal from '../components/CreateMemberModal';
 import MainView from '../components/MainView';
 import {redirectToPhoneNumber} from '../resources/Utils';
+import {Members} from '../stateManagemer/models/SocietyAppModal';
+import {
+  deleteMember,
+  getAllMembers,
+} from '../stateManagemer/slice/ServiceSlice';
 
-const MembersList = () => {
+const MembersList = ({route}: any) => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
+  const members = useAppSelector(state => state.userReducer.members);
   const [input, setInput] = useState('');
+  const [memberFilteredList, setMemberFilteredList] = useState<Members[]>([]);
   const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    if (members) {
+      let ar = members.filter(item =>
+        item.name.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
+      );
+      setMemberFilteredList(ar);
+    }
+  }, [input]);
+  React.useEffect(() => {
+    // Add key property to each item
+    let ar = members.map((item, index) => ({
+      ...item,
+      key: `${index}`,
+    }));
+    ar = ar.filter(item => item.type == route?.params?.data);
+    setMemberFilteredList(ar);
+  }, [members]);
+
   const closeRow = (rowMap: any, rowKey: any) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
   };
 
-  const deleteRow = ({rowMap, rowKey}: any) => {
-    // closeRow(rowMap, rowKey);
-    // const newData = [...listData];
-    // const prevIndex = listData.findIndex(item => item.key === rowKey);
-    // newData.splice(prevIndex, 1);
-    // setListData(newData);
+  const deleteRow = async (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const prevIndex = memberFilteredList.findIndex(
+      item => item?.key === rowKey,
+    );
+    console.log(memberFilteredList[prevIndex]);
+    await dispatch(deleteMember(memberFilteredList[prevIndex].id));
+    await dispatch(getAllMembers());
   };
 
   const onRowDidOpen = (rowKey: any) => {
@@ -50,32 +79,28 @@ const MembersList = () => {
             marginHorizontal: 10,
             backgroundColor: COLORS.gray,
             borderRadius: 10,
-            padding: 10,
+            padding: 5,
           }}
           onPress={() => closeRow(rowMap, data.item.key)}>
-          {/* <Icon
-            size={15}
-            type={Icons.FontAwesome}
-            name={'close'}
-            color={COLORS.white}
-          /> */}
+          <Image
+            source={ICONS.CANCEL_ICON}
+            style={{height: 20, width: 20, tintColor: COLORS.white}}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginHorizontal: 10}}
-          // onPress={() => deleteRow(rowMap, data.item.key)}
-        >
-          {/* <Icon
-            size={35}
-            type={Icons.MaterialCommunityIcons}
-            name={'delete'}
-            color={'red'}
-          /> */}
+          onPress={() => deleteRow(rowMap, data.item.key)}>
+          <Image
+            resizeMode="contain"
+            source={ICONS.DELETE_ICON}
+            style={{height: 30, width: 30}}
+          />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const renderMainItem = ({item, index}: any) => {
+  const renderMainItem = ({item, index}: {item: Members; index: number}) => {
     return (
       <View
         style={{
@@ -88,16 +113,16 @@ const MembersList = () => {
         }}>
         <Image
           style={{height: 50, width: 50, borderRadius: 50}}
-          source={ICONS.PROFILE_ICON}></Image>
+          source={{uri: item.imageUrl + ''}}></Image>
         <View style={{flex: 1, paddingHorizontal: '5%'}}>
-          <Text style={{...FONTS.h3}}>Name</Text>
+          <Text style={{...FONTS.h3}}>{item.name}</Text>
           <Text style={{...FONTS.body5, color: COLORS.gray}}>
-            Contact No:- 9355209292
+            Contact No:- {item.phoneNumber}
           </Text>
-          <Text style={{...FONTS.body5, color: COLORS.gray}}>AOA</Text>
+          <Text style={{...FONTS.body5, color: COLORS.gray}}>{item.type}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => redirectToPhoneNumber('9355209292')}
+          onPress={() => redirectToPhoneNumber(item.phoneNumber + '')}
           style={{justifyContent: 'center'}}>
           <Image
             style={{height: 30, width: 30}}
@@ -137,7 +162,7 @@ const MembersList = () => {
       {!isAdmin ? (
         <SwipeListView
           showsVerticalScrollIndicator={false}
-          data={[1, 2, 3, 4, 5, 6, 7, 8, 81, 213, 321, 142, 142412]}
+          data={memberFilteredList}
           renderItem={({item, index}) => renderMainItem({item, index})}
           renderHiddenItem={(data, rowMap) => renderHiddenItem({data, rowMap})}
           ListFooterComponent={() => (

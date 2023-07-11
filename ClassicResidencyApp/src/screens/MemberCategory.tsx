@@ -1,18 +1,23 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header';
-import {useAppSelector} from '../stateManagemer/Store';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
 import {SHADOW_PRIMARY, SHADOW_PRIMARY_LIGHT} from '../resources/Theme';
 import {useNavigation} from '@react-navigation/native';
+import {getAllMembers} from '../stateManagemer/slice/ServiceSlice';
 
 const MemberCategory = () => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
   const [pressed, setPressed] = useState(-1);
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  React.useEffect(() => {
+    dispatch(getAllMembers());
+  }, []);
   return (
-    <View>
+    <View style={{backgroundColor: COLORS.white}}>
       <Header title="Members" rightIconType={isAdmin ? 'CREATE' : 'NONE'} />
       <View style={{}}>
         <Text style={{...FONTS.h2, marginVertical: '10%', alignSelf: 'center'}}>
@@ -25,6 +30,9 @@ const MemberCategory = () => {
             width: '100%',
           }}>
           <FlatList
+            ListFooterComponent={() => (
+              <View style={{height: SIZES.height * 0.4}}></View>
+            )}
             style={{
               height: SIZES.height,
               alignSelf: 'center',
@@ -36,12 +44,25 @@ const MemberCategory = () => {
               justifyContent: 'space-evenly',
               paddingHorizontal: '1%',
             }}
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+            data={[
+              'AOA',
+              'Plumber',
+              'Electrician',
+              'Guard',
+              'Carpenter',
+              'Painter',
+              'Lift',
+              'Mason',
+              'HouseKeeping',
+              'Intercom',
+              'Gardner',
+              'MainGate',
+            ]}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('MembersList');
+                    navigation.navigate('MembersList', {data: item});
                   }}
                   onPressIn={() => {
                     setPressed(index);
@@ -53,7 +74,9 @@ const MemberCategory = () => {
                     backgroundColor:
                       pressed == index ? COLORS.primary : COLORS.white,
                     paddingVertical: '7%',
-                    paddingHorizontal: SIZES.width * 0.09,
+                    // paddingHorizontal: SIZES.width * 0.09,
+                    width: SIZES.width * 0.28,
+                    padding: '5%',
                     justifyContent: 'center',
                     marginHorizontal: SIZES.width * 0.02,
                     alignItems: 'center',
@@ -72,10 +95,10 @@ const MemberCategory = () => {
                   <Text
                     style={{
                       marginTop: 10,
-                      ...FONTS.body3,
+                      ...FONTS.body8,
                       color: pressed != index ? COLORS.black : COLORS.white,
                     }}>
-                    Title
+                    {item}
                   </Text>
                 </TouchableOpacity>
               );

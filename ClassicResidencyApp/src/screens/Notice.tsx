@@ -16,9 +16,10 @@ import {COLORS, ICONS, SIZES} from '../resources';
 import CreateNoticeModal from '../components/CreateNoticeModal';
 import MainView from '../components/MainView';
 import Loader from '../components/Loader';
-import {useAppSelector} from '../stateManagemer/Store';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {Notice} from '../stateManagemer/models/SocietyAppModal';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import {deleteNotice, getAllNotice} from '../stateManagemer/slice/ServiceSlice';
 // import Icon, {Icons} from '../components/Icons';
 
 const NoticeList = () => {
@@ -28,7 +29,11 @@ const NoticeList = () => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
   const noticeList = useAppSelector(state => state.userReducer.notice);
   const [noticeFilteredList, setNoticeFilteredList] = useState<Notice[]>([]);
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(getAllNotice());
+  }, []);
   React.useEffect(() => {
     if (noticeList) {
       let ar = noticeList.filter(item =>
@@ -52,12 +57,14 @@ const NoticeList = () => {
     }
   };
 
-  const deleteRow = ({rowMap, rowKey}: any) => {
-    // closeRow(rowMap, rowKey);
-    // const newData = [...listData];
-    // const prevIndex = listData.findIndex(item => item.key === rowKey);
-    // newData.splice(prevIndex, 1);
-    // setListData(newData);
+  const deleteRow = async (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const prevIndex = noticeFilteredList.findIndex(
+      item => item?.key === rowKey,
+    );
+    console.log(noticeFilteredList[prevIndex]);
+    await dispatch(deleteNotice(noticeFilteredList[prevIndex].id));
+    await dispatch(getAllNotice());
   };
 
   const onRowDidOpen = (rowKey: any) => {
@@ -83,23 +90,19 @@ const NoticeList = () => {
             padding: 10,
           }}
           onPress={() => closeRow(rowMap, data.item.key)}>
-          {/* <Icon
-            size={20}
-            type={Icons.FontAwesome}
-            name={'close'}
-            color={COLORS.white}
-          /> */}
+          <Image
+            source={ICONS.CANCEL_ICON}
+            style={{height: 20, width: 20, tintColor: COLORS.white}}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginHorizontal: 10}}
-          // onPress={() => deleteRow(rowMap, data.item.key)}
-        >
-          {/* <Icon
-            size={40}
-            type={Icons.MaterialCommunityIcons}
-            name={'delete'}
-            color={'red'}
-          /> */}
+          onPress={() => deleteRow(rowMap, data.item.key)}>
+          <Image
+            resizeMode="contain"
+            source={ICONS.DELETE_ICON}
+            style={{height: 40, width: 40}}
+          />
         </TouchableOpacity>
       </View>
     );

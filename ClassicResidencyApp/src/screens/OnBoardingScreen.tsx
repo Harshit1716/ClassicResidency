@@ -9,16 +9,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {COLORS, FONTS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {SHADOW_PRIMARY} from '../resources/Theme';
+import {getData, userDataSKeys} from '../resources/Utils';
+import {useAppDispatch} from '../stateManagemer/Store';
+import {loginUser} from '../stateManagemer/slice/ServiceSlice';
 
 const {height} = Dimensions.get('window');
 
 const OnBoardingScreen = ({navigation}: any) => {
+  const dispatch = useAppDispatch();
+  const checkUserExists = async () => {
+    const user = await getData(userDataSKeys);
+    if (user != null) {
+      dispatch(loginUser(user));
+    }
+  };
+  useEffect(() => {
+    checkUserExists();
+  }, []);
+
   return (
     <MainView>
       <View

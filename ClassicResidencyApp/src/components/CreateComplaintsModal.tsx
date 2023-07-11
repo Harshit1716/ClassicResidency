@@ -39,7 +39,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
   const [openCatrgory, setOpenCategory] = useState(false);
   const [imageFile, setImageFile] = React.useState<any>(null);
   const dispatch = useAppDispatch();
-  const userId = useAppSelector(state => state.userReducer.id);
+  const user = useAppSelector(state => state.userReducer);
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
 
   const handleChipPress = (chip: string) => {
@@ -111,10 +111,15 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
         createComplaint({
           title: title,
           des: description,
-          subject: subject,
+          type: subject,
           image: imageFile,
           slots: selectedChips,
-          user: userId,
+          user: user.id,
+          flatNo: user.block + '-' + user.flatType + '' + user.flatNumber,
+          by:
+            user.currentUser === user.phoneNumber
+              ? user.ownerName
+              : user?.tenantName ?? '',
         }),
       );
       onClose();
@@ -141,22 +146,22 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
       Alert.alert('Error', 'Please enter a valid title ');
       return false;
     }
-    if (subject.length == 0 || subject.length < 10) {
-      Alert.alert('Error', 'Please enter a valid Description ');
+    if (description.length == 0 || description.length < 10) {
+      Alert.alert('Error', 'Please select a valid Description ');
       return false;
     }
-    if (description.length == 0) {
-      Alert.alert('Error', 'Please select a valid Type ');
+    if (subject.length == 0) {
+      Alert.alert('Error', 'Please enter a valid Type ');
       return false;
     }
     if (selectedChips.length == 0) {
       Alert.alert('Error', 'Please select a preffered slot ');
       return false;
     }
-    if (imageFile == null) {
-      Alert.alert('Error', 'Please upload a an image');
-      return false;
-    }
+    // if (imageFile == null) {
+    //   Alert.alert('Error', 'Please upload a an image');
+    //   return false;
+    // }
     return true;
   };
 
@@ -184,9 +189,9 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
               </Text>
               <ProfileTextInput
                 textArea={true}
-                title={subject}
+                title={description}
                 disabled={false}
-                onChangeText={text => setSubject(text)}
+                onChangeText={text => setDecsription(text)}
                 placeholder="Description"
               />
 
@@ -209,7 +214,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                     marginVertical: SIZES.spacing,
                     color: COLORS.gray,
                   }}>
-                  {description == '' ? ' Select Type' : description}
+                  {subject == '' ? ' Select Type' : subject}
                 </Text>
               </TouchableOpacity>
               <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
@@ -335,7 +340,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
             selected={description}
             isVisible={openCatrgory}
             onClose={() => setOpenCategory(false)}
-            onSelect={setDecsription}
+            onSelect={setSubject}
           />
         )}
       </KeyboardAvoidingView>

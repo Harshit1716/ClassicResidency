@@ -15,48 +15,53 @@ import {ICONS, COLORS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
+import {useAppDispatch} from '../stateManagemer/Store';
+import {logout} from '../stateManagemer/slice/ServiceSlice';
 // import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
 
-const TabArr = [
-  {
-    route: 'Home',
-    label: 'About Us',
-    // type: Icons.MaterialIcons,
-    icon: 'house',
-  },
-  {
-    route: 'Search',
-    label: 'Contact Us',
-    // type: Icons.MaterialIcons,
-    icon: 'search',
-  },
-  {
-    route: 'Add',
-    label: 'All Complaints',
-    // type: Icons.MaterialIcons,
-    icon: 'add',
-  },
-  {
-    route: 'Like',
-    label: 'Manage Notice',
-    // type: Icons.AntDesign,
-    icon: 'heart',
-  },
-  {
-    route: 'Account',
-    label: 'Manage Members',
-    // type: Icons.FontAwesome,
-    icon: 'user-circle-o',
-  },
-  {
-    route: 'Account',
-    label: 'Logout',
-    // type: Icons.FontAwesome,
-    icon: 'user-circle-o',
-  },
-];
 const Profile = ({navigation}: any) => {
+  const disptach = useAppDispatch();
+  const TabArr = [
+    {
+      route: 'Home',
+      label: 'About Us',
+      icon: 'house',
+      onPress: () => {},
+    },
+    {
+      route: 'Search',
+      label: 'Contact Us',
+      icon: 'search',
+      onPress: () => {},
+    },
+    {
+      route: 'Add',
+      label: 'All Complaints',
+      icon: 'add',
+      onPress: () => {},
+    },
+    {
+      route: 'Like',
+      label: 'Manage Notice',
+      icon: 'heart',
+      onPress: () => {},
+    },
+    {
+      route: 'Account',
+      label: 'Manage Members',
+      icon: 'user-circle-o',
+      onPress: () => {},
+    },
+    {
+      route: 'Account',
+      label: 'Logout',
+      icon: 'user-circle-o',
+      onPress: () => {
+        disptach(logout());
+      },
+    },
+  ];
   return (
     // <MainView>
     <View style={{flex: 1}}>
@@ -130,6 +135,7 @@ const Profile = ({navigation}: any) => {
             {TabArr.map(item => {
               return (
                 <TouchableOpacity
+                  onPress={item.onPress}
                   style={{
                     width: '95%',
                     alignSelf: 'center',
@@ -148,11 +154,10 @@ const Profile = ({navigation}: any) => {
                     }}>
                     {item.label}
                   </Text>
-                  {/* <Icon
-                    type={Icons.Ionicons}
-                    name={'ios-chevron-forward'}
-                    color={COLORS.gray}
-                  /> */}
+                  <Image
+                    source={ICONS.FORWARD_ICON}
+                    style={{height: 20, width: 20, tintColor: COLORS.gray}}
+                  />
                 </TouchableOpacity>
               );
             })}
@@ -169,7 +174,7 @@ const Profile = ({navigation}: any) => {
           //   marginTop: '25%',
 
           marginTop:
-            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 140,
+            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 115,
         }}>
         <TouchableOpacity
           onPress={() => {

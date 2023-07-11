@@ -9,7 +9,12 @@ import {
   Notice,
 } from '../models/SocietyAppModal';
 import firestore from '@react-native-firebase/firestore';
-import {uploadImageToFirebase} from '../../resources/Utils';
+import {
+  clearAll,
+  storeData,
+  uploadImageToFirebase,
+  userDataSKeys,
+} from '../../resources/Utils';
 
 // method for userlogin
 export const login = createAsyncThunk(
@@ -30,8 +35,9 @@ export const login = createAsyncThunk(
         Alert.alert('Error', 'Invalid phone number or password');
         throw new Error('Invalid phone number or password');
       }
-      const user = snapshot.docs[0].data();
-      const {id} = user;
+      let user = snapshot.docs[0].data();
+
+      user['currentUser'] = phoneNumber;
       return user;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -119,26 +125,80 @@ export const createNotice = createAsyncThunk(
   },
 );
 
+export const deleteNotice = createAsyncThunk(
+  'user/deleteNotice',
+  async (id: string, {rejectWithValue}) => {
+    try {
+      const noticesCollectionRef = firestore().collection('notice');
+      const snapshot = await noticesCollectionRef.where('id', '==', id).get();
+      if (snapshot.empty) {
+        const errorMessage = "Notice doesn't exist";
+        Alert.alert('Error', errorMessage);
+        return rejectWithValue(errorMessage);
+      }
+      const docId = snapshot.docs[0].id;
+      await noticesCollectionRef.doc(docId).delete();
+      return id;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+
+export const deleteMember = createAsyncThunk(
+  'user/deleteMember',
+  async (id: string, {rejectWithValue}) => {
+    try {
+      const noticesCollectionRef = firestore().collection('members');
+      const snapshot = await noticesCollectionRef.where('id', '==', id).get();
+      if (snapshot.empty) {
+        const errorMessage = "Member doesn't exist";
+        Alert.alert('Error', errorMessage);
+        return rejectWithValue(errorMessage);
+      }
+      const docId = snapshot.docs[0].id;
+      await noticesCollectionRef.doc(docId).delete();
+      return id;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+
 export const createComplaint = createAsyncThunk(
-  'user/createNotice',
-  async ({title, des, subject, user, image}: any, {rejectWithValue}) => {
+  'user/createComplaints',
+  async (
+    {title, des, type, slots, flatNo, user, image, userName}: any,
+    {rejectWithValue},
+  ) => {
     try {
       let imageurl = '';
       if (image) imageurl = (await uploadImageToFirebase(image)) ?? '';
-      const noticeData: Notice = {
-        id: title + Date.now(),
+      let id = title + Date.now();
+      const noticeData: ComplaintType = {
+        by: userName,
+        id: id,
         title: title,
         description: des,
-        subject: subject,
-        createdAt: new Date().toLocaleDateString(),
-        createdBy: user,
+        type: type,
+        slots: slots,
+        createdOn: new Date().toLocaleDateString(),
         imageUrl: imageurl,
+        flatId: user,
+        flatNo: flatNo,
+        assignedTo: '',
+        status: 'Pending',
+        hide: false,
       };
 
-      const noticesCollectionRef = firestore()
-        .collection('notice')
-        .doc(title + Date.now());
+      const noticesCollectionRef = firestore().collection('complaints').doc(id);
       await noticesCollectionRef.set(noticeData);
+      const userRef = firestore().collection('Users').doc(user);
+      await userRef.update({
+        complaints: firestore.FieldValue.arrayUnion(id),
+      });
       return noticeData;
     } catch (error) {
       console.log(error);
@@ -195,10 +255,11 @@ export const createMember = createAsyncThunk(
         Alert.alert('Error', errorMessage);
         return rejectWithValue(errorMessage);
       }
-
+      let id = name + Date.now();
       let imageurl = '';
       if (image) imageurl = (await uploadImageToFirebase(image)) ?? '';
       const memberData: Members = {
+        id: id,
         imageUrl: imageurl,
         name: name,
         phoneNumber: number,
@@ -206,9 +267,7 @@ export const createMember = createAsyncThunk(
         assignedComplaints: [],
       };
 
-      const memberCollectionRef = firestore()
-        .collection('members')
-        .doc(name + Date.now());
+      const memberCollectionRef = firestore().collection('members').doc(id);
       await memberCollectionRef.set(memberData);
       return memberData;
     } catch (error) {
@@ -244,6 +303,7 @@ export const getComplaintsById = createAsyncThunk(
         doc => doc.data() as ComplaintType,
       );
       complaints = complaints.filter(item => item.flatId === currentUserId);
+      console.log(complaints);
       return complaints;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -270,6 +330,7 @@ const initialState: FlatType = {
   email: '',
   imageUrl: '',
   isTenantAdded: false,
+  currentUser: -1,
 };
 
 export const userSlice = createSlice({
@@ -277,28 +338,50 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, {payload}: PayloadAction<FlatType>) => {
+      state.loading = false;
       state.id = payload.id;
       state.block = payload.block;
+      state.flatType = payload.flatType;
       state.flatNumber = payload.flatNumber;
       state.ownerName = payload.ownerName;
-      state.flatType = payload.flatType;
+      state.password = payload.password;
+      state.imageUrl = payload.imageUrl;
       state.phoneNumber = payload.phoneNumber;
+
       state.complaints = payload.complaints;
-      state.adminComplaints = payload.adminComplaints;
       state.isAdmin = payload.isAdmin;
-      state.isAdmin = payload.isAdmin;
+      state.isAOA = payload.isAOA;
+      state.isTenantAdded = payload.isTenantAdded;
+      state.currentUser = payload.currentUser;
+
+      if (payload.isTenantAdded) {
+        state.tenantName = payload.tenantName;
+        state.tenantEmail = payload.tenantEmail;
+        state.tenantPhoneNumber = payload.tenantPhoneNumber;
+      }
+      state.error = null;
     },
     logout: state => {
-      console.log('here');
-      state.id = '';
-      state.block = '';
-      state.flatNumber = '';
-      state.ownerName = '';
-      state.flatType = '';
-      state.phoneNumber = '';
-      state.complaints = [];
-      state.isAdmin = false;
-      // Utils.clearAll();
+      (state.password = ''),
+        (state.id = ''),
+        (state.block = ''),
+        (state.flatNumber = ''),
+        (state.ownerName = ''),
+        (state.flatType = ''),
+        (state.phoneNumber = ''),
+        (state.complaints = []),
+        (state.adminComplaints = []),
+        (state.notice = []),
+        (state.isAdmin = false),
+        (state.isAOA = false),
+        (state.loading = false),
+        (state.error = null),
+        (state.members = []),
+        (state.email = ''),
+        (state.imageUrl = ''),
+        (state.isTenantAdded = false),
+        (state.currentUser = -1);
+      clearAll();
     },
   },
   extraReducers: builder => {
@@ -307,8 +390,6 @@ export const userSlice = createSlice({
       state.error = null;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(action.payload, 'HHHHHHHH');
-
       state.loading = false;
       state.id = action.payload.id;
       state.block = action.payload.block;
@@ -323,14 +404,14 @@ export const userSlice = createSlice({
       state.isAdmin = action.payload.isAdmin;
       state.isAOA = action.payload.isAOA;
       state.isTenantAdded = action.payload.isTenantAdded;
-
+      state.currentUser = action.payload.currentUser;
       if (action.payload.isTenantAdded) {
         state.tenantName = action.payload.tenantName;
         state.tenantEmail = action.payload.tenantEmail;
         state.tenantPhoneNumber = action.payload.tenantPhoneNumber;
       }
       state.error = null;
-      // Utils.storeData(Utils.userDataSKeys, state);
+      storeData(userDataSKeys, state);
     });
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false;
@@ -379,7 +460,6 @@ export const userSlice = createSlice({
     builder.addCase(getComplaintsById.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      console.log(action.payload, 'HAHAHAHA');
       state.complaints = action.payload;
     });
     builder.addCase(getComplaintsById.rejected, (state, action) => {
@@ -414,6 +494,23 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    builder.addCase(deleteNotice.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(deleteNotice.fulfilled, (state, action) => {
+      state.loading = false;
+      if (
+        action.payload != null ||
+        action.payload != undefined ||
+        action.payload != ''
+      )
+        Alert.alert('Success', 'Notice has been deleted successfully');
+    });
+    builder.addCase(deleteNotice.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
     // Members
     builder.addCase(getAllMembers.pending, state => {
       state.loading = true;
@@ -437,9 +534,40 @@ export const userSlice = createSlice({
     builder.addCase(createMember.fulfilled, (state, action) => {
       state.loading = false;
       Alert.alert('Success', 'Notice created successfully');
-      // state.notice = [action.payload, ...state.notice];
+      state.members = [action.payload, ...state.members];
     });
     builder.addCase(createMember.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(deleteMember.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(deleteMember.fulfilled, (state, action) => {
+      state.loading = false;
+      if (
+        action.payload != null ||
+        action.payload != undefined ||
+        action.payload != ''
+      )
+        Alert.alert('Success', 'Member has been deleted successfully');
+    });
+    builder.addCase(deleteMember.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(createComplaint.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(createComplaint.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload != null || action.payload != undefined)
+        Alert.alert('Success', 'Complaints has been registed successfully');
+      state.complaints = [action.payload, ...state.complaints];
+    });
+    builder.addCase(createComplaint.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

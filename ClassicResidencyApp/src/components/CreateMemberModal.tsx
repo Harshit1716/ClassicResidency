@@ -124,7 +124,7 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
       Alert.alert('Error', 'Please enter a valid subject ');
       return false;
     }
-    if (description.length == 0 || description.length < 5) {
+    if (description.length == 0) {
       Alert.alert('Error', 'Please enter a valid Description ');
       return false;
     }

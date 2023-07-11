@@ -1,10 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {LogBox, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import RootNavigation from './src/navigation/RootNavigation';
 import {Provider} from 'react-redux';
 import {store} from './src/stateManagemer/Store';
 
 const App = () => {
+  LogBox.ignoreAllLogs();
   return (
     <Provider store={store}>
       <View style={{flex: 1}}>

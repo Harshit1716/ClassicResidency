@@ -49,6 +49,7 @@ export const SIZES = {
   body3: 16,
   body4: 14,
   body5: 12,
+  body6: 10,
 
   // app dimensions
   width,
@@ -69,7 +70,7 @@ export const FONTS = {
   body5: {fontFamily: 'Poppins-Regular', fontSize: SIZES.body5, lineHeight: 18},
   body6: {fontFamily: 'Poppins-Regular', fontSize: SIZES.body5, lineHeight: 16},
   body7: {fontFamily: 'Poppins-Regular', fontSize: SIZES.body5, lineHeight: 14},
-  body8: {fontFamily: 'Poppins-Regular', fontSize: SIZES.body5, lineHeight: 12},
+  body8: {fontFamily: 'Poppins-Regular', fontSize: SIZES.body6, lineHeight: 14},
 };
 export const SHADOW = {
   shadowColor: COLORS.lightGray,
