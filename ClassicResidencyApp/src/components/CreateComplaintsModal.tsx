@@ -102,10 +102,12 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
     setTitle('');
     setDecsription('');
     setSubject('');
+    setSelectedChips([]);
     deleteImage();
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    const by = await user.ownerName;
     if (validate()) {
       dispatch(
         createComplaint({
@@ -116,10 +118,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
           slots: selectedChips,
           user: user.id,
           flatNo: user.block + '-' + user.flatType + '' + user.flatNumber,
-          by:
-            user.currentUser === user.phoneNumber
-              ? user.ownerName
-              : user?.tenantName ?? '',
+          userName: by,
         }),
       );
       onClose();

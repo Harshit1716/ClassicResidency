@@ -19,6 +19,7 @@ import CreateComplaintsModal from '../components/CreateComplaintsModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {getComplaintsById} from '../stateManagemer/slice/ServiceSlice';
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
+import {useNavigation} from '@react-navigation/native';
 
 const ComplaintsList = () => {
   const [input, setInput] = useState('');
@@ -26,6 +27,7 @@ const ComplaintsList = () => {
   const userId = useAppSelector(state => state.userReducer.id);
   const complaints = useAppSelector(state => state.userReducer.complaints);
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     dispatch(getComplaintsById({currentUserId: userId}));
@@ -33,6 +35,9 @@ const ComplaintsList = () => {
   const renderItem = ({item, index}: {item: ComplaintType; index: number}) => {
     return (
       <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ComplaintDetail', {data: item});
+        }}
         style={{
           padding: '5%',
           backgroundColor: COLORS.white,

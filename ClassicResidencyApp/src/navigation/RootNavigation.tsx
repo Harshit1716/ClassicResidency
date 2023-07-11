@@ -13,6 +13,7 @@ import NoticeDetail from '../components/NoticeDetail';
 import MemberCategory from '../screens/MemberCategory';
 import MembersList from '../screens/MembersList';
 import ComplaintsList from '../screens/ComplaintsList';
+import ComplaintDetail from '../components/ComplaintDetail';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -98,6 +99,15 @@ const RootNavigation = () => {
             }}
             name="MembersList"
             component={MembersList}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="ComplaintDetail"
+            component={ComplaintDetail}
           />
         )}
       </RootStack.Navigator>

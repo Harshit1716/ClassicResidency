@@ -192,7 +192,7 @@ export const createComplaint = createAsyncThunk(
         status: 'Pending',
         hide: false,
       };
-
+      console.log(noticeData, 'BHSDK');
       const noticesCollectionRef = firestore().collection('complaints').doc(id);
       await noticesCollectionRef.set(noticeData);
       const userRef = firestore().collection('Users').doc(user);
@@ -202,6 +202,7 @@ export const createComplaint = createAsyncThunk(
       return noticeData;
     } catch (error) {
       console.log(error);
+      Alert.alert('ERROR', error?.message + '');
       return rejectWithValue(error?.message);
     }
   },
