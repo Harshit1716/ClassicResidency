@@ -113,7 +113,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
   }
 
   const validate = () => {
-    if (title.length == 0 || title.length < 3) {
+    if (title.length == 0 || title.length < 3 || title.length > 25) {
       Alert.alert('Error', 'Please enter a valid title ');
       return false;
     }

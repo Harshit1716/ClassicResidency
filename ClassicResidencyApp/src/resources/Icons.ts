@@ -43,8 +43,34 @@ const CANCEL_ICON = require('../assets/cancel.png');
 const BUILDING_ICON = require('../assets/building.png');
 const SHOPS_ICON = require('../assets/shop.png');
 const EDIT_ICON = require('../assets/edit.png');
+const ELECTRICIAN_ICON = require('../assets/electIcon.png');
+const PLUMBER_ICON = require('../assets/plumberIcon.png');
+const MAIN_GATE_ICON = require('../assets/mainGate.png');
+const CARPENTER_ICON = require('../assets/carpenter.png');
+const PAINTER_ICON = require('../assets/painter.png');
+const MASON_ICON = require('../assets/mason.png');
+const ELEVATOR_ICON = require('../assets/elevator.png');
+const HOUSEKEEPING_ICON = require('../assets/housekeeping.png');
+const GARDNER_ICON = require('../assets/gardener.png');
+const GUARD_ICON = require('../assets/guard.png');
+const INTERCOM_ICON = require('../assets/intercom.png');
+const AOA_ICON = require('../assets/AOA.png');
+const SELECTED_ICON = require('../assets/success.png');
 
 export {
+  SELECTED_ICON,
+  INTERCOM_ICON,
+  AOA_ICON,
+  PLUMBER_ICON,
+  CARPENTER_ICON,
+  ELECTRICIAN_ICON,
+  GUARD_ICON,
+  HOUSEKEEPING_ICON,
+  GARDNER_ICON,
+  ELEVATOR_ICON,
+  MASON_ICON,
+  PAINTER_ICON,
+  MAIN_GATE_ICON,
   EDIT_ICON,
   BUILDING_ICON,
   SHOPS_ICON,

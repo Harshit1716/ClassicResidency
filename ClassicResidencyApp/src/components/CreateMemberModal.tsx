@@ -116,7 +116,7 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
   }
 
   const validate = () => {
-    if (title.length == 0 || title.length < 3) {
+    if (title.length == 0 || title.length < 3 || title.length > 25) {
       Alert.alert('Error', 'Please enter a valid title ');
       return false;
     }
@@ -126,6 +126,10 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
     }
     if (description.length == 0) {
       Alert.alert('Error', 'Please enter a valid Description ');
+      return false;
+    }
+    if (imageFile == null || imageFile == undefined) {
+      Alert.alert('Error', 'Please upload an Image ');
       return false;
     }
     return true;
@@ -205,7 +209,7 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
                       fontSize: 16,
                       fontFamily: 'Poppins',
                     }}>
-                    Upload Image (Optional)
+                    Upload Image
                   </Text>
                 </View>
               </TouchableOpacity>

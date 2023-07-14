@@ -27,6 +27,8 @@ import {
   getAllMembers,
   getAllNotice,
 } from '../stateManagemer/slice/ServiceSlice';
+import {Notice} from '../stateManagemer/models/SocietyAppModal';
+import NoticeCard from '../components/NoticeCard';
 const {width} = Dimensions.get('screen');
 const places = [
   {
@@ -64,16 +66,22 @@ const HomeScreen = ({navigation}: any) => {
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.userReducer);
+  const noticeList = useAppSelector(state => state.userReducer.notice);
+  const [noticeFilteredList, setNoticeFilteredList] =
+    useState<Notice[]>(noticeList);
 
   useEffect(() => {
     dispatch(getAllNotice());
     dispatch(getAllMembers());
   }, []);
   useEffect(() => {
-    let ar = places.filter(item =>
-      item.name.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
+    setNoticeFilteredList(noticeList);
+  }, [noticeList]);
+  useEffect(() => {
+    let ar = noticeList.filter(item =>
+      item.title.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
     );
-    setList(ar);
+    setNoticeFilteredList(ar);
   }, [input]);
 
   const categoryList = [
@@ -96,7 +104,7 @@ const HomeScreen = ({navigation}: any) => {
       ),
     },
     {
-      title: 'Bill',
+      title: 'Passes',
       Icon: (
         <Image
           style={{height: 50, width: 50, tintColor: COLORS.primary}}
@@ -212,7 +220,7 @@ const HomeScreen = ({navigation}: any) => {
 
           <View style={style.header}>
             <LinearGradient
-              colors={[COLORS.primary, '#396afc']}
+              colors={[COLORS.primary, COLORS.headerSecond]}
               style={{flex: 1}}
               start={{x: 0, y: 0.5}}
               end={{x: 1, y: 0.5}}
@@ -252,7 +260,7 @@ const HomeScreen = ({navigation}: any) => {
                 Platform.OS == 'ios' ? (SIZES.height > 812 ? 110 : 95) : 110,
             }}>
             <LinearGradient
-              colors={[COLORS.primary, '#396afc']}
+              colors={[COLORS.primary, COLORS.headerSecond]}
               style={{flex: 1}}
               start={{x: 0, y: 0.5}}
               end={{x: 1, y: 0.5}}
@@ -280,11 +288,21 @@ const HomeScreen = ({navigation}: any) => {
               <Text style={style.sectionTitle}>Ads and offers</Text>
               <Banner data={places} />
               <Text style={style.sectionTitle}>Notice Board</Text>
-              {list.map(item => (
+              {/* {noticeFilteredList.map(item => (
                 <View style={{paddingLeft: 20, paddingBottom: 20}}>
                   <RecommendedCard place={item} />
                 </View>
-              ))}
+              ))} */}
+              <FlatList
+                contentContainerStyle={{marginTop: 20, marginHorizontal: '2%'}}
+                data={noticeFilteredList}
+                renderItem={({item, index}) => {
+                  return <NoticeCard item={item} index={index} />;
+                }}
+                ListFooterComponent={() => (
+                  <View style={{height: SIZES.height * 0.05}} />
+                )}
+              />
             </View>
             <View style={{height: SIZES.height * 0.15}}></View>
             {/* </ScrollView> */}
@@ -297,7 +315,7 @@ const HomeScreen = ({navigation}: any) => {
             width: '90%',
             alignSelf: 'center',
             marginTop:
-              Platform.OS == 'ios' ? (SIZES.height > 812 ? 80 : 60) : 45,
+              Platform.OS == 'ios' ? (SIZES.height > 812 ? 80 : 60) : 50,
           }}>
           <SearchBar
             value={input}

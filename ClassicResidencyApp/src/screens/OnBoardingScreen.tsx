@@ -94,7 +94,8 @@ const OnBoardingScreen = ({navigation}: any) => {
         </View>
         <View
           style={{
-            paddingHorizontal: SIZES.spacing * 2,
+            // paddingHorizontal: SIZES.spacing * 2,
+            alignSelf: 'center',
             paddingTop: SIZES.spacing * 6,
             flexDirection: 'row',
           }}>
@@ -103,8 +104,9 @@ const OnBoardingScreen = ({navigation}: any) => {
             style={{
               backgroundColor: COLORS.primary,
               paddingVertical: SIZES.spacing * 1,
-              paddingHorizontal: SIZES.spacing * 2,
-              width: '48%',
+              // paddingHorizontal: SIZES.spacing * 2,
+              width: '90%',
+              alignSelf: 'center',
               borderRadius: SIZES.spacing,
               ...SHADOW_PRIMARY,
             }}>
@@ -114,10 +116,10 @@ const OnBoardingScreen = ({navigation}: any) => {
                 color: COLORS.white,
                 textAlign: 'center',
               }}>
-              Login
+              Start
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate('Register')}
             style={{
               paddingVertical: SIZES.spacing * 1,
@@ -133,7 +135,7 @@ const OnBoardingScreen = ({navigation}: any) => {
               }}>
               Register
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </MainView>

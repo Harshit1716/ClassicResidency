@@ -132,7 +132,7 @@ const LoginScreen = () => {
           }}
           disabled={isLoading}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           // onPress={() => handleCreateAccount()}
           style={{
             padding: SIZES.spacing,
@@ -144,7 +144,7 @@ const LoginScreen = () => {
             }}>
             Create new account
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </MainView>
   );

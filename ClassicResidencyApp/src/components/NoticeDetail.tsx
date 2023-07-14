@@ -35,13 +35,15 @@ const NoticeDetail = ({route}: any) => {
             padding: '5%',
             ...SHADOW,
           }}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{}}>
-              <Text style={{...FONTS.h2}}>{data.title}</Text>
-              <Text style={{...FONTS.body4}}>By : AOA</Text>
-            </View>
-            <Text style={{...FONTS.h4, marginTop: 5}}>{data.createdAt}</Text>
+          {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
+          <View style={{}}>
+            <Text style={{...FONTS.h2, width: '100%'}}>{data.title}</Text>
+            <Text style={{...FONTS.body4}}>By : AOA</Text>
           </View>
+          {/* </View> */}
+          <Text style={{...FONTS.h4, marginTop: 5}}>
+            Date : {data.createdAt}
+          </Text>
           {data.imageUrl != '' && (
             <ImageBackground
               style={{
@@ -51,7 +53,7 @@ const NoticeDetail = ({route}: any) => {
                 borderRadius: 10,
                 overflow: 'hidden',
               }}
-              source={ICONS.BANNER_ICON2}>
+              source={{uri: data.imageUrl + ''}}>
               {/* <TouchableOpacity
               style={{
                 width: 50,
@@ -88,7 +90,7 @@ const NoticeDetail = ({route}: any) => {
             ]}>
             {data.description}
           </Text>
-          <Text style={{...FONTS.h3}}> Thanks !</Text>
+          {/* <Text style={{...FONTS.h3}}> Thanks !</Text> */}
         </View>
       </ScrollView>
     </View>

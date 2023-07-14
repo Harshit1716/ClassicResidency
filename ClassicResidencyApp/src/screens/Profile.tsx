@@ -70,7 +70,7 @@ const Profile = ({navigation}: any) => {
 
         <View style={style.header}>
           <LinearGradient
-            colors={[COLORS.primary, '#396afc']}
+            colors={[COLORS.primary, COLORS.headerSecond]}
             style={{flex: 1}}
             start={{x: 0, y: 0.5}}
             end={{x: 1, y: 0.5}}

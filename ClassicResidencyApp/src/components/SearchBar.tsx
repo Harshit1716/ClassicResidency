@@ -29,7 +29,7 @@ const SearchBar = (props: SearchProps) => {
       style={[
         styles.inputContainer,
         {...props.searchStyle, ...getShadow()},
-        Platform.OS == 'android' && {paddingVertical: 0, height: 70},
+        Platform.OS == 'android' && {paddingVertical: 0, height: 60},
       ]}>
       <Image
         style={{height: 25, width: 25, marginRight: 10}}

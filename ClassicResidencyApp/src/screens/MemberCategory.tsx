@@ -45,24 +45,60 @@ const MemberCategory = () => {
               paddingHorizontal: '1%',
             }}
             data={[
-              'AOA',
-              'Plumber',
-              'Electrician',
-              'Guard',
-              'Carpenter',
-              'Painter',
-              'Lift',
-              'Mason',
-              'HouseKeeping',
-              'Intercom',
-              'Gardner',
-              'MainGate',
+              {
+                title: 'AOA',
+                image: ICONS.AOA_ICON,
+              },
+              {
+                title: 'Plumber',
+                image: ICONS.PLUMBER_ICON,
+              },
+              {
+                title: 'Electrician',
+                image: ICONS.ELECTRICIAN_ICON,
+              },
+              {
+                title: 'Guard',
+                image: ICONS.GUARD_ICON,
+              },
+              {
+                title: 'Carpenter',
+                image: ICONS.CARPENTER_ICON,
+              },
+              {
+                title: 'Painter',
+                image: ICONS.PAINTER_ICON,
+              },
+              {
+                title: 'Lift',
+                image: ICONS.ELEVATOR_ICON,
+              },
+              {
+                title: 'Mason',
+                image: ICONS.MASON_ICON,
+              },
+              {
+                title: 'HouseKeeping',
+                image: ICONS.HOUSEKEEPING_ICON,
+              },
+              {
+                title: 'Intercom',
+                image: ICONS.INTERCOM_ICON,
+              },
+              {
+                title: 'Gardner',
+                image: ICONS.GARDNER_ICON,
+              },
+              {
+                title: 'MainGate',
+                image: ICONS.MAIN_GATE_ICON,
+              },
             ]}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('MembersList', {data: item});
+                    navigation.navigate('MembersList', {data: item.title});
                   }}
                   onPressIn={() => {
                     setPressed(index);
@@ -88,9 +124,9 @@ const MemberCategory = () => {
                     style={{
                       height: 40,
                       width: 40,
-                      tintColor: pressed != index ? COLORS.black : COLORS.white,
+                      // tintColor: pressed != index ? COLORS.black : COLORS.white,
                     }}
-                    source={ICONS.MEMBERS_ICON}
+                    source={item.image}
                   />
                   <Text
                     style={{
@@ -98,7 +134,7 @@ const MemberCategory = () => {
                       ...FONTS.body8,
                       color: pressed != index ? COLORS.black : COLORS.white,
                     }}>
-                    {item}
+                    {item.title}
                   </Text>
                 </TouchableOpacity>
               );

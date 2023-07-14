@@ -19,7 +19,7 @@ import CreateComplaintsModal from '../components/CreateComplaintsModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {getComplaintsById} from '../stateManagemer/slice/ServiceSlice';
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const ComplaintsList = () => {
   const [input, setInput] = useState('');
@@ -29,9 +29,14 @@ const ComplaintsList = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  React.useEffect(() => {
-    dispatch(getComplaintsById({currentUserId: userId}));
-  }, []);
+  // React.useEffect(() => {
+  //   dispatch(getComplaintsById({currentUserId: userId}));
+  // }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getComplaintsById({currentUserId: userId}));
+    }, []),
+  );
   const renderItem = ({item, index}: {item: ComplaintType; index: number}) => {
     return (
       <TouchableOpacity

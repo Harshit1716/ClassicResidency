@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 
 interface HeaderProps {
   title: string;
-  rightIconType?: 'EDIT' | 'FILTER' | 'CREATE' | 'NONE';
+  rightIconType?: 'EDIT' | 'FILTER' | 'CREATE' | 'CANCEL' | 'NONE';
   iconPress?: () => void;
   hideBackIcon?: boolean;
 }
@@ -63,6 +63,19 @@ const Header = (props: HeaderProps) => {
             />
           </TouchableOpacity>
         )}
+        {props.rightIconType == 'CANCEL' && (
+          <TouchableOpacity onPress={props.iconPress}>
+            <Image
+              style={{
+                height: 25,
+                width: 25,
+                tintColor: COLORS.white,
+                marginRight: 5,
+              }}
+              source={ICONS.CANCEL_ICON}
+            />
+          </TouchableOpacity>
+        )}
         {props.rightIconType == 'NONE' && (
           <View
             style={{
@@ -78,11 +91,11 @@ const Header = (props: HeaderProps) => {
     <View style={{}}>
       <View style={styles.header}>
         <LinearGradient
-          colors={[COLORS.primary, '#396afc']}
+          colors={[COLORS.primary, COLORS.headerSecond]}
           style={{flex: 1}}
           start={{x: 0, y: 0.5}}
           end={{x: 1, y: 0.5}}
-          locations={[0, 0.7]}>
+          locations={[0, 0.8]}>
           <View
             style={{
               flexDirection: 'row',

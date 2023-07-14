@@ -208,6 +208,26 @@ export const createComplaint = createAsyncThunk(
   },
 );
 
+export const updateAssignedTo = createAsyncThunk(
+  'user/updateAssignedTo',
+  async (
+    {id, assignedTo}: {id: string; assignedTo: string},
+    {rejectWithValue},
+  ) => {
+    try {
+      const userRef = firestore().collection('complaints').doc(id);
+      await userRef.update({
+        assignedTo: assignedTo,
+      });
+      return userRef;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+
 // method to get all the complaints
 export const getAllComplaints = createAsyncThunk(
   'user/getAllComplaints',
@@ -569,6 +589,20 @@ export const userSlice = createSlice({
       state.complaints = [action.payload, ...state.complaints];
     });
     builder.addCase(createComplaint.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(updateAssignedTo.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateAssignedTo.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload != null || action.payload != undefined)
+        Alert.alert('Success', 'Member has been assigned to Complaints ');
+      // state.complaints = [action.payload, ...state.complaints];
+    });
+    builder.addCase(updateAssignedTo.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
