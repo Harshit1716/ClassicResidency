@@ -15,13 +15,14 @@ import {ICONS, COLORS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
-import {useAppDispatch} from '../stateManagemer/Store';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {logout} from '../stateManagemer/slice/ServiceSlice';
 // import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
 
 const Profile = ({navigation}: any) => {
   const disptach = useAppDispatch();
+  const user = useAppSelector(state => state.userReducer);
   const TabArr = [
     {
       route: 'Home',
@@ -36,22 +37,12 @@ const Profile = ({navigation}: any) => {
       onPress: () => {},
     },
     {
-      route: 'Add',
+      route: 'AllComplaints',
       label: 'All Complaints',
       icon: 'add',
-      onPress: () => {},
-    },
-    {
-      route: 'Like',
-      label: 'Manage Notice',
-      icon: 'heart',
-      onPress: () => {},
-    },
-    {
-      route: 'Account',
-      label: 'Manage Members',
-      icon: 'user-circle-o',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('AllComplaints');
+      },
     },
     {
       route: 'Account',
@@ -62,149 +53,174 @@ const Profile = ({navigation}: any) => {
       },
     },
   ];
+  const TabArr2 = [
+    {
+      label: 'About Us',
+      icon: 'house',
+      onPress: () => {},
+    },
+    {
+      label: 'Contact Us',
+      icon: 'search',
+      onPress: () => {},
+    },
+    // {
+    //   label: 'All Complaints',
+    //   icon: 'add',
+    //   onPress: () => {
+    //     navigation.navigate('AllComplaints');
+    //   },
+    // },
+
+    {
+      label: 'Logout',
+      icon: 'user-circle-o',
+      onPress: () => {
+        disptach(logout());
+      },
+    },
+  ];
   return (
     // <MainView>
     <View style={{flex: 1}}>
-      <View style={{flex: 1, backgroundColor: COLORS.white}}>
-        <StatusBar translucent={false} backgroundColor={COLORS.primary} />
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
 
-        <View style={style.header}>
-          <LinearGradient
-            colors={[COLORS.primary, COLORS.headerSecond]}
-            style={{flex: 1}}
-            start={{x: 0, y: 0.5}}
-            end={{x: 1, y: 0.5}}
-            locations={[0, 0.7]}>
+      <View style={style.header}>
+        <LinearGradient
+          colors={[COLORS.primary, COLORS.headerSecond]}
+          style={{flex: 1}}
+          start={{x: 0, y: 0.5}}
+          end={{x: 1, y: 0.5}}
+          locations={[0, 0.7]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingTop: Platform.OS == 'ios' ? 40 : 25,
+              paddingBottom: 10,
+              height: SIZES.height * 0.15,
+              paddingHorizontal: 20,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
             <View
               style={{
                 flexDirection: 'row',
-                paddingTop: Platform.OS == 'ios' ? 55 : 25,
-                paddingVertical: 10,
-                height: SIZES.height * 0.2,
-                paddingHorizontal: 20,
-                justifyContent: 'space-between',
+                alignItems: 'center',
               }}>
-              <View
+              <Image
+                resizeMode="contain"
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: '-15%',
-                }}>
-                <Image
-                  resizeMode="contain"
-                  style={{
-                    height: 40,
-                    width: 40,
-                    borderRadius: 20,
-                    marginRight: 10,
-                  }}
-                  source={ICONS.PROFILE_MEMBER_ICON}
-                />
-                <View>
-                  <Text style={style.headerTitle}>I-H1-702</Text>
-                  <Text style={{color: COLORS.white, ...FONTS.h3}}>
-                    Harshit
-                  </Text>
-                </View>
+                  height: 40,
+                  width: 40,
+                  borderRadius: 20,
+                  marginRight: 10,
+                }}
+                source={
+                  user.currentUser === user.phoneNumber
+                    ? user.imageUrl
+                      ? {uri: user.imageUrl + ''}
+                      : ICONS.PROFILE_ICON
+                    : user.tenantImage
+                    ? {uri: user.tenantImage + ''}
+                    : ICONS.PROFILE_ICON
+                }
+              />
+              <View>
+                <Text style={style.headerTitle}>
+                  {user.block + '-' + user.flatType + '-' + user.flatNumber}
+                </Text>
+                <Text style={{color: COLORS.white, ...FONTS.h3}}>
+                  {user.currentUser === user.phoneNumber
+                    ? user.ownerName
+                    : user.tenantName}
+                </Text>
               </View>
-              <TouchableOpacity>
+            </View>
+            <Text style={style.headerTitle}>{new Date().toDateString()}</Text>
+            {/* <TouchableOpacity>
+              <Image
+                style={{height: 40, width: 40, tintColor: COLORS.white}}
+                source={ICONS.NOTIFICATION_ICON}
+              />
+            </TouchableOpacity> */}
+          </View>
+        </LinearGradient>
+      </View>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Profile');
+        }}
+        activeOpacity={0.9}
+        style={style.inputContainer}>
+        <Image
+          style={{
+            height: 30,
+            width: 30,
+            marginRight: 10,
+
+            tintColor: COLORS.primary,
+          }}
+          source={ICONS.ACCOUNT_TAB_ICON}
+        />
+        <Text style={{color: COLORS.primary, ...FONTS.h3, flex: 1}}>
+          Personal Details
+        </Text>
+        <Image
+          style={{
+            height: 30,
+            width: 30,
+            marginRight: 10,
+            tintColor: COLORS.primary,
+          }}
+          source={ICONS.FORWARD_ICON}
+        />
+      </TouchableOpacity>
+
+      <ScrollView
+        style={{flex: 1, backgroundColor: COLORS.lightGray1, marginTop: 10}}>
+        <View
+          style={{
+            width: '95%',
+            borderRadius: 20,
+            backgroundColor: COLORS.white,
+            alignSelf: 'center',
+            marginBottom: SIZES.height * 0.18,
+            padding: '5%',
+            ...SHADOW,
+          }}>
+          {(user.isAOA || user.isAdmin ? TabArr : TabArr2).map(item => {
+            return (
+              <TouchableOpacity
+                onPress={item.onPress}
+                style={{
+                  width: '95%',
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: '5%',
+                  // borderBottomWidth: 1,
+                  alignItems: 'center',
+                }}>
+                {/* <Icon type={item.type} name={item.icon} color={COLORS.gray} /> */}
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    ...FONTS.body3,
+                    color: COLORS.gray,
+                    flex: 1,
+                  }}>
+                  {item.label}
+                </Text>
                 <Image
-                  style={{height: 40, width: 40, tintColor: COLORS.white}}
-                  source={ICONS.NOTIFICATION_ICON}
+                  source={ICONS.FORWARD_ICON}
+                  style={{height: 20, width: 20, tintColor: COLORS.gray}}
                 />
               </TouchableOpacity>
-            </View>
-          </LinearGradient>
+            );
+          })}
         </View>
-
-        <ScrollView
-          style={{flex: 1, backgroundColor: COLORS.lightGray1}}
-          //   showsVerticalScrollIndicator={false}
-        >
-          <View style={{height: SIZES.height * 0.07}}></View>
-          <View
-            style={{
-              width: '95%',
-              borderRadius: 20,
-              backgroundColor: COLORS.white,
-              alignSelf: 'center',
-              marginBottom: SIZES.height * 0.18,
-              padding: '5%',
-              ...SHADOW,
-            }}>
-            {TabArr.map(item => {
-              return (
-                <TouchableOpacity
-                  onPress={item.onPress}
-                  style={{
-                    width: '95%',
-                    alignSelf: 'center',
-                    flexDirection: 'row',
-                    paddingVertical: '5%',
-                    // borderBottomWidth: 1,
-                    alignItems: 'center',
-                  }}>
-                  {/* <Icon type={item.type} name={item.icon} color={COLORS.gray} /> */}
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      ...FONTS.body3,
-                      color: COLORS.gray,
-                      flex: 1,
-                    }}>
-                    {item.label}
-                  </Text>
-                  <Image
-                    source={ICONS.FORWARD_ICON}
-                    style={{height: 20, width: 20, tintColor: COLORS.gray}}
-                  />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View></View>
-        </ScrollView>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          position: 'absolute',
-          width: '90%',
-          alignSelf: 'center',
-          //   marginTop: '25%',
-
-          marginTop:
-            Platform.OS == 'ios' ? (SIZES.height > 812 ? 135 : 100) : 115,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Profile');
-          }}
-          activeOpacity={0.9}
-          style={style.inputContainer}>
-          <Image
-            style={{
-              height: 30,
-              width: 30,
-              marginRight: 10,
-              tintColor: COLORS.primary,
-            }}
-            source={ICONS.ACCOUNT_TAB_ICON}
-          />
-          <Text style={{color: COLORS.primary, ...FONTS.h3, flex: 1}}>
-            Personal Details
-          </Text>
-          <Image
-            style={{
-              height: 30,
-              width: 30,
-              marginRight: 10,
-              tintColor: COLORS.primary,
-            }}
-            source={ICONS.FORWARD_ICON}
-          />
-        </TouchableOpacity>
-      </View>
+        <View></View>
+      </ScrollView>
     </View>
 
     // </MainView>
@@ -221,17 +237,20 @@ const style = StyleSheet.create({
     ...FONTS.h2,
   },
   inputContainer: {
-    marginTop: 10,
     zIndex: 1,
-    width: Platform.OS == 'ios' ? (SIZES.height > 812 ? '90%' : '85%') : '90%',
+    width: '90%',
+    // width: Platform.OS == 'ios' ? (SIZES.height > 812 ? '90%' : '85%') : '90%',
     alignSelf: 'center',
     backgroundColor: COLORS.white,
     borderRadius: 10,
+    marginVertical: 20,
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: Platform.OS == 'ios' ? (SIZES.height > 812 ? 15 : 12) : 15,
+    paddingVertical: 20,
+    // paddingVertical: Platform.OS == 'ios' ? (SIZES.height > 812 ? 15 : 12) : 15,
     alignItems: 'center',
     ...SHADOW_PRIMARY,
+    // ...SHADOW,
   },
   categoryContainer: {
     marginHorizontal: 20,

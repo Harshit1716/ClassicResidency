@@ -35,7 +35,7 @@ const list = [
   'Painter',
   'Lift',
   'Mason',
-  'HouseKeeping',
+  'HouseHelp',
   'Intercom',
   'Gardner',
   'MainGate',
@@ -58,7 +58,7 @@ const SelectAssignedToModal = (props: ModalProps) => {
   }, [input]);
   React.useEffect(() => {
     let ar = members.filter(item => item.type == props.type);
-    console.log(props.selected);
+
     setMemberFilteredList(ar);
   }, [props.selected]);
 
@@ -194,7 +194,7 @@ const SelectAssignedToModal = (props: ModalProps) => {
             </View>
           </View>
           <SearchBar
-            placeholder={'Select Type'}
+            placeholder={'Search Member'}
             onChangeText={text => {
               setInput(text);
             }}

@@ -31,7 +31,6 @@ const UploadImageModal = (props: ModalProps) => {
       .then(async image => {
         await props.onSelect(image);
         props.onClose();
-        console.log(image);
       })
       .catch(error => {
         console.log('Image picker error:', error);

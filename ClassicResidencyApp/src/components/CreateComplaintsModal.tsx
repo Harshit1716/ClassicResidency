@@ -34,12 +34,16 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
   const [title, setTitle] = useState('');
   const [description, setDecsription] = useState('');
   const [subject, setSubject] = useState('');
+  const [block, setblock] = useState('');
+  const [flatType, setflatType] = useState('');
+  const [faltNo, setfaltNo] = useState('');
 
   const [open, setOpen] = useState(false);
   const [openCatrgory, setOpenCategory] = useState(false);
   const [imageFile, setImageFile] = React.useState<any>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.userReducer);
+
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
 
   const handleChipPress = (chip: string) => {
@@ -117,7 +121,9 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
           image: imageFile,
           slots: selectedChips,
           user: user.id,
-          flatNo: user.block + '-' + user.flatType + '' + user.flatNumber,
+          flatNo: user.isAOA
+            ? `${block}-${flatType}-${faltNo}`
+            : user.block + '-' + user.flatType + '' + user.flatNumber,
           userName: by,
         }),
       );
@@ -157,10 +163,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
       Alert.alert('Error', 'Please select a preffered slot ');
       return false;
     }
-    // if (imageFile == null) {
-    //   Alert.alert('Error', 'Please upload a an image');
-    //   return false;
-    // }
+
     return true;
   };
 
@@ -175,7 +178,46 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 25}}>Title</Text>
+              {user.isAOA && (
+                <>
+                  <Text style={{...FONTS.h3, marginLeft: 25}}>Flat No</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <View style={{width: SIZES.width * 0.3}}>
+                      <ProfileTextInput
+                        title={block}
+                        disabled={false}
+                        onChangeText={text => setblock(text)}
+                        placeholder="BLock"
+                      />
+                    </View>
+
+                    <View style={{width: SIZES.width * 0.3}}>
+                      <ProfileTextInput
+                        title={flatType}
+                        disabled={false}
+                        onChangeText={text => setflatType(text)}
+                        placeholder="Flat Type"
+                      />
+                    </View>
+                    <View style={{width: SIZES.width * 0.3}}>
+                      <ProfileTextInput
+                        title={faltNo}
+                        disabled={false}
+                        onChangeText={text => setfaltNo(text)}
+                        placeholder="Flat No"
+                      />
+                    </View>
+                  </View>
+                </>
+              )}
+
+              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+                Title
+              </Text>
               <ProfileTextInput
                 title={title}
                 disabled={false}

@@ -27,7 +27,7 @@ import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {createMember, createNotice} from '../stateManagemer/slice/ServiceSlice';
 import SelectCategoryModal from './SelectCategoryModal';
 
-const CreateMemberModal = ({isVisible, onClose}: any) => {
+const CreateMemberModal = ({isVisible, onClose, type}: any) => {
   const [title, setTitle] = useState('');
   const [description, setDecsription] = useState('');
   const [subject, setSubject] = useState('');
@@ -167,25 +167,49 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
               <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
                 Type
               </Text>
-              <TouchableOpacity
-                style={{overflow: 'hidden'}}
-                onPress={() => {
-                  setOpenCategory(true);
-                }}>
-                <Text
-                  style={{
-                    width: '90%',
-                    alignSelf: 'center',
-                    ...FONTS.body3,
-                    padding: SIZES.spacing * 1.2,
-                    backgroundColor: COLORS.lightPrimary,
-                    borderRadius: 10,
-                    marginVertical: SIZES.spacing,
-                    color: COLORS.gray,
+
+              {type || type != '' ? (
+                <TouchableOpacity
+                  disabled={true}
+                  style={{overflow: 'hidden'}}
+                  onPress={() => {
+                    setOpenCategory(true);
                   }}>
-                  {description == '' ? ' Select Type' : description}
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      width: '90%',
+                      alignSelf: 'center',
+                      ...FONTS.body3,
+                      padding: SIZES.spacing * 1.2,
+                      backgroundColor: COLORS.lightPrimary,
+                      borderRadius: 10,
+                      marginVertical: SIZES.spacing,
+                      color: COLORS.gray,
+                    }}>
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{overflow: 'hidden'}}
+                  onPress={() => {
+                    setOpenCategory(true);
+                  }}>
+                  <Text
+                    style={{
+                      width: '90%',
+                      alignSelf: 'center',
+                      ...FONTS.body3,
+                      padding: SIZES.spacing * 1.2,
+                      backgroundColor: COLORS.lightPrimary,
+                      borderRadius: 10,
+                      marginVertical: SIZES.spacing,
+                      color: COLORS.gray,
+                    }}>
+                    {description == '' ? ' Select Type' : description}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
             {imageFile == null && (
               <TouchableOpacity

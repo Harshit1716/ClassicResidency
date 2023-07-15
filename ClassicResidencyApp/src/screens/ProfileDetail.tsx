@@ -7,25 +7,87 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
 import Header from '../components/Header';
 import {SHADOW_PRIMARY} from '../resources/Theme';
-import AppTextInput from '../components/AppTextInput';
-import ProfileTextInput from '../components/ProfileTextInput';
-import AppButton from '../components/AppButton';
+
 import ProfileModal from '../components/AddProfileModal';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {
+  addTenant,
+  uploadProfilePic,
+} from '../stateManagemer/slice/ServiceSlice';
+import UploadImageModal from '../components/UploadImageModal';
 
 const ProfileDetail = () => {
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
+  const [tName, setTName] = useState('');
+  const [tEmail, setTEmail] = useState('');
+  const [tPhoneNo, setTPhoneNo] = useState('');
+  const user = useAppSelector(state => state.userReducer);
+  const [editable, setEditable] = useState<boolean>(false);
+  const [imageFile, setImageFile] = React.useState<any>(null);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (user.currentUser === user.phoneNumber) {
+      setName(user.ownerName);
+      setPhoneNo(user.phoneNumber);
+      setEmail(user.email);
+
+      if (user.tenantName != '') {
+        setTName(user?.tenantName ?? '');
+        setTPhoneNo(user?.tenantPhoneNumber ?? '');
+        setTEmail(user?.tenantEmail ?? '');
+      }
+    } else if (user.currentUser === user.tenantPhoneNumber) {
+      setName(user?.tenantName ?? '');
+      setPhoneNo(user?.tenantPhoneNumber ?? '');
+      setEmail(user?.tenantEmail ?? '');
+      setTName(user.ownerName);
+      setTPhoneNo(user.phoneNumber);
+      setTEmail(user.email);
+    }
+  }, [user]);
+
+  console.log(user.email);
+  const TextView = (txt: string) => {
+    return (
+      <Text
+        style={{
+          width: '90%',
+          alignSelf: 'center',
+          ...FONTS.body4,
+          padding: SIZES.spacing * 1.2,
+          alignItems: 'center',
+          backgroundColor: COLORS.lightPrimary,
+          borderRadius: SIZES.spacing,
+          marginVertical: SIZES.spacing,
+          color: COLORS.black,
+        }}>
+        {txt}
+      </Text>
+    );
+  };
   return (
     <View style={{flex: 1}}>
       <Header
-        iconPress={() => Alert.alert('Pressed')}
+        iconPress={() => {
+          if (editable == false) setEditable(true);
+          else if (editable == true) {
+            setImageFile(null);
+            setEditable(false);
+          }
+        }}
         title="Profile"
-        rightIconType="EDIT"
+        rightIconType={editable ? 'CANCEL' : 'EDIT'}
       />
       <View style={styles.header}>
         <LinearGradient
@@ -60,48 +122,177 @@ const ProfileDetail = () => {
 
             // height: SIZES.height,
           }}>
+          {editable && (
+            <TouchableOpacity
+              onPress={async () => {
+                if (imageFile == null) setOpen2(true);
+                else {
+                  await dispatch(
+                    uploadProfilePic({
+                      image: imageFile,
+                      flag: user.currentUser === user.phoneNumber,
+                      userId: user.id,
+                    }),
+                  );
+                  setImageFile(null);
+                  setEditable(false);
+                }
+              }}
+              style={{
+                width: '50%',
+                padding: '3%',
+                marginVertical: 20,
+                alignSelf: 'flex-start',
+                marginLeft: 20,
+                borderRadius: 10,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: COLORS.primary,
+                ...SHADOW,
+              }}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  color: COLORS.white,
+                  // flex: 1,
+                  // marginRight: 20,
+                  textAlign: 'center',
+                }}>
+                {imageFile == null ? 'Select Image' : 'Upload Image'}
+              </Text>
+            </TouchableOpacity>
+          )}
           <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
-          <ProfileTextInput
-            title=""
-            disabled={false}
-            onChangeText={text => console.log(text)}
-            placeholder="Name"
-          />
+          {TextView(name)}
           <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
             Email
           </Text>
-          <ProfileTextInput
-            title=""
-            disabled={true}
-            onChangeText={text => console.log(text)}
-            placeholder="Email"
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => setOpen(true)}
-          style={{
-            width: '80%',
-            padding: '3%',
-
-            alignSelf: 'center',
-            borderRadius: 10,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: COLORS.primary,
-            ...SHADOW,
-          }}>
-          <Text
-            style={{
-              ...FONTS.h3,
-              color: COLORS.white,
-              // flex: 1,
-              // marginRight: 20,
-              textAlign: 'center',
-            }}>
-            ADD TENANT
+          {TextView(email)}
+          <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+            Phone Number
           </Text>
-        </TouchableOpacity>
+          {TextView(phoneNo)}
+        </View>
+        {(user?.tenantName == undefined || user.tenantName == '') &&
+          editable && (
+            <TouchableOpacity
+              onPress={() => setOpen(true)}
+              style={{
+                width: '80%',
+                padding: '3%',
+
+                alignSelf: 'center',
+                borderRadius: 10,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: COLORS.primary,
+                ...SHADOW,
+              }}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  color: COLORS.white,
+                  // flex: 1,
+                  // marginRight: 20,
+                  textAlign: 'center',
+                }}>
+                Add Member
+              </Text>
+            </TouchableOpacity>
+          )}
+        {user.tenantName !== '' && (
+          <View
+            style={{
+              width: '90%',
+              borderRadius: 20,
+              alignSelf: 'center',
+              backgroundColor: COLORS.white,
+              ...SHADOW,
+              paddingTop: '5%',
+              paddingBottom: '10%',
+              marginBottom: 100,
+            }}>
+            <Text style={{...FONTS.h3, marginLeft: 20, marginBottom: 20}}>
+              Other Member
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Image
+                source={
+                  user.currentUser === user.phoneNumber
+                    ? user.tenantImage && user?.tenantImage != ''
+                      ? {uri: user.tenantImage + ''}
+                      : ICONS.PROFILE_ICON
+                    : user.imageUrl && user?.imageUrl != ''
+                    ? {uri: user.imageUrl}
+                    : ICONS.PROFILE_ICON
+                }
+                style={{
+                  // alignSelf: 'center',
+                  width: 90,
+                  height: 90,
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 75,
+                  marginLeft: 10,
+                  marginBottom: 10,
+                  zIndex: 1,
+                }}
+              />
+              <View style={{flex: 1}}>
+                <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
+                {TextView(tName)}
+              </View>
+            </View>
+
+            <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+              Email
+            </Text>
+            {TextView(tEmail)}
+            <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+              Phone Number
+            </Text>
+            {TextView(tPhoneNo)}
+            {user.currentUser === user.phoneNumber && editable && (
+              <TouchableOpacity
+                onPress={async () => {
+                  await dispatch(
+                    addTenant({
+                      userId: user.id,
+                      name: '',
+                      number: '',
+                      email: '',
+                      image: null,
+                      isTenant: '',
+                    }),
+                  );
+                }}
+                style={{
+                  width: '80%',
+                  padding: '3%',
+                  alignSelf: 'center',
+                  borderRadius: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'red',
+                  marginTop: 20,
+                  ...SHADOW,
+                }}>
+                <Text
+                  style={{
+                    ...FONTS.h3,
+                    color: COLORS.white,
+                    // flex: 1,
+                    // marginRight: 20,
+                    textAlign: 'center',
+                  }}>
+                  Delete Member
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </ScrollView>
       <View
         style={{
@@ -110,15 +301,43 @@ const ProfileDetail = () => {
           width: '90%',
           alignSelf: 'center',
           //   marginTop: '25%',
-          marginTop: Platform.OS == 'ios' ? (SIZES.height > 812 ? 65 : 65) : 40,
+          marginTop: Platform.OS == 'ios' ? (SIZES.height > 812 ? 65 : 65) : 10,
         }}>
-        <Image source={ICONS.PROFILE_ICON} style={styles.profilePicture} />
+        <View>
+          <Image
+            resizeMode="contain"
+            source={
+              user.currentUser === user.phoneNumber
+                ? user.imageUrl
+                  ? imageFile != null
+                    ? {uri: imageFile.path + ''}
+                    : {uri: user.imageUrl + ''}
+                  : imageFile != null
+                  ? {uri: imageFile.path + ''}
+                  : ICONS.PROFILE_ICON
+                : user.tenantImage
+                ? imageFile != null
+                  ? {uri: imageFile.path + ''}
+                  : {uri: user.tenantImage + ''}
+                : imageFile != null
+                ? {uri: imageFile.path + ''}
+                : ICONS.PROFILE_ICON
+            }
+            style={styles.profilePicture}></Image>
+        </View>
       </View>
       <ProfileModal
         isVisible={open}
         onClose={() => setOpen(false)}
         // user={{name: 'harry', email: 'asdada', bio: 'asdsad'}}
       />
+      {open2 && (
+        <UploadImageModal
+          isVisible={open2}
+          onClose={() => setOpen2(false)}
+          onSelect={setImageFile}
+        />
+      )}
     </View>
   );
 };
@@ -148,13 +367,12 @@ const styles = StyleSheet.create({
   },
   profilePicture: {
     alignSelf: 'center',
-    width: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 150 : 120,
-    marginTop: '10%',
-    height: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 150 : 120,
+    width: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 120 : 120,
+    marginTop: '15%',
+    height: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 120 : 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 75,
     zIndex: 1,
-    marginBottom: '-25%',
   },
   inputContainer: {
     marginTop: 10,

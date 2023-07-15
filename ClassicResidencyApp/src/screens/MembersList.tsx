@@ -6,8 +6,7 @@ import SearchBar from '../components/SearchBar';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
 import {SwipeListView} from 'react-native-swipe-list-view';
-// import Icon, {Icons} from '../components/Icons';
-import CreateNoticeModal from '../components/CreateNoticeModal';
+
 import CreateMemberModal from '../components/CreateMemberModal';
 import MainView from '../components/MainView';
 import {redirectToPhoneNumber} from '../resources/Utils';
@@ -19,6 +18,7 @@ import {
 
 const MembersList = ({route}: any) => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
+  const isAOA = useAppSelector(state => state.userReducer.isAOA);
   const members = useAppSelector(state => state.userReducer.members);
   const [input, setInput] = useState('');
   const [memberFilteredList, setMemberFilteredList] = useState<Members[]>([]);
@@ -135,7 +135,7 @@ const MembersList = ({route}: any) => {
     <MainView>
       <Header
         title="Members List "
-        rightIconType={!isAdmin ? 'CREATE' : 'NONE'}
+        rightIconType={isAOA || isAdmin ? 'CREATE' : 'NONE'}
         iconPress={() => setOpen(true)}
       />
       <View
@@ -149,7 +149,7 @@ const MembersList = ({route}: any) => {
         }}>
         <SearchBar
           searchStyle={{}}
-          placeholder={'Search Notice ...'}
+          placeholder={'Search Members ...'}
           onChangeText={text => {
             setInput(text);
           }}
@@ -159,7 +159,7 @@ const MembersList = ({route}: any) => {
       </View>
       <View style={{marginTop: 20}}></View>
 
-      {!isAdmin ? (
+      {isAOA || isAdmin ? (
         <SwipeListView
           showsVerticalScrollIndicator={false}
           data={memberFilteredList}
@@ -179,9 +179,7 @@ const MembersList = ({route}: any) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           style={{margin: '5%', height: SIZES.height * 0.9}}
-          data={[
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 123, 131, 231, 231231, 1231231,
-          ]}
+          data={memberFilteredList}
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.2}}></View>
           )}
@@ -189,7 +187,11 @@ const MembersList = ({route}: any) => {
             renderMainItem({item, index})
           }></FlatList>
       )}
-      <CreateMemberModal onClose={() => setOpen(false)} isVisible={open} />
+      <CreateMemberModal
+        type={route?.params?.data}
+        onClose={() => setOpen(false)}
+        isVisible={open}
+      />
     </MainView>
   );
 };

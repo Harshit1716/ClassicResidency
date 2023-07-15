@@ -24,12 +24,12 @@ const LoginScreen = () => {
   const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
     const data = {
-      flatNumber: '702',
-      flatType: 'H1',
-      block: 'I',
-      name: 'Harshit Tyagi',
-      email: 'harshit@yopmail.com',
-      phoneNumber: '9355209292',
+      flatNumber: '102',
+      flatType: 'H3',
+      block: 'A',
+      name: 'Puneey Singh',
+      email: 'puneet@yopmail.com',
+      phoneNumber: '8383921635',
     };
     dispatch(createUser({...data}));
   }
@@ -38,7 +38,7 @@ const LoginScreen = () => {
   useEffect(() => {
     setNumber('9355209292');
     setPasssword('Harry');
-  });
+  }, []);
   return (
     <MainView>
       <View
@@ -133,7 +133,7 @@ const LoginScreen = () => {
           disabled={isLoading}
         />
         {/* <TouchableOpacity
-          // onPress={() => handleCreateAccount()}
+          onPress={() => handleCreateAccount()}
           style={{
             padding: SIZES.spacing,
           }}>

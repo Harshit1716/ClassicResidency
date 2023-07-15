@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert, Linking} from 'react-native';
 import storage from '@react-native-firebase/storage';
+import {COLORS} from './Theme';
 
 export const storeData = async (key: string, value: any) => {
   try {
@@ -28,7 +29,7 @@ export const clearAll = async () => {
   } catch (e) {
     // clear error
   }
-  console.log('Done.');
+  // console.log('Done.');
 };
 
 // Async Keys
@@ -71,4 +72,17 @@ export const redirectToPhoneNumber = (number: any) => {
   Linking.openURL(phoneNumber).catch(error => {
     console.log('Failed to open phone number screen:', error);
   });
+};
+
+export const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'Pending':
+      return 'red';
+    case 'InProgress':
+      return 'lightblue';
+    case 'Closed':
+      return 'green';
+    default:
+      return 'red';
+  }
 };

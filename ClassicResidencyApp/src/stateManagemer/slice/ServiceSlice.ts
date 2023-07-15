@@ -8,7 +8,7 @@ import {
   Members,
   Notice,
 } from '../models/SocietyAppModal';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {Filter} from '@react-native-firebase/firestore';
 import {
   clearAll,
   storeData,
@@ -24,21 +24,56 @@ export const login = createAsyncThunk(
     {rejectWithValue},
   ) => {
     try {
-      console.log('inside');
+      // const flatsRef = firestore().collection('Users');
+      // const snapshot = await flatsRef
+      //   .where('phoneNumber', '==', phoneNumber)
+      //   .where('password' || 'tenantPassword', '==', password)
+      //   .get();
+
+      // if (snapshot.empty) {
+      //   Alert.alert('Error', 'Invalid phone number or password');
+      //   throw new Error('Invalid phone number or password');
+      // }
+
+      // let user = snapshot.docs[0].data();
+
+      // user['currentUser'] = phoneNumber;
+      // user['email'] = user.email;
+      // console.log(user.email, 'Sent');
+      // return user;
       const flatsRef = firestore().collection('Users');
-      const snapshot = await flatsRef
-        .where('phoneNumber', '==', phoneNumber)
+      const phoneNumberQuery = flatsRef.where('phoneNumber', '==', phoneNumber);
+      const tenantPhoneNumberQuery = flatsRef.where(
+        'tenantPhoneNumber',
+        '==',
+        phoneNumber,
+      );
+      const passwordQuery = flatsRef.where('password', '==', password);
+
+      const snapshot = await phoneNumberQuery
         .where('password', '==', password)
         .get();
 
       if (snapshot.empty) {
-        Alert.alert('Error', 'Invalid phone number or password');
-        throw new Error('Invalid phone number or password');
-      }
-      let user = snapshot.docs[0].data();
+        const snapshot2 = await tenantPhoneNumberQuery
+          .where('tenantPassword', '==', password)
+          .get();
 
-      user['currentUser'] = phoneNumber;
-      return user;
+        if (snapshot2.empty) {
+          Alert.alert('Error', 'Invalid phone number or password');
+          throw new Error('Invalid phone number or password');
+        }
+
+        // User found with tenantPhoneNumber and password
+        const user = snapshot2.docs[0].data();
+        user['currentUser'] = user.tenantPhoneNumber;
+        return user;
+      } else {
+        // User found with phoneNumber and password
+        const user = snapshot.docs[0].data();
+        user['currentUser'] = user.phoneNumber;
+        return user;
+      }
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -67,7 +102,6 @@ export const createUser = createAsyncThunk(
     {rejectWithValue},
   ) => {
     try {
-      console.log('STarted');
       const id = block + flatType + flatNumber;
       const userRef = firestore().collection('Users').doc(id);
       const password = await phoneNumber.split('').reverse().join('');
@@ -82,17 +116,46 @@ export const createUser = createAsyncThunk(
         imageUrl: '',
         complaints: [],
         isTenantAdded: false,
-        isAdmin: false,
-
-        isAOA: false,
+        isAdmin: true,
+        isAOA: true,
+        tenantName: '',
+        tenantEmail: '',
+        tenantPhoneNumber: '',
+        tenantPassword: '',
+        tenantImage: '',
         password: password,
       };
 
       await userRef.set(user);
-      console.log('STarted', user);
+
       return user;
     } catch (error) {
       console.log(error);
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+export const uploadProfilePic = createAsyncThunk(
+  'user/uploadProfilePic',
+  async ({image, flag, userId}: any, {rejectWithValue}) => {
+    try {
+      let imageurl = '';
+      if (image) imageurl = (await uploadImageToFirebase(image)) ?? '';
+      const userRef = firestore().collection('Users').doc(userId);
+
+      const ownerImage = {
+        imageUrl: imageurl,
+      };
+      const tenantImage = {
+        tenantImage: imageurl,
+      };
+
+      await userRef.update(flag ? ownerImage : tenantImage);
+
+      return flag ? ownerImage.imageUrl : tenantImage.tenantImage;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
       return rejectWithValue(error?.message);
     }
   },
@@ -192,7 +255,7 @@ export const createComplaint = createAsyncThunk(
         status: 'Pending',
         hide: false,
       };
-      console.log(noticeData, 'BHSDK');
+
       const noticesCollectionRef = firestore().collection('complaints').doc(id);
       await noticesCollectionRef.set(noticeData);
       const userRef = firestore().collection('Users').doc(user);
@@ -200,6 +263,41 @@ export const createComplaint = createAsyncThunk(
         complaints: firestore.FieldValue.arrayUnion(id),
       });
       return noticeData;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+
+export const addTenant = createAsyncThunk(
+  'user/addTenant',
+  async (
+    {userId, name, number, email, isTenant, image}: any,
+    {rejectWithValue},
+  ) => {
+    try {
+      let imageurl = '';
+      if (image) imageurl = (await uploadImageToFirebase(image)) ?? '';
+      const userRef = firestore().collection('Users').doc(userId);
+      const password = await number.split('').reverse().join('');
+
+      const tenantData = {
+        tenantName: name,
+        tenantEmail: email,
+        tenantPhoneNumber: number,
+        tenantPassword: password,
+        tenantImage: imageurl,
+        isTenantAdded: isTenant,
+      };
+      await userRef.update(tenantData);
+
+      // const snapshot = await userRef.get();
+
+      // let user = snapshot.data();
+
+      return tenantData;
     } catch (error) {
       console.log(error);
       Alert.alert('ERROR', error?.message + '');
@@ -233,7 +331,9 @@ export const getAllComplaints = createAsyncThunk(
   'user/getAllComplaints',
   async (_, {rejectWithValue}) => {
     try {
-      const complaintsRef = firestore().collection('complaints');
+      const complaintsRef = firestore()
+        .collection('complaints')
+        .orderBy('createdOn', 'desc');
       const snapshot = await complaintsRef.get();
       // const complaints = snapshot.docs.map(doc => doc.data());
       const complaints: ComplaintType[] = snapshot.docs.map(
@@ -249,7 +349,9 @@ export const getAllNotice = createAsyncThunk(
   'user/getAllNotice',
   async (_, {rejectWithValue}) => {
     try {
-      const complaintsRef = firestore().collection('notice');
+      const complaintsRef = firestore()
+        .collection('notice')
+        .orderBy('createdAt', 'desc');
       const snapshot = await complaintsRef.get();
       const complaints: Notice[] = snapshot.docs.map(
         doc => doc.data() as Notice,
@@ -317,7 +419,9 @@ export const getComplaintsById = createAsyncThunk(
   'user/getComplaintsById',
   async ({currentUserId}: {currentUserId: string}, {rejectWithValue}) => {
     try {
-      const complaintsRef = firestore().collection('complaints');
+      const complaintsRef = firestore()
+        .collection('complaints')
+        .orderBy('createdOn', 'desc');
       const snapshot = await complaintsRef.get();
       // const complaints = snapshot.docs.map(doc => doc.data());
       let complaints: ComplaintType[] = snapshot.docs.map(
@@ -366,6 +470,7 @@ export const userSlice = createSlice({
       state.flatNumber = payload.flatNumber;
       state.ownerName = payload.ownerName;
       state.password = payload.password;
+      state.email = payload.email;
       state.imageUrl = payload.imageUrl;
       state.phoneNumber = payload.phoneNumber;
 
@@ -375,11 +480,11 @@ export const userSlice = createSlice({
       state.isTenantAdded = payload.isTenantAdded;
       state.currentUser = payload.currentUser;
 
-      if (payload.isTenantAdded) {
-        state.tenantName = payload.tenantName;
-        state.tenantEmail = payload.tenantEmail;
-        state.tenantPhoneNumber = payload.tenantPhoneNumber;
-      }
+      // if (payload.isTenantAdded) {
+      state.tenantName = payload.tenantName;
+      state.tenantEmail = payload.tenantEmail;
+      state.tenantPhoneNumber = payload.tenantPhoneNumber;
+      // }
       state.error = null;
     },
     logout: state => {
@@ -411,6 +516,7 @@ export const userSlice = createSlice({
       state.error = null;
     });
     builder.addCase(login.fulfilled, (state, action) => {
+      console.log(action.payload.email + 'asjdnasdaosjknd');
       state.loading = false;
       state.id = action.payload.id;
       state.block = action.payload.block;
@@ -419,6 +525,7 @@ export const userSlice = createSlice({
       state.ownerName = action.payload.ownerName;
       state.password = action.payload.password;
       state.imageUrl = action.payload.imageUrl;
+      state.email = action.payload.email;
       state.phoneNumber = action.payload.phoneNumber;
 
       state.complaints = action.payload.complaints;
@@ -426,11 +533,11 @@ export const userSlice = createSlice({
       state.isAOA = action.payload.isAOA;
       state.isTenantAdded = action.payload.isTenantAdded;
       state.currentUser = action.payload.currentUser;
-      if (action.payload.isTenantAdded) {
-        state.tenantName = action.payload.tenantName;
-        state.tenantEmail = action.payload.tenantEmail;
-        state.tenantPhoneNumber = action.payload.tenantPhoneNumber;
-      }
+      // if (action.payload.isTenantAdded) {
+      state.tenantName = action.payload.tenantName;
+      state.tenantEmail = action.payload.tenantEmail;
+      state.tenantPhoneNumber = action.payload.tenantPhoneNumber;
+      // }
       state.error = null;
       storeData(userDataSKeys, state);
     });
@@ -495,7 +602,7 @@ export const userSlice = createSlice({
     builder.addCase(getAllNotice.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      console.log(action.payload, 'HAHAHAHA');
+
       state.notice = action.payload;
     });
     builder.addCase(getAllNotice.rejected, (state, action) => {
@@ -540,7 +647,7 @@ export const userSlice = createSlice({
     builder.addCase(getAllMembers.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      console.log(action.payload, 'HAHAHAHA');
+
       state.members = action.payload;
     });
 
@@ -603,6 +710,44 @@ export const userSlice = createSlice({
       // state.complaints = [action.payload, ...state.complaints];
     });
     builder.addCase(updateAssignedTo.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(addTenant.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(addTenant.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload != null || action.payload != undefined)
+        if (action.payload.tenantName == '')
+          Alert.alert('Success', 'Member has been deleted ');
+        else Alert.alert('Success', 'Member has been added ');
+      state.tenantName = action.payload.tenantName;
+      state.tenantEmail = action.payload.tenantEmail;
+      state.tenantPhoneNumber = action.payload.tenantPhoneNumber;
+      state.tenantPassword = action.payload.tenantPassword;
+      state.tenantImage = action.payload.tenantImage;
+    });
+    builder.addCase(addTenant.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(uploadProfilePic.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(uploadProfilePic.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload != null || action.payload != undefined)
+        Alert.alert('Success', 'Profile picture has been updated ');
+      if (state.currentUser === state.password) {
+        state.imageUrl = action.payload;
+      } else if (state.currentUser === state.tenantPhoneNumber) {
+        state.tenantImage = action.payload;
+      }
+    });
+    builder.addCase(uploadProfilePic.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

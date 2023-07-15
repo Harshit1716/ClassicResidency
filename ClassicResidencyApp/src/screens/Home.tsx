@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Alert,
 } from 'react-native';
 
 import {ICONS, COLORS, SIZES} from '../resources';
@@ -24,6 +25,7 @@ import Banner from '../components/Banners';
 import SearchBar from '../components/SearchBar';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {
+  getAllComplaints,
   getAllMembers,
   getAllNotice,
 } from '../stateManagemer/slice/ServiceSlice';
@@ -73,6 +75,7 @@ const HomeScreen = ({navigation}: any) => {
   useEffect(() => {
     dispatch(getAllNotice());
     dispatch(getAllMembers());
+    if (user.isAdmin || user.isAOA) dispatch(getAllComplaints());
   }, []);
   useEffect(() => {
     setNoticeFilteredList(noticeList);
@@ -237,9 +240,20 @@ const HomeScreen = ({navigation}: any) => {
                 <Image
                   resizeMode="contain"
                   style={{height: 35, width: 35, borderRadius: 35}}
-                  source={ICONS.PROFILE_MEMBER_ICON}
+                  source={
+                    user.currentUser === user.phoneNumber
+                      ? user.imageUrl
+                        ? {uri: user.imageUrl + ''}
+                        : ICONS.PROFILE_ICON
+                      : user.tenantImage
+                      ? {uri: user.tenantImage + ''}
+                      : ICONS.PROFILE_ICON
+                  }
                 />
-                <TouchableOpacity>
+                <Text style={style.headerTitle}>
+                  {new Date().toDateString()}
+                </Text>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       height: 35,
@@ -249,7 +263,7 @@ const HomeScreen = ({navigation}: any) => {
                     }}
                     source={ICONS.NOTIFICATION_ICON}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </LinearGradient>
           </View>
@@ -267,7 +281,11 @@ const HomeScreen = ({navigation}: any) => {
               locations={[0, 0.7]}>
               <View style={{paddingHorizontal: 20}}>
                 <Text style={style.headerTitle}>Welcome</Text>
-                <Text style={style.headerTitle}>{user.ownerName}</Text>
+                <Text style={style.headerTitle}>
+                  {user.currentUser === user.phoneNumber
+                    ? user.ownerName
+                    : user.tenantName}
+                </Text>
               </View>
             </LinearGradient>
           </View>
@@ -288,16 +306,20 @@ const HomeScreen = ({navigation}: any) => {
               <Text style={style.sectionTitle}>Ads and offers</Text>
               <Banner data={places} />
               <Text style={style.sectionTitle}>Notice Board</Text>
-              {/* {noticeFilteredList.map(item => (
-                <View style={{paddingLeft: 20, paddingBottom: 20}}>
-                  <RecommendedCard place={item} />
-                </View>
-              ))} */}
+
               <FlatList
                 contentContainerStyle={{marginTop: 20, marginHorizontal: '2%'}}
                 data={noticeFilteredList}
                 renderItem={({item, index}) => {
-                  return <NoticeCard item={item} index={index} />;
+                  return (
+                    <>
+                      {index < 5 ? (
+                        <NoticeCard item={item} index={index} />
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  );
                 }}
                 ListFooterComponent={() => (
                   <View style={{height: SIZES.height * 0.05}} />

@@ -36,8 +36,9 @@ const ProfileTextInput = (props: InputProps) => {
         {
           width: '90%',
           alignSelf: 'center',
-          ...FONTS.body3,
+          ...FONTS.body4,
           padding: SIZES.spacing * 1.2,
+          alignItems: 'center',
           backgroundColor: COLORS.lightPrimary,
           borderRadius: SIZES.spacing,
           marginVertical: SIZES.spacing,

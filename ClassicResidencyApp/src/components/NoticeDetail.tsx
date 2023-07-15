@@ -18,7 +18,7 @@ import {Notice} from '../stateManagemer/models/SocietyAppModal';
 
 const NoticeDetail = ({route}: any) => {
   const [data, setData] = useState<Notice>(route?.params?.data);
-  console.log(route.params.data);
+
   return (
     <View>
       <Header title="Notice Detail" rightIconType="NONE" />
@@ -46,8 +46,11 @@ const NoticeDetail = ({route}: any) => {
           </Text>
           {data.imageUrl != '' && (
             <ImageBackground
+              resizeMode="contain"
               style={{
-                height: 250,
+                // height: 350,
+                // height: '100%',
+                aspectRatio: 1 / 1.5,
                 width: '100%',
                 marginTop: '10%',
                 borderRadius: 10,

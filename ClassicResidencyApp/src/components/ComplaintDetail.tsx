@@ -32,6 +32,7 @@ const ComplaintDetail = ({route}: any) => {
   const members = useAppSelector(state => state.userReducer.members);
   const dispatch = useAppDispatch();
   const [editable, setEditable] = useState<boolean>(false);
+  const isAdmin = useAppSelector(state => state.userReducer.isAOA);
 
   useEffect(() => {
     setSelectedAssigned(route.params.data.assignedTo);
@@ -52,12 +53,12 @@ const ComplaintDetail = ({route}: any) => {
       Alert.alert('Error', 'Please assign complaint to a member');
     }
   };
-  console.log(route.params.data);
+
   return (
     <MainView>
       <Header
         title="Complaint Detail"
-        rightIconType={editable ? 'CANCEL' : 'EDIT'}
+        rightIconType={isAdmin ? (editable ? 'CANCEL' : 'EDIT') : 'NONE'}
         iconPress={() => {
           if (editable == false) setEditable(true);
           else if (editable == true) setEditable(false);
@@ -86,7 +87,7 @@ const ComplaintDetail = ({route}: any) => {
               backgroundColor: COLORS.lightGray,
               width: '95%',
               alignSelf: 'center',
-              marginVertical: 5,
+              marginVertical: 15,
             }}></View>
 
           <View

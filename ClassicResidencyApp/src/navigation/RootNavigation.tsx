@@ -14,10 +14,12 @@ import MemberCategory from '../screens/MemberCategory';
 import MembersList from '../screens/MembersList';
 import ComplaintsList from '../screens/ComplaintsList';
 import ComplaintDetail from '../components/ComplaintDetail';
+import AdminComplaints from '../screens/AdminComplaints';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const email = useAppSelector(state => state.userReducer.id);
+  const AOA = useAppSelector(state => state.userReducer.isAOA);
   const admin = useAppSelector(state => state.userReducer.isAdmin);
 
   return (
@@ -108,6 +110,15 @@ const RootNavigation = () => {
             }}
             name="ComplaintDetail"
             component={ComplaintDetail}
+          />
+        )}
+        {(!admin || AOA) && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="AllComplaints"
+            component={AdminComplaints}
           />
         )}
       </RootStack.Navigator>

@@ -27,6 +27,7 @@ const NoticeList = () => {
   const [open, setOpen] = useState(false);
   const isLoading = useAppSelector(state => state.userReducer.loading);
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
+  const isAOA = useAppSelector(state => state.userReducer.isAOA);
   const noticeList = useAppSelector(state => state.userReducer.notice);
   const [noticeFilteredList, setNoticeFilteredList] = useState<Notice[]>([]);
   const dispatch = useAppDispatch();
@@ -62,7 +63,7 @@ const NoticeList = () => {
     const prevIndex = noticeFilteredList.findIndex(
       item => item?.key === rowKey,
     );
-    console.log(noticeFilteredList[prevIndex]);
+    // console.log(noticeFilteredList[prevIndex]);
     await dispatch(deleteNotice(noticeFilteredList[prevIndex].id));
     await dispatch(getAllNotice());
   };
@@ -114,13 +115,12 @@ const NoticeList = () => {
         <Header
           iconPress={() => setOpen(true)}
           title="Notice"
-          rightIconType={!isAdmin ? 'CREATE' : 'NONE'}
+          rightIconType={isAdmin || isAOA ? 'CREATE' : 'NONE'}
         />
         <View
           style={{
             marginTop: 20,
             marginHorizontal: 30,
-            // position: 'absolute',
             alignSelf: 'center',
             zIndex: 1,
           }}>
@@ -134,7 +134,7 @@ const NoticeList = () => {
             shadow={'DEFAULT'}
           />
         </View>
-        {!isAdmin ? (
+        {isAdmin || isAOA ? (
           <>
             <View style={{marginTop: 20}}></View>
             <SwipeListView

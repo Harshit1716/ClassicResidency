@@ -122,7 +122,7 @@ const SelectCategoryModal = (props: ModalProps) => {
             </View>
           </View>
           <SearchBar
-            placeholder={'Select Type'}
+            placeholder={'Search Type'}
             onChangeText={text => {
               setInput(text);
             }}

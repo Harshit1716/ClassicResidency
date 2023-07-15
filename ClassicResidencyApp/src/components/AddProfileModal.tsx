@@ -24,16 +24,22 @@ import AppButton from './AppButton';
 import CustomBtn from './CustomBtn';
 import UploadImageModal from './UploadImageModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {createMember, createNotice} from '../stateManagemer/slice/ServiceSlice';
+import {
+  addTenant,
+  createMember,
+  createNotice,
+} from '../stateManagemer/slice/ServiceSlice';
 import SelectCategoryModal from './SelectCategoryModal';
+import CheckBox from '@react-native-community/checkbox';
 
-const CreateMemberModal = ({isVisible, onClose}: any) => {
+const AddProfileModal = ({isVisible, onClose}: any) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [email, setEmail] = useState('');
 
+  const [tenant, settenant] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openCatrgory, setOpenCategory] = useState(false);
+
   const [imageFile, setImageFile] = React.useState<any>(null);
   const dispatch = useAppDispatch();
   const userId = useAppSelector(state => state.userReducer.id);
@@ -58,11 +64,10 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
               right: -20,
             }}
             onPress={onClose}>
-            {/* <Icon
-              type={Icons.FontAwesome}
-              name={'close'}
-              color={COLORS.primary}
-            /> */}
+            <Image
+              source={ICONS.CLOSE_ICON}
+              style={{height: 20, tintColor: COLORS.primary, width: 20}}
+            />
           </TouchableOpacity>
         </View>
 
@@ -80,14 +85,16 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
 
   function handleSubmit() {
     if (validate()) {
-      // dispatch(
-      //   createMember({
-      //     name: name,
-      //     number: number,
-      //     type: description,
-      //     image: imageFile,
-      //   }),
-      // );
+      dispatch(
+        addTenant({
+          userId: userId,
+          name: name,
+          number: number,
+          email: email,
+          image: imageFile,
+          isTenant: tenant,
+        }),
+      );
       onClose();
       reset();
     }
@@ -120,10 +127,7 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
       Alert.alert('Error', 'Please enter a email ');
       return false;
     }
-    if (imageFile == null) {
-      Alert.alert('Error', 'Please upload an Image ');
-      return false;
-    }
+
     return true;
   };
 
@@ -166,6 +170,30 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
                 placeholder="Contact Number"
                 keybordType="email"
               />
+              <View
+                style={{
+                  width: '100%',
+                  alignSelf: 'center',
+                  ...FONTS.body3,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: SIZES.spacing * 1.2,
+                  paddingRight: 30,
+                  backgroundColor: COLORS.white,
+                  borderRadius: SIZES.spacing,
+                  marginVertical: SIZES.spacing,
+                }}>
+                <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+                  Is member tenant
+                </Text>
+
+                <CheckBox
+                  disabled={false}
+                  value={tenant}
+                  onValueChange={newValue => settenant(newValue)}
+                />
+              </View>
             </View>
             {imageFile == null && (
               <TouchableOpacity
@@ -239,20 +267,12 @@ const CreateMemberModal = ({isVisible, onClose}: any) => {
             onSelect={setImageFile}
           />
         )}
-        {openCatrgory && (
-          <SelectCategoryModal
-            selected={'description'}
-            isVisible={openCatrgory}
-            onClose={() => setOpenCategory(false)}
-            onSelect={'setDecsription'}
-          />
-        )}
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
-export default CreateMemberModal;
+export default AddProfileModal;
 
 const styles = StyleSheet.create({
   container: {

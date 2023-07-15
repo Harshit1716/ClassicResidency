@@ -17,18 +17,21 @@ import {SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 
 import CreateComplaintsModal from '../components/CreateComplaintsModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {getComplaintsById} from '../stateManagemer/slice/ServiceSlice';
+import {
+  getAllComplaints,
+  getComplaintsById,
+} from '../stateManagemer/slice/ServiceSlice';
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getStatusColor} from '../resources/Utils';
 
-const ComplaintsList = () => {
+const AdminComplaints = () => {
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
   const userId = useAppSelector(state => state.userReducer.id);
-  const complaints = useAppSelector(state => state.userReducer.complaints);
-  const dispatch = useAppDispatch();
+  const complaints = useAppSelector(state => state.userReducer.adminComplaints);
   const [filterdList, setFilterdList] = useState<ComplaintType[]>([]);
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
   React.useEffect(() => {
@@ -127,11 +130,7 @@ const ComplaintsList = () => {
   };
   return (
     <MainView>
-      <Header
-        title="Complaints"
-        rightIconType="CREATE"
-        iconPress={() => setOpen(true)}
-      />
+      <Header title="Complaints" rightIconType="NONE" />
       <View
         style={{
           marginVertical: 20,
@@ -171,7 +170,7 @@ const ComplaintsList = () => {
       <FlatList
         style={{}}
         ListFooterComponent={() => (
-          <View style={{height: SIZES.height * 0.2}}></View>
+          <View style={{height: SIZES.height * 0.1}}></View>
         )}
         data={filterdList}
         renderItem={renderItem}
@@ -181,6 +180,6 @@ const ComplaintsList = () => {
   );
 };
 
-export default ComplaintsList;
+export default AdminComplaints;
 
 const styles = StyleSheet.create({});

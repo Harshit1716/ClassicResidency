@@ -8,12 +8,14 @@ export interface FlatType {
   email: string;
   imageUrl: string;
 
-  tenantName?: string;
-  tenantEmail?: string;
-  tenantPhoneNumber?: string;
+  tenantName: string;
+  tenantEmail: string;
+  tenantPhoneNumber: string;
+  tenantPassword: string;
+  tenantImage: string;
 
-  complaints: ComplaintType[];
   isTenantAdded: boolean;
+  complaints: ComplaintType[];
   isAdmin: boolean;
   loading: boolean;
   isAOA: boolean;
@@ -39,9 +41,11 @@ export interface AddedMember {
   imageUrl: string;
 
   isTenantAdded: boolean;
-  tenantName?: string;
-  tenantEmail?: string;
-  tenantPhoneNumber?: string;
+  tenantName: string;
+  tenantImage: string;
+  tenantEmail: string;
+  tenantPhoneNumber: string;
+  tenantPassword: string;
 
   complaints: ComplaintType[];
 

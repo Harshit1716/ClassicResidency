@@ -7,10 +7,13 @@ import {Image} from 'react-native-animatable';
 import {SHADOW_PRIMARY, SHADOW_PRIMARY_LIGHT} from '../resources/Theme';
 import {useNavigation} from '@react-navigation/native';
 import {getAllMembers} from '../stateManagemer/slice/ServiceSlice';
+import CreateMemberModal from '../components/CreateMemberModal';
 
 const MemberCategory = () => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
+  const isAOA = useAppSelector(state => state.userReducer.isAdmin);
   const [pressed, setPressed] = useState(-1);
+  const [open, setOpen] = useState(false);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   React.useEffect(() => {
@@ -18,7 +21,11 @@ const MemberCategory = () => {
   }, []);
   return (
     <View style={{backgroundColor: COLORS.white}}>
-      <Header title="Members" rightIconType={isAdmin ? 'CREATE' : 'NONE'} />
+      <Header
+        title="Members"
+        rightIconType={isAOA || isAdmin ? 'CREATE' : 'NONE'}
+        iconPress={() => setOpen(true)}
+      />
       <View style={{}}>
         <Text style={{...FONTS.h2, marginVertical: '10%', alignSelf: 'center'}}>
           Choose Catergory
@@ -78,7 +85,7 @@ const MemberCategory = () => {
                 image: ICONS.MASON_ICON,
               },
               {
-                title: 'HouseKeeping',
+                title: 'HouseHelp',
                 image: ICONS.HOUSEKEEPING_ICON,
               },
               {
@@ -142,6 +149,11 @@ const MemberCategory = () => {
           />
         </View>
       </View>
+      <CreateMemberModal
+        type={''}
+        onClose={() => setOpen(false)}
+        isVisible={open}
+      />
     </View>
   );
 };
