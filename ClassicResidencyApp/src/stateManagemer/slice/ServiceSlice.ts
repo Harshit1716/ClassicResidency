@@ -24,23 +24,6 @@ export const login = createAsyncThunk(
     {rejectWithValue},
   ) => {
     try {
-      // const flatsRef = firestore().collection('Users');
-      // const snapshot = await flatsRef
-      //   .where('phoneNumber', '==', phoneNumber)
-      //   .where('password' || 'tenantPassword', '==', password)
-      //   .get();
-
-      // if (snapshot.empty) {
-      //   Alert.alert('Error', 'Invalid phone number or password');
-      //   throw new Error('Invalid phone number or password');
-      // }
-
-      // let user = snapshot.docs[0].data();
-
-      // user['currentUser'] = phoneNumber;
-      // user['email'] = user.email;
-      // console.log(user.email, 'Sent');
-      // return user;
       const flatsRef = firestore().collection('Users');
       const phoneNumberQuery = flatsRef.where('phoneNumber', '==', phoneNumber);
       const tenantPhoneNumberQuery = flatsRef.where(
@@ -282,6 +265,22 @@ export const addTenant = createAsyncThunk(
       if (image) imageurl = (await uploadImageToFirebase(image)) ?? '';
       const userRef = firestore().collection('Users').doc(userId);
       const password = await number.split('').reverse().join('');
+      const query = firestore()
+        .collection('Users')
+        .where('phoneNumber', '==', number)
+        .get();
+
+      const query2 = firestore()
+        .collection('Users')
+        .where('tenantPhoneNumber', '==', number)
+        .get();
+
+      const [snapshot, snapshot2] = await Promise.all([query, query2]);
+
+      if (!snapshot.empty || !snapshot2.empty) {
+        // Alert.alert('Error', 'Phone number already exists');
+        throw new Error('Phone number already exists');
+      }
 
       const tenantData = {
         tenantName: name,
@@ -291,6 +290,7 @@ export const addTenant = createAsyncThunk(
         tenantImage: imageurl,
         isTenantAdded: isTenant,
       };
+
       await userRef.update(tenantData);
 
       // const snapshot = await userRef.get();
@@ -309,13 +309,14 @@ export const addTenant = createAsyncThunk(
 export const updateAssignedTo = createAsyncThunk(
   'user/updateAssignedTo',
   async (
-    {id, assignedTo}: {id: string; assignedTo: string},
+    {id, assignedTo, status}: {id: string; assignedTo: string; status: string},
     {rejectWithValue},
   ) => {
     try {
       const userRef = firestore().collection('complaints').doc(id);
       await userRef.update({
         assignedTo: assignedTo,
+        status: status,
       });
       return userRef;
     } catch (error) {
@@ -706,7 +707,7 @@ export const userSlice = createSlice({
     builder.addCase(updateAssignedTo.fulfilled, (state, action) => {
       state.loading = false;
       if (action.payload != null || action.payload != undefined)
-        Alert.alert('Success', 'Member has been assigned to Complaints ');
+        Alert.alert('Success', 'Complaint have been updated ');
       // state.complaints = [action.payload, ...state.complaints];
     });
     builder.addCase(updateAssignedTo.rejected, (state, action) => {

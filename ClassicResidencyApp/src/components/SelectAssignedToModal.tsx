@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, ICONS} from '../resources';
-import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
+import {FONTS, SHADOW, SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 // import Icon, {Icons} from './Icons';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -174,7 +174,7 @@ const SelectAssignedToModal = (props: ModalProps) => {
                   justifyContent: 'center',
                   borderRadius: 10,
                   marginTop: -70,
-                  right: -90,
+                  right: -SIZES.width * 0.3,
                 }}
                 onPress={props.onClose}>
                 {/* <Icon

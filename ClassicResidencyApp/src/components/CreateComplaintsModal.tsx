@@ -345,10 +345,10 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                   source={{uri: imageFile.path + ''}}>
                   <TouchableOpacity
                     style={{
-                      width: 50,
-                      height: 50,
+                      width: 45,
+                      height: 45,
                       marginRight: -20,
-                      backgroundColor: 'red',
+                      backgroundColor: COLORS.primary,
                       ...SHADOW,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -357,11 +357,14 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                       alignSelf: 'flex-end',
                     }}
                     onPress={() => deleteImage()}>
-                    {/* <Icon
-                      type={Icons.FontAwesome}
-                      name={'close'}
-                      color={COLORS.white}
-                    /> */}
+                    <Image
+                      style={{
+                        height: 20,
+                        width: 20,
+                        tintColor: COLORS.white,
+                      }}
+                      source={ICONS.CLOSE_ICON}
+                    />
                   </TouchableOpacity>
                 </ImageBackground>
               </View>

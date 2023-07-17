@@ -36,8 +36,10 @@ const LoginScreen = () => {
   const [number, setNumber] = useState('');
   const [password, setPasssword] = useState('');
   useEffect(() => {
-    setNumber('9355209292');
-    setPasssword('Harry');
+    setNumber('8383921635');
+    setPasssword('5361293838');
+    // setNumber('9355209292');
+    // setPasssword('Harry');
   }, []);
   return (
     <MainView>

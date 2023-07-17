@@ -28,6 +28,7 @@ import {
   getAllComplaints,
   getAllMembers,
   getAllNotice,
+  getComplaintsById,
 } from '../stateManagemer/slice/ServiceSlice';
 import {Notice} from '../stateManagemer/models/SocietyAppModal';
 import NoticeCard from '../components/NoticeCard';
@@ -76,6 +77,7 @@ const HomeScreen = ({navigation}: any) => {
     dispatch(getAllNotice());
     dispatch(getAllMembers());
     if (user.isAdmin || user.isAOA) dispatch(getAllComplaints());
+    dispatch(getComplaintsById({currentUserId: user.id}));
   }, []);
   useEffect(() => {
     setNoticeFilteredList(noticeList);
@@ -250,7 +252,7 @@ const HomeScreen = ({navigation}: any) => {
                       : ICONS.PROFILE_ICON
                   }
                 />
-                <Text style={style.headerTitle}>
+                <Text style={{color: COLORS.white, ...FONTS.h3}}>
                   {new Date().toDateString()}
                 </Text>
                 {/* <TouchableOpacity>

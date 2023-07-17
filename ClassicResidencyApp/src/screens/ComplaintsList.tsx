@@ -35,10 +35,12 @@ const ComplaintsList = () => {
     setFilterdList(complaints ?? []);
   }, [complaints]);
   React.useEffect(() => {
-    let ar = complaints?.filter(item =>
-      item.title.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
-    );
-    setFilterdList(ar ?? []);
+    if (complaints && complaints.length > 0) {
+      let ar = complaints?.filter(item =>
+        item?.title?.toLocaleLowerCase()?.includes(input?.toLocaleLowerCase()),
+      );
+      setFilterdList(ar ?? []);
+    }
   }, [input]);
   useFocusEffect(
     React.useCallback(() => {
@@ -92,7 +94,7 @@ const ComplaintsList = () => {
             }}>
             <Text
               style={{
-                ...FONTS.h6,
+                ...FONTS.body7,
                 textAlign: 'center',
                 marginBottom: -5,
                 color: COLORS.white,
@@ -140,7 +142,7 @@ const ComplaintsList = () => {
           zIndex: 1,
         }}>
         <SearchBar
-          searchStyle={{width: '85%'}}
+          searchStyle={{width: '98%'}}
           placeholder={'Search Complaints ...'}
           onChangeText={text => {
             setInput(text);
@@ -148,7 +150,7 @@ const ComplaintsList = () => {
           value={input}
           shadow={'LIGHT'}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => Alert.alert('Pressed')}
           style={{
             marginLeft: 10,
@@ -166,7 +168,7 @@ const ComplaintsList = () => {
             }}
             source={ICONS.FILTER_ICON}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <FlatList
         style={{}}

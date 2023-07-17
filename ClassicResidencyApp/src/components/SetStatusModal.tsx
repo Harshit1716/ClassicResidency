@@ -16,44 +16,9 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 interface ModalProps {
   isVisible: boolean;
   onClose: () => void;
-  onSelect: any;
+  onSelect: (status: string) => void;
 }
-const UploadImageModal = (props: ModalProps) => {
-  const [imageFile, setImageFile] = React.useState<any>();
-  const [imageName, setImageName] = React.useState('');
-
-  function openCamera() {
-    ImageCropPicker.openCamera({
-      width: 300,
-      height: 400,
-      cropping: true,
-    })
-      .then(async image => {
-        await props.onSelect(image);
-        props.onClose();
-      })
-      .catch(error => {
-        console.log('Image picker error:', error);
-        // Handle the error here
-      });
-  }
-  function openGallery() {
-    ImageCropPicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-      cropperToolbarTitle: 'Crop Image',
-    })
-      .then(async image => {
-        await props.onSelect(image);
-        props.onClose();
-        console.log(image, 'Gallery Picked');
-      })
-      .catch(error => {
-        console.log('Image picker error:', error);
-        // Handle the error here
-      });
-  }
+const SetStatusModal = (props: ModalProps) => {
   return (
     <Modal visible={true} animationType="slide" transparent>
       <View
@@ -110,10 +75,10 @@ const UploadImageModal = (props: ModalProps) => {
                 }}
                 onPress={props.onClose}>
                 {/* <Icon
-                  type={Icons.FontAwesome}
-                  name={'close'}
-                  color={COLORS.primary}
-                /> */}
+                    type={Icons.FontAwesome}
+                    name={'close'}
+                    color={COLORS.primary}
+                  /> */}
                 <Image
                   style={{
                     height: 20,
@@ -127,18 +92,27 @@ const UploadImageModal = (props: ModalProps) => {
           </View>
           <TouchableOpacity onPress={() => {}}>
             <CustomBtn
-              title="Camera"
+              title="Pending"
               onPress={() => {
-                openCamera();
+                props.onSelect('Pending');
               }}
               disabled={false}
               shadow={'DEFAULT'}
               color={COLORS.primary}
             />
             <CustomBtn
-              title="Gallery"
+              title="InProgress"
               onPress={() => {
-                openGallery();
+                props.onSelect('InProgress');
+              }}
+              disabled={false}
+              shadow={'DEFAULT'}
+              color={COLORS.primary}
+            />
+            <CustomBtn
+              title="Closed"
+              onPress={() => {
+                props.onSelect('Closed');
               }}
               disabled={false}
               shadow={'DEFAULT'}
@@ -151,6 +125,6 @@ const UploadImageModal = (props: ModalProps) => {
   );
 };
 
-export default UploadImageModal;
+export default SetStatusModal;
 
 const styles = StyleSheet.create({});

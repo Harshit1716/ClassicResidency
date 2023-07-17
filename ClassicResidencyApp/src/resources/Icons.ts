@@ -56,8 +56,10 @@ const GUARD_ICON = require('../assets/guard.png');
 const INTERCOM_ICON = require('../assets/intercom.png');
 const AOA_ICON = require('../assets/AOA.png');
 const SELECTED_ICON = require('../assets/success.png');
+const COMMING_SOON_ICON = require('../assets/commingSoon.jpeg');
 
 export {
+  COMMING_SOON_ICON,
   SELECTED_ICON,
   INTERCOM_ICON,
   AOA_ICON,

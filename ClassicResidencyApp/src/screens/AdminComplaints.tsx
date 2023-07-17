@@ -139,7 +139,7 @@ const AdminComplaints = () => {
           zIndex: 1,
         }}>
         <SearchBar
-          searchStyle={{width: '85%'}}
+          searchStyle={{width: '97%'}}
           placeholder={'Search Complaints ...'}
           onChangeText={text => {
             setInput(text);
@@ -147,7 +147,7 @@ const AdminComplaints = () => {
           value={input}
           shadow={'LIGHT'}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => Alert.alert('Pressed')}
           style={{
             marginLeft: 10,
@@ -165,7 +165,7 @@ const AdminComplaints = () => {
             }}
             source={ICONS.FILTER_ICON}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <FlatList
         style={{}}

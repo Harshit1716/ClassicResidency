@@ -19,15 +19,18 @@ import {ComplaintType, Notice} from '../stateManagemer/models/SocietyAppModal';
 import SelectCategoryModal from './SelectCategoryModal';
 import SelectAssignedToModal from './SelectAssignedToModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {redirectToPhoneNumber} from '../resources/Utils';
+import {getStatusColor, redirectToPhoneNumber} from '../resources/Utils';
 import AppButton from './AppButton';
 import {updateAssignedTo} from '../stateManagemer/slice/ServiceSlice';
 import MainView from './MainView';
+import SetStatusModal from './SetStatusModal';
 
 const ComplaintDetail = ({route}: any) => {
   const [data, setData] = useState<ComplaintType>(route?.params?.data);
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [selectedAssigned, setSelectedAssigned] = useState('');
+  const [status, setStatus] = useState('');
   const [selectedMember, setSelectedMember] = useState();
   const members = useAppSelector(state => state.userReducer.members);
   const dispatch = useAppDispatch();
@@ -36,6 +39,7 @@ const ComplaintDetail = ({route}: any) => {
 
   useEffect(() => {
     setSelectedAssigned(route.params.data.assignedTo);
+    setStatus(route.params.data.status);
   }, [route.params.data]);
 
   useEffect(() => {
@@ -46,7 +50,11 @@ const ComplaintDetail = ({route}: any) => {
   const handleAssignedTo = async () => {
     if (editable && selectedAssigned != '') {
       await dispatch(
-        updateAssignedTo({id: data.id, assignedTo: selectedAssigned}),
+        updateAssignedTo({
+          id: data.id,
+          assignedTo: selectedAssigned,
+          status: status,
+        }),
       );
       setEditable(false);
     } else {
@@ -100,21 +108,35 @@ const ComplaintDetail = ({route}: any) => {
               <Text style={{...FONTS.body4}}>By : {data.by}</Text>
               <Text style={{...FONTS.body4}}>Date : {data.createdOn}</Text>
             </View>
-            <Text
+            <TouchableOpacity
               style={{
                 width: '30%',
                 // alignSelf: 'center',
                 overflow: 'hidden',
                 ...FONTS.body3,
                 padding: 8,
-                textAlign: 'center',
-                backgroundColor: 'red',
+                // textAlign: 'center',
+                backgroundColor: getStatusColor(status ?? 'Pending'),
                 borderRadius: 5,
                 marginVertical: SIZES.spacing,
-                color: COLORS.white,
+                // color: COLORS.white,
+              }}
+              disabled={!editable}
+              onPress={() => {
+                if (editable) {
+                  setOpen2(true);
+                }
               }}>
-              {data.status}
-            </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  ...FONTS.body5,
+
+                  color: COLORS.white,
+                }}>
+                {status}
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={{...FONTS.h3, marginTop: 10}}>Service :</Text>
@@ -276,6 +298,18 @@ const ComplaintDetail = ({route}: any) => {
           isVisible={open}
           onClose={() => setOpen(false)}
           onSelect={setSelectedAssigned}
+        />
+      )}
+      {open2 && (
+        <SetStatusModal
+          isVisible={open2}
+          onClose={() => {
+            setOpen2(false);
+          }}
+          onSelect={txt => {
+            setStatus(txt);
+            setOpen2(false);
+          }}
         />
       )}
     </MainView>

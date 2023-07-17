@@ -115,16 +115,23 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
   }
 
   const validate = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneNumberRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+    // !phoneNumberRegex.test(number)
     if (name.length == 0 || name.length < 3) {
       Alert.alert('Error', 'Please enter a valid Name ');
       return false;
     }
-    if (number.length == 0 || number.length < 3) {
+    if (number.length == 0 || !phoneNumberRegex.test(number)) {
       Alert.alert('Error', 'Please enter a valid number ');
       return false;
     }
-    if (email.length == 0 || email.length < 5) {
-      Alert.alert('Error', 'Please enter a email ');
+    if (email.length == 0 || !emailRegex.test(email)) {
+      Alert.alert('Error', 'Please enter a valid email ');
+      return false;
+    }
+    if (imageFile == null) {
+      Alert.alert('Error', 'Please upload an image ');
       return false;
     }
 
@@ -167,7 +174,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                 title={email}
                 disabled={false}
                 onChangeText={text => setEmail(text)}
-                placeholder="Contact Number"
+                placeholder="Email"
                 keybordType="email"
               />
               <View
@@ -217,7 +224,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                       fontSize: 16,
                       fontFamily: 'Poppins',
                     }}>
-                    Upload Image (Optional)
+                    Upload Image
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -239,7 +246,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                       width: 50,
                       height: 50,
                       marginRight: -20,
-                      backgroundColor: 'red',
+                      backgroundColor: COLORS.primary,
                       ...SHADOW,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -248,11 +255,10 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                       alignSelf: 'flex-end',
                     }}
                     onPress={() => deleteImage()}>
-                    {/* <Icon
-                      type={Icons.FontAwesome}
-                      name={'close'}
-                      color={COLORS.white}
-                    /> */}
+                    <Image
+                      source={ICONS.CLOSE_ICON}
+                      style={{height: 20, tintColor: COLORS.white, width: 20}}
+                    />
                   </TouchableOpacity>
                 </ImageBackground>
               </View>

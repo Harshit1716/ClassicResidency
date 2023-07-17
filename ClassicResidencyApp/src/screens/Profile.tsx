@@ -100,7 +100,7 @@ const Profile = ({navigation}: any) => {
               height: SIZES.height * 0.15,
               paddingHorizontal: 20,
               justifyContent: 'space-between',
-              alignItems: 'center',
+              // alignItems: 'center',
             }}>
             <View
               style={{
@@ -136,7 +136,9 @@ const Profile = ({navigation}: any) => {
                 </Text>
               </View>
             </View>
-            <Text style={style.headerTitle}>{new Date().toDateString()}</Text>
+            <Text style={{color: COLORS.white, ...FONTS.h3}}>
+              {new Date().toDateString()}
+            </Text>
             {/* <TouchableOpacity>
               <Image
                 style={{height: 40, width: 40, tintColor: COLORS.white}}

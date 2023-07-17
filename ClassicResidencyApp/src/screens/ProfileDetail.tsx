@@ -21,11 +21,15 @@ import {
   uploadProfilePic,
 } from '../stateManagemer/slice/ServiceSlice';
 import UploadImageModal from '../components/UploadImageModal';
+import MainView from '../components/MainView';
+import SetStatusModal from '../components/SetStatusModal';
 
 const ProfileDetail = () => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+
   const [name, setName] = useState('');
+
   const [email, setEmail] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
   const [tName, setTName] = useState('');
@@ -77,7 +81,7 @@ const ProfileDetail = () => {
     );
   };
   return (
-    <View style={{flex: 1}}>
+    <MainView style={{flex: 1}}>
       <Header
         iconPress={() => {
           if (editable == false) setEditable(true);
@@ -175,6 +179,7 @@ const ProfileDetail = () => {
           {TextView(phoneNo)}
         </View>
         {(user?.tenantName == undefined || user.tenantName == '') &&
+          !user.tenantName &&
           editable && (
             <TouchableOpacity
               onPress={() => setOpen(true)}
@@ -202,7 +207,7 @@ const ProfileDetail = () => {
               </Text>
             </TouchableOpacity>
           )}
-        {user.tenantName !== '' && (
+        {user.tenantName !== '' && user.tenantName && (
           <View
             style={{
               width: '90%',
@@ -230,8 +235,8 @@ const ProfileDetail = () => {
                 }
                 style={{
                   // alignSelf: 'center',
-                  width: 90,
-                  height: 90,
+                  width: 80,
+                  height: 80,
                   backgroundColor: COLORS.lightGray,
                   borderRadius: 75,
                   marginLeft: 10,
@@ -338,7 +343,7 @@ const ProfileDetail = () => {
           onSelect={setImageFile}
         />
       )}
-    </View>
+    </MainView>
   );
 };
 
@@ -367,9 +372,9 @@ const styles = StyleSheet.create({
   },
   profilePicture: {
     alignSelf: 'center',
-    width: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 120 : 120,
+    width: Platform.OS == 'android' ? 110 : SIZES.height > 812 ? 120 : 120,
     marginTop: '15%',
-    height: Platform.OS == 'android' ? 120 : SIZES.height > 812 ? 120 : 120,
+    height: Platform.OS == 'android' ? 110 : SIZES.height > 812 ? 120 : 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 75,
     zIndex: 1,

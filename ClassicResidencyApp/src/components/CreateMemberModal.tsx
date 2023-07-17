@@ -86,6 +86,9 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
     deleteImage();
   }
 
+  useEffect(() => {
+    setDecsription(type);
+  }, [type]);
   function handleSubmit() {
     if (validate()) {
       dispatch(
@@ -116,16 +119,18 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
   }
 
   const validate = () => {
+    const phoneNumberRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+    // !phoneNumberRegex.test(number)
     if (title.length == 0 || title.length < 3 || title.length > 25) {
       Alert.alert('Error', 'Please enter a valid title ');
       return false;
     }
-    if (subject.length == 0 || subject.length < 3) {
-      Alert.alert('Error', 'Please enter a valid subject ');
+    if (subject.length == 0 || !phoneNumberRegex.test(subject)) {
+      Alert.alert('Error', 'Please enter a valid phone number ');
       return false;
     }
     if (description.length == 0) {
-      Alert.alert('Error', 'Please enter a valid Description ');
+      Alert.alert('Error', 'Please select a valid member type ');
       return false;
     }
     if (imageFile == null || imageFile == undefined) {
@@ -168,7 +173,7 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                 Type
               </Text>
 
-              {type || type != '' ? (
+              {description || description != '' ? (
                 <TouchableOpacity
                   disabled={true}
                   style={{overflow: 'hidden'}}
@@ -186,7 +191,7 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                       marginVertical: SIZES.spacing,
                       color: COLORS.gray,
                     }}>
-                    {type}
+                    {description}
                   </Text>
                 </TouchableOpacity>
               ) : (

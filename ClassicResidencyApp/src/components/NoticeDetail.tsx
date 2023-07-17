@@ -46,11 +46,12 @@ const NoticeDetail = ({route}: any) => {
           </Text>
           {data.imageUrl != '' && (
             <ImageBackground
-              resizeMode="contain"
+              resizeMode="stretch"
               style={{
                 // height: 350,
                 // height: '100%',
-                aspectRatio: 1 / 1.5,
+                marginBottom: 20,
+                aspectRatio: 1 / 1,
                 width: '100%',
                 marginTop: '10%',
                 borderRadius: 10,
@@ -79,7 +80,7 @@ const NoticeDetail = ({route}: any) => {
             </TouchableOpacity> */}
             </ImageBackground>
           )}
-          <Text style={{...FONTS.body3, marginTop: 10}}>
+          <Text style={{...FONTS.h3, marginTop: 10}}>
             Subject : {data.subject}
           </Text>
           <Text
