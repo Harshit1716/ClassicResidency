@@ -36,14 +36,18 @@ export const clearAll = async () => {
 export const userDataSKeys = 'user_login_data';
 
 export const uploadImageToFirebase = async (image: any) => {
-  if (image != null && image?.path != null) {
+  if (
+    image != null &&
+    image?.assets.length != 0 &&
+    image?.assets?.[0]?.uri != null
+  ) {
     try {
       const fileName = Date.now().toString();
 
       const task = storage()
         .ref()
-        .child(`images/${fileName}`)
-        .putFile(image.path);
+        .child(`images/${image?.assets?.[0]?.fileName}`)
+        .putFile(image?.assets?.[0]?.uri);
 
       // Monitor the upload progress
       task.on('state_changed', snapshot => {

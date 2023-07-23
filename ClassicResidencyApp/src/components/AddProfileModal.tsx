@@ -263,7 +263,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                     width: SIZES.width * 0.8,
                     marginTop: 30,
                   }}
-                  source={{uri: imageFile.path + ''}}>
+                  source={{uri: imageFile?.assets?.[0]?.uri + ''}}>
                   <TouchableOpacity
                     style={{
                       width: 50,

@@ -1,6 +1,9 @@
 import {
+  Alert,
   Image,
   Modal,
+  PermissionsAndroid,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,7 +15,12 @@ import {FONTS, SHADOW, SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 // import Icon, {Icons} from './Icons';
 import ImageCropPicker from 'react-native-image-crop-picker';
-
+import {
+  CameraOptions,
+  ImageLibraryOptions,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 interface ModalProps {
   isVisible: boolean;
   onClose: () => void;
@@ -36,6 +44,19 @@ const UploadImageModal = (props: ModalProps) => {
         console.log('Image picker error:', error);
         // Handle the error here
       });
+    var options = {
+      title: 'Select Image',
+      customButtons: [
+        {
+          name: 'customOptionKey',
+          title: 'Choose Photo from Custom Option',
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
   }
   function openGallery() {
     ImageCropPicker.openPicker({
@@ -54,6 +75,110 @@ const UploadImageModal = (props: ModalProps) => {
         // Handle the error here
       });
   }
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else return true;
+  };
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        Alert.alert('Write permission err', err + '');
+      }
+      return false;
+    } else return true;
+  };
+
+  const captureImage = async () => {
+    let options: CameraOptions = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+      saveToPhotos: true,
+    };
+    // let isCameraPermitted = await requestCameraPermission();
+    // let isStoragePermitted = await requestExternalWritePermission();
+    if (true) {
+      launchCamera(options, async response => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          Alert.alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          Alert.alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          Alert.alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          Alert.alert(response?.errorMessage ?? '');
+          return;
+        }
+        await props.onSelect(response);
+        props.onClose();
+        console.log(response, 'Gallery Picked');
+
+        // setFilePath(response);
+      });
+    }
+  };
+
+  const chooseFile = () => {
+    let options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, async response => {
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        console.log('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        console.log('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        console.log('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        console.log(response?.errorMessage ?? '');
+        return;
+      }
+      await props.onSelect(response);
+      props.onClose();
+      console.log(response, 'Gallery Picked');
+      // console.log('base64 -> ', response.base64);
+      // console.log('uri -> ', response.uri);
+      // console.log('width -> ', response.width);
+      // console.log('height -> ', response.height);
+      // console.log('fileSize -> ', response.fileSize);
+      // console.log('type -> ', response.type);
+      // console.log('fileName -> ', response.fileName);
+      // setFilePath(response);
+    });
+  };
+
   return (
     <Modal visible={true} animationType="slide" transparent>
       <View
@@ -129,7 +254,7 @@ const UploadImageModal = (props: ModalProps) => {
             <CustomBtn
               title="Camera"
               onPress={() => {
-                openCamera();
+                captureImage();
               }}
               disabled={false}
               shadow={'DEFAULT'}
@@ -138,7 +263,7 @@ const UploadImageModal = (props: ModalProps) => {
             <CustomBtn
               title="Gallery"
               onPress={() => {
-                openGallery();
+                chooseFile();
               }}
               disabled={false}
               shadow={'DEFAULT'}

@@ -346,17 +346,17 @@ const ProfileDetail = () => {
               user.currentUser === user.phoneNumber
                 ? user.imageUrl
                   ? imageFile != null
-                    ? {uri: imageFile.path + ''}
+                    ? {uri: imageFile?.assets?.[0]?.uri + ''}
                     : {uri: user.imageUrl + ''}
                   : imageFile != null
-                  ? {uri: imageFile.path + ''}
+                  ? {uri: imageFile?.assets?.[0]?.uri + ''}
                   : ICONS.PROFILE_ICON
                 : user.tenantImage
                 ? imageFile != null
-                  ? {uri: imageFile.path + ''}
+                  ? {uri: imageFile?.assets?.[0]?.uri + ''}
                   : {uri: user.tenantImage + ''}
                 : imageFile != null
-                ? {uri: imageFile.path + ''}
+                ? {uri: imageFile?.assets?.[0]?.uri + ''}
                 : ICONS.PROFILE_ICON
             }
             style={styles.profilePicture}></Image>
