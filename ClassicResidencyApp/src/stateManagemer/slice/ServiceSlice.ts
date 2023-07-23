@@ -257,7 +257,7 @@ export const createComplaint = createAsyncThunk(
 export const addTenant = createAsyncThunk(
   'user/addTenant',
   async (
-    {userId, name, number, email, isTenant, image}: any,
+    {userId, name, number, email, isTenant, image, actionType}: any,
     {rejectWithValue},
   ) => {
     try {
@@ -277,7 +277,7 @@ export const addTenant = createAsyncThunk(
 
       const [snapshot, snapshot2] = await Promise.all([query, query2]);
 
-      if (!snapshot.empty || !snapshot2.empty) {
+      if (actionType == 'ADD' && (!snapshot.empty || !snapshot2.empty)) {
         // Alert.alert('Error', 'Phone number already exists');
         throw new Error('Phone number already exists');
       }
@@ -537,10 +537,23 @@ export const userSlice = createSlice({
       // if (action.payload.isTenantAdded) {
       state.tenantName = action.payload.tenantName;
       state.tenantEmail = action.payload.tenantEmail;
+      state.tenantPassword = action.payload.tenantPassword;
       state.tenantPhoneNumber = action.payload.tenantPhoneNumber;
+
+      let user = {
+        phoneNumber: '',
+        password: '',
+      };
+      if (state.currentUser === state.phoneNumber) {
+        user.password = state.password;
+        user.phoneNumber = state.phoneNumber;
+      } else if (state.currentUser === state.tenantPhoneNumber) {
+        user.password = state.tenantPassword;
+        user.phoneNumber = state.tenantPhoneNumber;
+      }
       // }
       state.error = null;
-      storeData(userDataSKeys, state);
+      storeData(userDataSKeys, user);
     });
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false;

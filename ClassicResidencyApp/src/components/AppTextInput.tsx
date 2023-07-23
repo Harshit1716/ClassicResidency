@@ -10,13 +10,14 @@ interface InputProps {
   placeholder: string;
   onChangeText: (text: string) => void;
   editable: boolean;
+  keyboarType?: string;
 }
 
 const AppTextInput = (props: InputProps) => {
   const [focused, setFocused] = useState<boolean>(false);
   return (
     <TextInput
-      keyboardType="number-pad"
+      keyboardType={props.keyboarType == 'phone' ? 'number-pad' : 'default'}
       onChangeText={props.onChangeText}
       value={props.value}
       placeholder={props.placeholder}

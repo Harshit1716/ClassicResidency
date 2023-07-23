@@ -93,6 +93,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
           email: email,
           image: imageFile,
           isTenant: tenant,
+          actionType: 'ADD',
         }),
       );
       onClose();
@@ -149,7 +150,9 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 25}}>Name</Text>
+              <Text style={{...FONTS.h3, marginLeft: 25, color: COLORS.gray}}>
+                Name
+              </Text>
               <ProfileTextInput
                 title={name}
                 disabled={false}
@@ -157,7 +160,13 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                 placeholder="Title"
               />
 
-              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 25,
+                  color: COLORS.gray,
+                  marginTop: 10,
+                }}>
                 Contact Number
               </Text>
               <ProfileTextInput
@@ -167,7 +176,13 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                 placeholder="Contact Number"
                 keybordType="phone"
               />
-              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 25,
+                  color: COLORS.gray,
+                  marginTop: 10,
+                }}>
                 Email
               </Text>
               <ProfileTextInput
@@ -191,7 +206,13 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
                   borderRadius: SIZES.spacing,
                   marginVertical: SIZES.spacing,
                 }}>
-                <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+                <Text
+                  style={{
+                    ...FONTS.h3,
+                    marginLeft: 25,
+                    color: COLORS.gray,
+                    marginTop: 10,
+                  }}>
                   Is member tenant
                 </Text>
 
@@ -231,7 +252,9 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
             )}
             {imageFile != null && (
               <View style={{marginTop: 20, alignSelf: 'center'}}>
-                <Text style={{...FONTS.h3, marginTop: 10}}>Image</Text>
+                <Text style={{...FONTS.h3, color: COLORS.gray, marginTop: 10}}>
+                  Image
+                </Text>
                 <ImageBackground
                   resizeMode="stretch"
                   style={{

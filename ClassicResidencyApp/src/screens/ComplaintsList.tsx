@@ -1,6 +1,7 @@
 import {
   Alert,
   FlatList,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,12 +22,14 @@ import {getComplaintsById} from '../stateManagemer/slice/ServiceSlice';
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getStatusColor} from '../resources/Utils';
+import NoDataFound from '../components/NoDataFound';
 
 const ComplaintsList = () => {
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
   const userId = useAppSelector(state => state.userReducer.id);
   const complaints = useAppSelector(state => state.userReducer.complaints);
+  const members = useAppSelector(state => state.userReducer.members);
   const dispatch = useAppDispatch();
   const [filterdList, setFilterdList] = useState<ComplaintType[]>([]);
   const navigation = useNavigation();
@@ -71,7 +74,7 @@ const ComplaintsList = () => {
             marginBottom: 10,
           }}>
           <View style={{justifyContent: 'center'}}>
-            <Text style={{...FONTS.h3}}>{item.type}</Text>
+            <Text style={{...FONTS.h3, color: COLORS.black}}>{item.type}</Text>
             {item.assignedTo != '' && (
               <TouchableOpacity
                 style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -79,7 +82,9 @@ const ComplaintsList = () => {
                   style={{height: 20, width: 20, marginRight: 10}}
                   source={ICONS.PROFILE_ICON}
                 />
-                <Text style={{...FONTS.body7}}>{item.assignedTo}</Text>
+                <Text style={{...FONTS.body7, color: COLORS.gray}}>
+                  {members.filter(obj => obj.id === item.assignedTo)[0].name}
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -103,8 +108,8 @@ const ComplaintsList = () => {
             </Text>
           </View>
         </View>
-        <Text style={{...FONTS.h3}}>{item.title}</Text>
-        <Text numberOfLines={3} style={{...FONTS.body4}}>
+        <Text style={{...FONTS.h3, color: COLORS.black}}>{item.title}</Text>
+        <Text numberOfLines={3} style={{...FONTS.body4, color: COLORS.gray}}>
           {item.description}
         </Text>
         <View
@@ -116,19 +121,26 @@ const ComplaintsList = () => {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View>
-              <Text style={{...FONTS.body4}}>By : {item.by}</Text>
-              <Text numberOfLines={3} style={{...FONTS.body5}}>
+              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+                By : {item.by}
+              </Text>
+              <Text
+                numberOfLines={3}
+                style={{...FONTS.body5, color: COLORS.gray}}>
                 Flat : {item.flatNo}
               </Text>
             </View>
           </View>
-          <Text style={{...FONTS.body5}}>{item.createdOn}</Text>
+          <Text style={{...FONTS.body5, color: COLORS.gray}}>
+            {item.createdOn}
+          </Text>
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <MainView>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header
         title="Complaints"
         rightIconType="CREATE"
@@ -170,14 +182,18 @@ const ComplaintsList = () => {
           />
         </TouchableOpacity> */}
       </View>
-      <FlatList
-        style={{}}
-        ListFooterComponent={() => (
-          <View style={{height: SIZES.height * 0.2}}></View>
-        )}
-        data={filterdList}
-        renderItem={renderItem}
-      />
+      {filterdList.length > 0 ? (
+        <FlatList
+          style={{}}
+          ListFooterComponent={() => (
+            <View style={{height: SIZES.height * 0.2}}></View>
+          )}
+          data={filterdList}
+          renderItem={renderItem}
+        />
+      ) : (
+        <NoDataFound />
+      )}
       <CreateComplaintsModal onClose={() => setOpen(false)} isVisible={open} />
     </MainView>
   );

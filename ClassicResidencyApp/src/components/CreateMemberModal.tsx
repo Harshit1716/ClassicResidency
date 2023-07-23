@@ -151,7 +151,9 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 25}}>Name</Text>
+              <Text style={{...FONTS.h3, marginLeft: 25, color: COLORS.gray}}>
+                Name
+              </Text>
               <ProfileTextInput
                 title={title}
                 disabled={false}
@@ -159,7 +161,13 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                 placeholder="Title"
               />
 
-              <Text style={{...FONTS.h3, marginLeft: 25, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 25,
+                  color: COLORS.gray,
+                  marginTop: 10,
+                }}>
                 Contact Number
               </Text>
               <ProfileTextInput
@@ -169,7 +177,13 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                 placeholder="Contact Number"
                 keybordType="phone"
               />
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 20,
+                  marginTop: 10,
+                  color: COLORS.gray,
+                }}>
                 Type
               </Text>
 
@@ -260,7 +274,7 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                       width: 50,
                       height: 50,
                       marginRight: -20,
-                      backgroundColor: 'red',
+                      backgroundColor: COLORS.primary,
                       ...SHADOW,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -269,11 +283,14 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                       alignSelf: 'flex-end',
                     }}
                     onPress={() => deleteImage()}>
-                    {/* <Icon
-                      type={Icons.FontAwesome}
-                      name={'close'}
-                      color={COLORS.white}
-                    /> */}
+                    <Image
+                      style={{
+                        height: 20,
+                        width: 20,
+                        tintColor: COLORS.white,
+                      }}
+                      source={ICONS.CLOSE_ICON}
+                    />
                   </TouchableOpacity>
                 </ImageBackground>
               </View>

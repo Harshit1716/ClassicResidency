@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import MainView from '../components/MainView';
 import Header from '../components/Header';
@@ -7,6 +7,7 @@ import {COLORS, ICONS, SIZES} from '../resources';
 const Engage = () => {
   return (
     <MainView>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header hideBackIcon={true} title={'Engage'} rightIconType="NONE" />
       <View
         style={{

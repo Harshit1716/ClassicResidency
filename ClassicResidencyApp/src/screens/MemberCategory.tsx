@@ -27,7 +27,13 @@ const MemberCategory = () => {
         iconPress={() => setOpen(true)}
       />
       <View style={{}}>
-        <Text style={{...FONTS.h2, marginVertical: '10%', alignSelf: 'center'}}>
+        <Text
+          style={{
+            ...FONTS.h2,
+            marginVertical: '10%',
+            alignSelf: 'center',
+            color: COLORS.gray,
+          }}>
           Choose Catergory
         </Text>
 
@@ -121,6 +127,7 @@ const MemberCategory = () => {
                     width: SIZES.width * 0.28,
                     padding: '5%',
                     justifyContent: 'center',
+                    marginTop: 10,
                     marginHorizontal: SIZES.width * 0.02,
                     alignItems: 'center',
                     marginBottom: '10%',
@@ -138,6 +145,7 @@ const MemberCategory = () => {
                   <Text
                     style={{
                       marginTop: 10,
+
                       ...FONTS.body8,
                       color: pressed != index ? COLORS.black : COLORS.white,
                     }}>

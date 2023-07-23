@@ -17,7 +17,7 @@ import MainView from '../components/MainView';
 import {SHADOW_PRIMARY} from '../resources/Theme';
 import {getData, userDataSKeys} from '../resources/Utils';
 import {useAppDispatch} from '../stateManagemer/Store';
-import {loginUser} from '../stateManagemer/slice/ServiceSlice';
+import {login, loginUser} from '../stateManagemer/slice/ServiceSlice';
 
 const {height} = Dimensions.get('window');
 
@@ -26,7 +26,9 @@ const OnBoardingScreen = ({navigation}: any) => {
   const checkUserExists = async () => {
     const user = await getData(userDataSKeys);
     if (user != null) {
-      dispatch(loginUser(user));
+      dispatch(
+        login({phoneNumber: user?.phoneNumber, password: user?.password}),
+      );
     }
   };
   useEffect(() => {

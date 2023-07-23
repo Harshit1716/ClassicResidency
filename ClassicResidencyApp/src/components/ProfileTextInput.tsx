@@ -42,6 +42,7 @@ const ProfileTextInput = (props: InputProps) => {
           backgroundColor: COLORS.lightPrimary,
           borderRadius: SIZES.spacing,
           marginVertical: SIZES.spacing,
+          color: COLORS.black,
         },
         focused && {
           borderStyle: 'dotted',

@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
@@ -15,6 +22,7 @@ import {
   deleteMember,
   getAllMembers,
 } from '../stateManagemer/slice/ServiceSlice';
+import NoDataFound from '../components/NoDataFound';
 
 const MembersList = ({route}: any) => {
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
@@ -27,8 +35,10 @@ const MembersList = ({route}: any) => {
 
   React.useEffect(() => {
     if (members) {
-      let ar = members.filter(item =>
-        item.name.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
+      let ar = members.filter(
+        item =>
+          item.name.toLocaleLowerCase().includes(input.toLocaleLowerCase()) &&
+          item.type == route?.params?.data,
       );
       setMemberFilteredList(ar);
     }
@@ -112,10 +122,10 @@ const MembersList = ({route}: any) => {
           flexDirection: 'row',
         }}>
         <Image
-          style={{height: 50, width: 50, borderRadius: 50}}
+          style={{height: 60, width: 60, borderRadius: 10}}
           source={{uri: item.imageUrl + ''}}></Image>
         <View style={{flex: 1, paddingHorizontal: '5%'}}>
-          <Text style={{...FONTS.h3}}>{item.name}</Text>
+          <Text style={{...FONTS.h3, color: COLORS.black}}>{item.name}</Text>
           <Text style={{...FONTS.body5, color: COLORS.gray}}>
             Contact No:- {item.phoneNumber}
           </Text>
@@ -133,9 +143,10 @@ const MembersList = ({route}: any) => {
   };
   return (
     <MainView>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header
         title="Members List "
-        rightIconType={isAOA || isAdmin ? 'CREATE' : 'NONE'}
+        rightIconType={isAdmin ? 'CREATE' : 'NONE'}
         iconPress={() => setOpen(true)}
       />
       <View
@@ -159,33 +170,47 @@ const MembersList = ({route}: any) => {
       </View>
       <View style={{marginTop: 20}}></View>
 
-      {isAOA || isAdmin ? (
-        <SwipeListView
-          showsVerticalScrollIndicator={false}
-          data={memberFilteredList}
-          renderItem={({item, index}) => renderMainItem({item, index})}
-          renderHiddenItem={(data, rowMap) => renderHiddenItem({data, rowMap})}
-          ListFooterComponent={() => (
-            <View style={{height: SIZES.height * 0.3}}></View>
+      {isAdmin ? (
+        <>
+          {memberFilteredList.length > 0 ? (
+            <SwipeListView
+              showsVerticalScrollIndicator={false}
+              data={memberFilteredList}
+              renderItem={({item, index}) => renderMainItem({item, index})}
+              renderHiddenItem={(data, rowMap) =>
+                renderHiddenItem({data, rowMap})
+              }
+              ListFooterComponent={() => (
+                <View style={{height: SIZES.height * 0.3}}></View>
+              )}
+              contentContainerStyle={{marginHorizontal: 10}}
+              rightOpenValue={-130}
+              previewRowKey={'0'}
+              previewOpenValue={-40}
+              previewOpenDelay={3000}
+              onRowDidOpen={onRowDidOpen}
+            />
+          ) : (
+            <NoDataFound />
           )}
-          contentContainerStyle={{marginHorizontal: 10}}
-          rightOpenValue={-130}
-          previewRowKey={'0'}
-          previewOpenValue={-40}
-          previewOpenDelay={3000}
-          onRowDidOpen={onRowDidOpen}
-        />
+        </>
       ) : (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          style={{margin: '5%', height: SIZES.height * 0.9}}
-          data={memberFilteredList}
-          ListFooterComponent={() => (
-            <View style={{height: SIZES.height * 0.2}}></View>
+        <>
+          {memberFilteredList.length > 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{margin: '5%', height: SIZES.height * 0.9}}
+              data={memberFilteredList}
+              ListFooterComponent={() => (
+                <View style={{height: SIZES.height * 0.2}}></View>
+              )}
+              renderItem={({item, index}) =>
+                renderMainItem({item, index})
+              }></FlatList>
+          ) : (
+            <NoDataFound />
           )}
-          renderItem={({item, index}) =>
-            renderMainItem({item, index})
-          }></FlatList>
+        </>
       )}
       <CreateMemberModal
         type={route?.params?.data}

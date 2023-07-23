@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   Platform,
   SafeAreaView,
@@ -24,12 +25,12 @@ const LoginScreen = () => {
   const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
     const data = {
-      flatNumber: '102',
-      flatType: 'H3',
-      block: 'A',
-      name: 'Puneey Singh',
-      email: 'puneet@yopmail.com',
-      phoneNumber: '8383921635',
+      flatNumber: '1102',
+      flatType: 'H2',
+      block: 'J',
+      name: 'Akshay Bhardwaj',
+      email: 'akshay@yopmail.com',
+      phoneNumber: '9512347086',
     };
     dispatch(createUser({...data}));
   }
@@ -37,10 +38,31 @@ const LoginScreen = () => {
   const [password, setPasssword] = useState('');
   useEffect(() => {
     setNumber('8383921635');
-    setPasssword('5361293838');
+    setPasssword('Harry');
     // setNumber('9355209292');
     // setPasssword('Harry');
   }, []);
+
+  const validate = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneNumberRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+    // !phoneNumberRegex.test(number)
+    if (number.length == 0) {
+      Alert.alert('Error', 'Please enter a number ');
+      return false;
+    }
+    if (!phoneNumberRegex.test(number)) {
+      Alert.alert('Error', 'Please enter a valid number ');
+      return false;
+    }
+    if (password.length == 0) {
+      Alert.alert('Error', 'Please enter a password  ');
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <MainView>
       <View
@@ -130,7 +152,9 @@ const LoginScreen = () => {
         <AppButton
           title="Login"
           onPress={() => {
-            dispatch(login({phoneNumber: number, password: password}));
+            if (validate()) {
+              dispatch(login({phoneNumber: number, password: password}));
+            }
           }}
           disabled={isLoading}
         />

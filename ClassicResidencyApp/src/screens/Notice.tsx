@@ -20,6 +20,7 @@ import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {Notice} from '../stateManagemer/models/SocietyAppModal';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {deleteNotice, getAllNotice} from '../stateManagemer/slice/ServiceSlice';
+import NoDataFound from '../components/NoDataFound';
 // import Icon, {Icons} from '../components/Icons';
 
 const NoticeList = () => {
@@ -136,36 +137,48 @@ const NoticeList = () => {
         </View>
         {isAdmin || isAOA ? (
           <>
-            <View style={{marginTop: 20}}></View>
-            <SwipeListView
-              data={noticeFilteredList}
-              renderItem={({item, index}) => (
-                <NoticeCard item={item} index={index} />
-              )}
-              renderHiddenItem={(data, rowMap) =>
-                renderHiddenItem({data, rowMap})
-              }
-              ListFooterComponent={() => (
-                <View style={{height: SIZES.height * 0.05}}></View>
-              )}
-              rightOpenValue={-130}
-              previewRowKey={'0'}
-              previewOpenValue={-40}
-              previewOpenDelay={3000}
-              onRowDidOpen={onRowDidOpen}
-            />
+            {noticeFilteredList.length > 0 ? (
+              <>
+                <View style={{marginTop: 20}}></View>
+                <SwipeListView
+                  data={noticeFilteredList}
+                  renderItem={({item, index}) => (
+                    <NoticeCard item={item} index={index} />
+                  )}
+                  renderHiddenItem={(data, rowMap) =>
+                    renderHiddenItem({data, rowMap})
+                  }
+                  ListFooterComponent={() => (
+                    <View style={{height: SIZES.height * 0.05}}></View>
+                  )}
+                  rightOpenValue={-130}
+                  previewRowKey={'0'}
+                  previewOpenValue={-40}
+                  previewOpenDelay={3000}
+                  onRowDidOpen={onRowDidOpen}
+                />
+              </>
+            ) : (
+              <NoDataFound />
+            )}
           </>
         ) : (
-          <FlatList
-            contentContainerStyle={{marginTop: 20, marginHorizontal: '2%'}}
-            data={noticeFilteredList}
-            renderItem={({item, index}) => {
-              return <NoticeCard item={item} index={index} />;
-            }}
-            ListFooterComponent={() => (
-              <View style={{height: SIZES.height * 0.05}} />
+          <>
+            {noticeFilteredList.length ? (
+              <FlatList
+                contentContainerStyle={{marginTop: 20, marginHorizontal: '2%'}}
+                data={noticeFilteredList}
+                renderItem={({item, index}) => {
+                  return <NoticeCard item={item} index={index} />;
+                }}
+                ListFooterComponent={() => (
+                  <View style={{height: SIZES.height * 0.05}} />
+                )}
+              />
+            ) : (
+              <NoDataFound />
             )}
-          />
+          </>
         )}
 
         <CreateNoticeModal onClose={() => setOpen(false)} isVisible={open} />

@@ -1,4 +1,4 @@
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import MainView from '../components/MainView';
 import Header from '../components/Header';
@@ -8,6 +8,7 @@ import {Image} from 'react-native-animatable';
 const ShopsList = () => {
   return (
     <MainView>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header hideBackIcon={true} title={'SHOPS'} rightIconType="NONE" />
 
       <View

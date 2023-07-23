@@ -136,7 +136,13 @@ const HomeScreen = ({navigation}: any) => {
             <View key={index} style={style.iconContainer}>
               {item.Icon}
             </View>
-            <Text style={{marginTop: 15, ...FONTS.body7, textAlign: 'center'}}>
+            <Text
+              style={{
+                marginTop: 15,
+                ...FONTS.body7,
+                textAlign: 'center',
+                color: COLORS.gray,
+              }}>
               {item.title}
             </Text>
           </TouchableOpacity>
@@ -397,6 +403,7 @@ const style = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 20,
     ...FONTS.h2,
+    color: COLORS.black,
   },
   cardImage: {
     height: 220,

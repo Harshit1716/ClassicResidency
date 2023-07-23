@@ -30,6 +30,7 @@ const AdminComplaints = () => {
   const [open, setOpen] = useState(false);
   const userId = useAppSelector(state => state.userReducer.id);
   const complaints = useAppSelector(state => state.userReducer.adminComplaints);
+  const members = useAppSelector(state => state.userReducer.members);
   const [filterdList, setFilterdList] = useState<ComplaintType[]>([]);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
@@ -80,7 +81,9 @@ const AdminComplaints = () => {
                   style={{height: 20, width: 20, marginRight: 10}}
                   source={ICONS.PROFILE_ICON}
                 />
-                <Text style={{...FONTS.body7}}>{item.assignedTo}</Text>
+                <Text style={{...FONTS.body7}}>
+                  {members.filter(obj => obj.id === item.assignedTo)[0].name}
+                </Text>
               </TouchableOpacity>
             )}
           </View>

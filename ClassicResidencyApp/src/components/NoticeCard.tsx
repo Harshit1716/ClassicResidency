@@ -79,12 +79,17 @@ const NoticeCard = ({item, index}: {item: Notice; index: number}) => {
               style={{color: COLORS.white, ...FONTS.body6}}>
               {item.description}
             </Text>
-            <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-              <Text
-                style={{marginTop: 10, ...FONTS.body4, color: COLORS.white}}>
-                Click to read...
-              </Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity style={{alignSelf: 'flex-end'}}> */}
+            <Text
+              style={{
+                marginTop: 10,
+                ...FONTS.body4,
+                color: COLORS.white,
+                alignSelf: 'flex-end',
+              }}>
+              Read more..
+            </Text>
+            {/* </TouchableOpacity> */}
           </View>
         </View>
       </LinearGradient>

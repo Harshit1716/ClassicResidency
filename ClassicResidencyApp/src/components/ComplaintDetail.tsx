@@ -2,6 +2,7 @@ import {
   Alert,
   ImageBackground,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,12 +12,7 @@ import React, {useEffect, useState} from 'react';
 import Header from './Header';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {Image} from 'react-native-animatable';
-// import Icon, {Icons} from './Icons';
-import {SHADOW_PRIMARY} from '../resources/Theme';
-import AppTextInput from './AppTextInput';
-import ProfileTextInput from './ProfileTextInput';
 import {ComplaintType, Notice} from '../stateManagemer/models/SocietyAppModal';
-import SelectCategoryModal from './SelectCategoryModal';
 import SelectAssignedToModal from './SelectAssignedToModal';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {getStatusColor, redirectToPhoneNumber} from '../resources/Utils';
@@ -35,7 +31,7 @@ const ComplaintDetail = ({route}: any) => {
   const members = useAppSelector(state => state.userReducer.members);
   const dispatch = useAppDispatch();
   const [editable, setEditable] = useState<boolean>(false);
-  const isAdmin = useAppSelector(state => state.userReducer.isAOA);
+  const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
 
   useEffect(() => {
     setSelectedAssigned(route.params.data.assignedTo);
@@ -64,6 +60,7 @@ const ComplaintDetail = ({route}: any) => {
 
   return (
     <MainView>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header
         title="Complaint Detail"
         rightIconType={isAdmin ? (editable ? 'CANCEL' : 'EDIT') : 'NONE'}
@@ -105,8 +102,12 @@ const ComplaintDetail = ({route}: any) => {
               alignItems: 'center',
             }}>
             <View style={{}}>
-              <Text style={{...FONTS.body4}}>By : {data.by}</Text>
-              <Text style={{...FONTS.body4}}>Date : {data.createdOn}</Text>
+              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+                By : {data.by}
+              </Text>
+              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+                Date : {data.createdOn}
+              </Text>
             </View>
             <TouchableOpacity
               style={{
@@ -139,7 +140,9 @@ const ComplaintDetail = ({route}: any) => {
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{...FONTS.h3, marginTop: 10}}>Service :</Text>
+            <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+              Service :
+            </Text>
             <Text
               style={{
                 ...FONTS.h3,
@@ -152,7 +155,9 @@ const ComplaintDetail = ({route}: any) => {
           </View>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{...FONTS.h3, marginTop: 10}}>Flat No :</Text>
+            <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+              Flat No :
+            </Text>
             <Text
               style={{
                 ...FONTS.h3,
@@ -165,7 +170,9 @@ const ComplaintDetail = ({route}: any) => {
           </View>
           {data.imageUrl && (
             <>
-              <Text style={{...FONTS.h3, marginTop: 10}}>Image</Text>
+              <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+                Image
+              </Text>
               <Image
                 style={{
                   height: 250,
@@ -177,7 +184,9 @@ const ComplaintDetail = ({route}: any) => {
                 source={{uri: data.imageUrl + ''}}></Image>
             </>
           )}
-          <Text style={{...FONTS.h3, marginTop: 10}}>Description</Text>
+          <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+            Description
+          </Text>
           <Text
             style={{
               width: '100%',
@@ -186,10 +195,13 @@ const ComplaintDetail = ({route}: any) => {
               backgroundColor: COLORS.lightPrimary,
               borderRadius: SIZES.spacing,
               marginVertical: SIZES.spacing,
+              color: COLORS.gray,
             }}>
             {data.description}
           </Text>
-          <Text style={{...FONTS.h3, marginTop: 10}}>Preffered Time</Text>
+          <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+            Preffered Time
+          </Text>
           <View
             style={{
               flexDirection: 'row',
@@ -224,7 +236,9 @@ const ComplaintDetail = ({route}: any) => {
               </TouchableOpacity>
             ))}
           </View>
-          <Text style={{...FONTS.h3, marginTop: 10}}>Assigned To :</Text>
+          <Text style={{...FONTS.h3, marginTop: 10, color: COLORS.gray}}>
+            Assigned To :
+          </Text>
           {editable && (
             <TouchableOpacity
               style={{overflow: 'hidden'}}
@@ -263,7 +277,9 @@ const ComplaintDetail = ({route}: any) => {
                 style={{height: 50, width: 50, borderRadius: 50}}
                 source={{uri: selectedMember?.imageUrl + ''}}></Image>
               <View style={{flex: 1, paddingHorizontal: '5%'}}>
-                <Text style={{...FONTS.h3}}>{selectedMember?.name}</Text>
+                <Text style={{...FONTS.h3, color: COLORS.gray}}>
+                  {selectedMember?.name}
+                </Text>
                 <Text style={{...FONTS.body5, color: COLORS.gray}}>
                   Contact No:- {selectedMember?.phoneNumber}
                 </Text>

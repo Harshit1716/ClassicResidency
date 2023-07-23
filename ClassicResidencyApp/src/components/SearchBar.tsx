@@ -39,7 +39,7 @@ const SearchBar = (props: SearchProps) => {
         value={props.value}
         onChangeText={props.onChangeText}
         placeholder={props.placeholder}
-        style={{color: COLORS.gray, width: '100%'}}
+        style={{color: COLORS.black, width: '100%'}}
       />
     </View>
   );

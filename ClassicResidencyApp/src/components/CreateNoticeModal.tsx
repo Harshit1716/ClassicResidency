@@ -139,7 +139,9 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              <Text style={{...FONTS.h3, marginLeft: 20}}>Title</Text>
+              <Text style={{...FONTS.h3, marginLeft: 20, color: COLORS.gray}}>
+                Title
+              </Text>
               <ProfileTextInput
                 title={title}
                 disabled={false}
@@ -147,7 +149,13 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                 placeholder="Title"
               />
 
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 20,
+                  color: COLORS.gray,
+                  marginTop: 10,
+                }}>
                 Subject
               </Text>
               <ProfileTextInput
@@ -156,7 +164,13 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                 onChangeText={text => setSubject(text)}
                 placeholder="Subject"
               />
-              <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  marginLeft: 20,
+                  marginTop: 10,
+                  color: COLORS.gray,
+                }}>
                 Description
               </Text>
               <ProfileTextInput

@@ -2,6 +2,7 @@ import {
   Alert,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -82,6 +83,7 @@ const ProfileDetail = () => {
   };
   return (
     <MainView style={{flex: 1}}>
+      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
       <Header
         iconPress={() => {
           if (editable == false) setEditable(true);
@@ -167,13 +169,27 @@ const ProfileDetail = () => {
               </Text>
             </TouchableOpacity>
           )}
-          <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
+          <Text style={{...FONTS.h3, marginLeft: 20, color: COLORS.gray}}>
+            Name
+          </Text>
           {TextView(name)}
-          <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+          <Text
+            style={{
+              ...FONTS.h3,
+              marginLeft: 20,
+              color: COLORS.gray,
+              marginTop: 10,
+            }}>
             Email
           </Text>
           {TextView(email)}
-          <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+          <Text
+            style={{
+              ...FONTS.h3,
+              marginLeft: 20,
+              color: COLORS.gray,
+              marginTop: 10,
+            }}>
             Phone Number
           </Text>
           {TextView(phoneNo)}
@@ -245,16 +261,30 @@ const ProfileDetail = () => {
                 }}
               />
               <View style={{flex: 1}}>
-                <Text style={{...FONTS.h3, marginLeft: 20}}>Name</Text>
+                <Text style={{...FONTS.h3, marginLeft: 20, color: COLORS.gray}}>
+                  Name
+                </Text>
                 {TextView(tName)}
               </View>
             </View>
 
-            <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+            <Text
+              style={{
+                ...FONTS.h3,
+                marginLeft: 20,
+                color: COLORS.gray,
+                marginTop: 10,
+              }}>
               Email
             </Text>
             {TextView(tEmail)}
-            <Text style={{...FONTS.h3, marginLeft: 20, marginTop: 10}}>
+            <Text
+              style={{
+                ...FONTS.h3,
+                marginLeft: 20,
+                color: COLORS.gray,
+                marginTop: 10,
+              }}>
               Phone Number
             </Text>
             {TextView(tPhoneNo)}
@@ -269,6 +299,7 @@ const ProfileDetail = () => {
                       email: '',
                       image: null,
                       isTenant: '',
+                      actionType: 'DELETE',
                     }),
                   );
                 }}
