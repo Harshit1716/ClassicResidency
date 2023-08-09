@@ -23,6 +23,7 @@ interface ModalProps {
 }
 
 const list = [
+  'None',
   'AOA',
   'Plumber',
   'Electrician',
@@ -36,7 +37,7 @@ const list = [
   'Gardner',
   'MainGate',
 ];
-const SelectCategoryModal = (props: ModalProps) => {
+const FilterCategoryModal = (props: ModalProps) => {
   const [input, setInput] = React.useState('');
   const [selected, setSelected] = React.useState(props.selected);
   const [filteredList, setFilteredList] = useState(list);
@@ -105,10 +106,10 @@ const SelectCategoryModal = (props: ModalProps) => {
                 }}
                 onPress={props.onClose}>
                 {/* <Icon
-                  type={Icons.FontAwesome}
-                  name={'close'}
-                  color={COLORS.primary}
-                /> */}
+                    type={Icons.FontAwesome}
+                    name={'close'}
+                    color={COLORS.primary}
+                  /> */}
                 <Image
                   style={{
                     height: 20,
@@ -166,6 +167,6 @@ const SelectCategoryModal = (props: ModalProps) => {
   );
 };
 
-export default SelectCategoryModal;
+export default FilterCategoryModal;
 
 const styles = StyleSheet.create({});

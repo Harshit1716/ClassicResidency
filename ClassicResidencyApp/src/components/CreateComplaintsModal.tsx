@@ -121,7 +121,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
           image: imageFile,
           slots: selectedChips,
           user: user.id,
-          flatNo: user.isAOA
+          flatNo: user.isAdmin
             ? `${block}-${flatType}-${faltNo}`
             : user.block + '-' + user.flatType + '' + user.flatNumber,
           userName: by,
@@ -178,7 +178,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
           {header()}
           <ScrollView>
             <View style={styles.enterDetailsContainer}>
-              {user.isAOA && (
+              {user.isAdmin && (
                 <>
                   <Text style={{...FONTS.h3, marginLeft: 25}}>Flat No</Text>
                   <View

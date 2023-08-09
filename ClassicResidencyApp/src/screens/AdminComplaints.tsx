@@ -1,6 +1,7 @@
 import {
   Alert,
   FlatList,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,6 +25,8 @@ import {
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getStatusColor} from '../resources/Utils';
+import ComplaintsFilterModal from '../components/ComplaintsFilterModal';
+import NoDataFound from '../components/NoDataFound';
 
 const AdminComplaints = () => {
   const [input, setInput] = useState('');
@@ -35,20 +38,49 @@ const AdminComplaints = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
+  const [block, setBlock] = useState('');
+  const [type, setType] = useState('');
+  const [status, setStatus] = useState('');
+
   React.useEffect(() => {
     setFilterdList(complaints ?? []);
   }, [complaints]);
   React.useEffect(() => {
-    let ar = complaints?.filter(item =>
-      item.title.toLocaleLowerCase().includes(input.toLocaleLowerCase()),
+    let ar = complaints?.filter(
+      item =>
+        item.title.toLocaleLowerCase().includes(input.toLocaleLowerCase()) &&
+        item.status.includes(status) &&
+        item.type.includes(type) &&
+        item?.flatNo?.[0].toLowerCase().includes(block.toLowerCase()),
     );
     setFilterdList(ar ?? []);
   }, [input]);
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(getComplaintsById({currentUserId: userId}));
+      dispatch(getAllComplaints());
     }, []),
   );
+
+  React.useEffect(() => {
+    let ar = complaints?.filter(
+      item =>
+        item.status.includes(status) &&
+        item.type.includes(type) &&
+        item?.flatNo?.[0].toLowerCase().includes(block.toLowerCase()),
+    );
+    console.log(ar?.[0]?.flatNo?.[0].toLowerCase(), block, 'HAhAh');
+    setFilterdList(ar ?? []);
+  }, [block, type, status]);
+
+  const handleFilter = (
+    txtStatus: string,
+    txtBlock: string,
+    txtType: string,
+  ) => {
+    setStatus(txtStatus);
+    setType(txtType);
+    setBlock(txtBlock);
+  };
   const renderItem = ({item, index}: {item: ComplaintType; index: number}) => {
     return (
       <TouchableOpacity
@@ -82,7 +114,7 @@ const AdminComplaints = () => {
                   source={ICONS.PROFILE_ICON}
                 />
                 <Text style={{...FONTS.body7}}>
-                  {members.filter(obj => obj.id === item.assignedTo)[0].name}
+                  {members.filter(obj => obj?.id === item.assignedTo)[0]?.name}
                 </Text>
               </TouchableOpacity>
             )}
@@ -131,8 +163,10 @@ const AdminComplaints = () => {
       </TouchableOpacity>
     );
   };
+
   return (
     <MainView>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
       <Header title="Complaints" rightIconType="NONE" />
       <View
         style={{
@@ -142,7 +176,7 @@ const AdminComplaints = () => {
           zIndex: 1,
         }}>
         <SearchBar
-          searchStyle={{width: '97%'}}
+          searchStyle={{width: '87%'}}
           placeholder={'Search Complaints ...'}
           onChangeText={text => {
             setInput(text);
@@ -150,8 +184,8 @@ const AdminComplaints = () => {
           value={input}
           shadow={'LIGHT'}
         />
-        {/* <TouchableOpacity
-          onPress={() => Alert.alert('Pressed')}
+        <TouchableOpacity
+          onPress={() => setOpen(true)}
           style={{
             marginLeft: 10,
             // backgroundColor: 'red',
@@ -168,17 +202,27 @@ const AdminComplaints = () => {
             }}
             source={ICONS.FILTER_ICON}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
-      <FlatList
-        style={{}}
-        ListFooterComponent={() => (
-          <View style={{height: SIZES.height * 0.1}}></View>
-        )}
-        data={filterdList}
-        renderItem={renderItem}
+      {filterdList.length > 0 ? (
+        <FlatList
+          style={{}}
+          ListFooterComponent={() => (
+            <View style={{height: SIZES.height * 0.1}}></View>
+          )}
+          data={filterdList}
+          renderItem={renderItem}
+        />
+      ) : (
+        <NoDataFound />
+      )}
+
+      {/* <CreateComplaintsModal onClose={() => setOpen(false)} isVisible={open} /> */}
+      <ComplaintsFilterModal
+        onApply={handleFilter}
+        onClose={() => setOpen(false)}
+        isVisible={open}
       />
-      <CreateComplaintsModal onClose={() => setOpen(false)} isVisible={open} />
     </MainView>
   );
 };

@@ -17,7 +17,7 @@ const AppTextInput = (props: InputProps) => {
   const [focused, setFocused] = useState<boolean>(false);
   return (
     <TextInput
-      keyboardType={props.keyboarType == 'phone' ? 'number-pad' : 'default'}
+      keyboardType={props?.keyboarType == 'phone' ? 'number-pad' : 'default'}
       onChangeText={props.onChangeText}
       value={props.value}
       placeholder={props.placeholder}
@@ -33,6 +33,7 @@ const AppTextInput = (props: InputProps) => {
           backgroundColor: COLORS.lightPrimary,
           borderRadius: SIZES.spacing,
           marginVertical: SIZES.spacing,
+          color: COLORS.black,
           height: 50,
         },
         focused && {

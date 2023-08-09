@@ -45,6 +45,7 @@ const ComplaintsList = () => {
       setFilterdList(ar ?? []);
     }
   }, [input]);
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getComplaintsById({currentUserId: userId}));
@@ -82,8 +83,8 @@ const ComplaintsList = () => {
                   style={{height: 20, width: 20, marginRight: 10}}
                   source={ICONS.PROFILE_ICON}
                 />
-                <Text style={{...FONTS.body7, color: COLORS.gray}}>
-                  {members.filter(obj => obj.id === item.assignedTo)[0].name}
+                <Text style={{...FONTS.body7, color: COLORS.black}}>
+                  {members.filter(obj => obj.id === item.assignedTo)?.[0]?.name}
                 </Text>
               </TouchableOpacity>
             )}
@@ -109,7 +110,7 @@ const ComplaintsList = () => {
           </View>
         </View>
         <Text style={{...FONTS.h3, color: COLORS.black}}>{item.title}</Text>
-        <Text numberOfLines={3} style={{...FONTS.body4, color: COLORS.gray}}>
+        <Text numberOfLines={3} style={{...FONTS.body4, color: COLORS.black}}>
           {item.description}
         </Text>
         <View
@@ -121,17 +122,17 @@ const ComplaintsList = () => {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View>
-              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+              <Text style={{...FONTS.body4, color: COLORS.black}}>
                 By : {item.by}
               </Text>
               <Text
                 numberOfLines={3}
-                style={{...FONTS.body5, color: COLORS.gray}}>
+                style={{...FONTS.body5, color: COLORS.black}}>
                 Flat : {item.flatNo}
               </Text>
             </View>
           </View>
-          <Text style={{...FONTS.body5, color: COLORS.gray}}>
+          <Text style={{...FONTS.body5, color: COLORS.black}}>
             {item.createdOn}
           </Text>
         </View>
@@ -185,6 +186,12 @@ const ComplaintsList = () => {
       {filterdList.length > 0 ? (
         <FlatList
           style={{}}
+          refreshing={true}
+          // onRefresh={() => {
+          //  <View>
+          //   <Acti
+          //  </View>
+          // }}
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.2}}></View>
           )}

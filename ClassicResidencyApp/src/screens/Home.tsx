@@ -14,6 +14,7 @@ import {
   Image,
   Platform,
   Alert,
+  BackHandler,
 } from 'react-native';
 
 import {ICONS, COLORS, SIZES} from '../resources';
@@ -32,6 +33,7 @@ import {
 } from '../stateManagemer/slice/ServiceSlice';
 import {Notice} from '../stateManagemer/models/SocietyAppModal';
 import NoticeCard from '../components/NoticeCard';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 const {width} = Dimensions.get('screen');
 const places = [
   {
@@ -65,7 +67,7 @@ const places = [
 ];
 
 const HomeScreen = ({navigation}: any) => {
-  const [list, setList] = useState(places);
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.userReducer);
@@ -148,78 +150,6 @@ const HomeScreen = ({navigation}: any) => {
           </TouchableOpacity>
         ))}
       </View>
-    );
-  };
-
-  const RecommendedCard = ({place}: any) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('NoticeDetail')}
-        style={style.rmCardImage}>
-        <LinearGradient
-          colors={['#606c88', '#3f4c6b']}
-          style={{flex: 1}}
-          start={{x: 0, y: 0.5}}
-          end={{x: 1, y: 0.5}}
-          locations={[0, 0.7]}>
-          <View
-            style={{
-              flex: 1,
-              paddingHorizontal: '5%',
-              paddingVertical: '2%',
-            }}>
-            <Text
-              style={{
-                color: COLORS.white,
-                ...FONTS.h2,
-                marginTop: 10,
-              }}>
-              {place.name}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  marginTop: 10,
-                  marginBottom: 5,
-                  alignItems: 'center',
-                }}>
-                <Image
-                  style={{height: 25, width: 25, tintColor: COLORS.white}}
-                  source={ICONS.MEMBERS_ICON}
-                />
-                <Text
-                  style={{
-                    color: COLORS.white,
-                    ...FONTS.h3,
-                    marginLeft: 10,
-                    marginTop: 5,
-                  }}>
-                  {place.location}
-                </Text>
-              </View>
-
-              {/* </View> */}
-              <Text
-                numberOfLines={3}
-                style={{color: COLORS.white, ...FONTS.body6}}>
-                {place.details}
-              </Text>
-              <TouchableOpacity>
-                <Text style={{marginTop: 10, ...FONTS.h4, color: COLORS.white}}>
-                  Click to read...
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
     );
   };
 
@@ -306,6 +236,7 @@ const HomeScreen = ({navigation}: any) => {
                 marginHorizontal: 20,
                 marginTop: 35,
                 ...FONTS.h2,
+                color: COLORS.gray,
               }}>
               Services
             </Text>
@@ -356,6 +287,14 @@ const HomeScreen = ({navigation}: any) => {
           />
         </View>
       </View>
+      {open && (
+        <ChangePasswordModal
+          isVisible={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+        />
+      )}
     </MainView>
   );
 };

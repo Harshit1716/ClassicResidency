@@ -74,6 +74,8 @@ export const createUser = createAsyncThunk(
       name,
       email,
       phoneNumber,
+      isAOA,
+      isAdmin,
     }: {
       flatNumber: string;
       flatType: string;
@@ -81,12 +83,36 @@ export const createUser = createAsyncThunk(
       name: string;
       email: string;
       phoneNumber: string;
+      isAOA: boolean;
+      isAdmin: boolean;
     },
     {rejectWithValue},
   ) => {
     try {
       const id = block + flatType + flatNumber;
       const userRef = firestore().collection('Users').doc(id);
+      const existingUserDoc = await userRef.get();
+
+      if (existingUserDoc.exists) {
+        Alert.alert('Error', 'Flat already exists');
+        throw new Error('Flat already exists');
+      }
+      const query = firestore()
+        .collection('Users')
+        .where('phoneNumber', '==', phoneNumber)
+        .get();
+
+      const query2 = firestore()
+        .collection('Users')
+        .where('tenantPhoneNumber', '==', phoneNumber)
+        .get();
+
+      const [snapshot, snapshot2] = await Promise.all([query, query2]);
+
+      if (!snapshot.empty || !snapshot2.empty) {
+        // Alert.alert('Error', 'Phone number already exists');
+        throw new Error('Phone number already exists');
+      }
       const password = await phoneNumber.split('').reverse().join('');
       const user: AddedMember = {
         id: id,
@@ -99,8 +125,8 @@ export const createUser = createAsyncThunk(
         imageUrl: '',
         complaints: [],
         isTenantAdded: false,
-        isAdmin: true,
-        isAOA: true,
+        isAdmin: isAdmin,
+        isAOA: isAOA,
         tenantName: '',
         tenantEmail: '',
         tenantPhoneNumber: '',
@@ -456,7 +482,7 @@ const initialState: FlatType = {
   email: '',
   imageUrl: '',
   isTenantAdded: false,
-  currentUser: -1,
+  currentUser: -1 + '',
 };
 
 export const userSlice = createSlice({
@@ -517,7 +543,6 @@ export const userSlice = createSlice({
       state.error = null;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(action.payload.email + 'asjdnasdaosjknd');
       state.loading = false;
       state.id = action.payload.id;
       state.block = action.payload.block;
@@ -565,17 +590,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.loading = false;
-      // state.id = action.payload.id;
-      // state.block = action.payload.block;
-      // state.flatNumber = action.payload.flatNumber;
-      // state.ownerName = action.payload.ownerName;
-      // state.flatType = action.payload.flatType;
-      // state.phoneNumber = action.payload.phoneNumber;
-      // state.complaints = action.payload.complaints;
-      // state.isAdmin = action.payload.isAdmin;
-      // state.isAOA = action.payload.isAOA;
-      // state.error = null;
-      // Utils.storeData(Utils.userDataSKeys, state);
+      Alert.alert('success', 'Profile has been Added');
     });
     builder.addCase(createUser.rejected, (state, action) => {
       state.loading = false;
@@ -589,6 +604,7 @@ export const userSlice = createSlice({
     builder.addCase(getAllComplaints.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
+
       state.adminComplaints = action.payload;
     });
     builder.addCase(getAllComplaints.rejected, (state, action) => {
@@ -602,6 +618,7 @@ export const userSlice = createSlice({
     builder.addCase(getComplaintsById.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
+      console.log(action.payload, 'BHSDK');
       state.complaints = action.payload;
     });
     builder.addCase(getComplaintsById.rejected, (state, action) => {

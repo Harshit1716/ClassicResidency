@@ -234,6 +234,14 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
                       alignSelf: 'flex-end',
                     }}
                     onPress={() => deleteImage()}>
+                    <Image
+                      style={{
+                        height: 20,
+                        width: 20,
+                        tintColor: COLORS.primary,
+                      }}
+                      source={ICONS.CLOSE_ICON}
+                    />
                     {/* <Icon
                       type={Icons.FontAwesome}
                       name={'close'}

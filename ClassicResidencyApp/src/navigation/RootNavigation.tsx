@@ -15,6 +15,7 @@ import MembersList from '../screens/MembersList';
 import ComplaintsList from '../screens/ComplaintsList';
 import ComplaintDetail from '../components/ComplaintDetail';
 import AdminComplaints from '../screens/AdminComplaints';
+import NewUserScreen from '../screens/NewUserScreen';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -47,6 +48,15 @@ const RootNavigation = () => {
             }}
             name="Login"
             component={Login}
+          />
+        )}
+        {email == '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="NewUserScreen"
+            component={NewUserScreen}
           />
         )}
         {email != '' && (

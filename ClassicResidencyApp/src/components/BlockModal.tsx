@@ -22,21 +22,8 @@ interface ModalProps {
   selected: string;
 }
 
-const list = [
-  'AOA',
-  'Plumber',
-  'Electrician',
-  'Guard',
-  'Carpenter',
-  'Painter',
-  'Lift',
-  'Mason',
-  'HouseKeeping',
-  'Intercom',
-  'Gardner',
-  'MainGate',
-];
-const SelectCategoryModal = (props: ModalProps) => {
+const list = ['All', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'SH'];
+const BlockModal = (props: ModalProps) => {
   const [input, setInput] = React.useState('');
   const [selected, setSelected] = React.useState(props.selected);
   const [filteredList, setFilteredList] = useState(list);
@@ -91,7 +78,7 @@ const SelectCategoryModal = (props: ModalProps) => {
                   color: COLORS.primary,
                   textAlign: 'center',
                 }}>
-                Select Type
+                Select Block
               </Text>
               <TouchableOpacity
                 style={{
@@ -105,10 +92,10 @@ const SelectCategoryModal = (props: ModalProps) => {
                 }}
                 onPress={props.onClose}>
                 {/* <Icon
-                  type={Icons.FontAwesome}
-                  name={'close'}
-                  color={COLORS.primary}
-                /> */}
+                    type={Icons.FontAwesome}
+                    name={'close'}
+                    color={COLORS.primary}
+                  /> */}
                 <Image
                   style={{
                     height: 20,
@@ -120,18 +107,10 @@ const SelectCategoryModal = (props: ModalProps) => {
               </TouchableOpacity>
             </View>
           </View>
-          <SearchBar
-            placeholder={'Search Type'}
-            onChangeText={text => {
-              setInput(text);
-            }}
-            searchStyle={{width: '90%', alignSelf: 'center', height: 50}}
-            value={input}
-            shadow={'LIGHT'}
-          />
+
           <FlatList
             showsVerticalScrollIndicator={false}
-            style={{marginVertical: 20}}
+            style={{marginBottom: 20}}
             data={filteredList}
             renderItem={({item, index}) => {
               return (
@@ -151,7 +130,7 @@ const SelectCategoryModal = (props: ModalProps) => {
                   }}>
                   <Text
                     style={{
-                      ...FONTS.body4,
+                      ...FONTS.h3,
                       color: selected == item ? COLORS.white : COLORS.gray,
                     }}>
                     {item}
@@ -166,6 +145,6 @@ const SelectCategoryModal = (props: ModalProps) => {
   );
 };
 
-export default SelectCategoryModal;
+export default BlockModal;
 
 const styles = StyleSheet.create({});

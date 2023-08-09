@@ -60,7 +60,7 @@ export const uploadImageToFirebase = async (image: any) => {
 
       // Get the download URL of the uploaded image
       const downloadURL = await storage()
-        .ref(`images/${fileName}`)
+        .ref(`images/${image?.assets?.[0]?.fileName}`)
         .getDownloadURL();
 
       return downloadURL;
@@ -86,6 +86,8 @@ export const getStatusColor = (status: string) => {
       return 'lightblue';
     case 'Closed':
       return 'green';
+    case 'None':
+      return 'gray';
     default:
       return 'red';
   }

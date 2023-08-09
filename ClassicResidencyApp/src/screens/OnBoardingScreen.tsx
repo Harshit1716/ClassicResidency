@@ -12,7 +12,7 @@ import {
 import React, {useEffect} from 'react';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {COLORS, FONTS, SIZES} from '../resources';
+import {COLORS, FONTS, ICONS, SIZES} from '../resources';
 import MainView from '../components/MainView';
 import {SHADOW_PRIMARY} from '../resources/Theme';
 import {getData, userDataSKeys} from '../resources/Utils';
@@ -53,10 +53,11 @@ const OnBoardingScreen = ({navigation}: any) => {
         }}>
         <ImageBackground
           style={{
+            marginLeft: '5%',
             height: height / 2.5,
           }}
           resizeMode="contain"
-          source={require('../assets/electrician.jpg')}
+          source={ICONS.MAIN_LOGO_ICON}
         />
         <View
           style={{
@@ -71,7 +72,7 @@ const OnBoardingScreen = ({navigation}: any) => {
               color: COLORS.primary,
               textAlign: 'center',
             }}>
-            Welcom To The
+            Welcome To The
           </Text>
           <Text
             style={{

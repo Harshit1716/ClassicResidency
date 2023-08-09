@@ -97,7 +97,7 @@ const AddProfileModal = ({isVisible, onClose}: any) => {
         }),
       );
       onClose();
-      reset();
+      // reset();
     }
   }
 

@@ -1,6 +1,7 @@
 import {
   Alert,
   Image,
+  Linking,
   Modal,
   PermissionsAndroid,
   Platform,
@@ -76,6 +77,21 @@ const UploadImageModal = (props: ModalProps) => {
       });
   }
 
+  const handleCameraPermissionDenied = () => {
+    Alert.alert(
+      'Camera Permission Required',
+      'Please enable camera permissions for the app in the settings to use this feature.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Open Settings',
+          onPress: () => {
+            Linking.openSettings();
+          },
+        },
+      ],
+    );
+  };
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -83,6 +99,9 @@ const UploadImageModal = (props: ModalProps) => {
           PermissionsAndroid.PERMISSIONS.CAMERA,
         );
         // If CAMERA Permission is granted
+        if (granted === 'never_ask_again') {
+          handleCameraPermissionDenied();
+        }
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
         console.warn(err);
@@ -116,31 +135,31 @@ const UploadImageModal = (props: ModalProps) => {
       saveToPhotos: true,
     };
     // let isCameraPermitted = await requestCameraPermission();
+
     // let isStoragePermitted = await requestExternalWritePermission();
-    if (true) {
-      launchCamera(options, async response => {
-        console.log('Response = ', response);
+    // if (isCameraPermitted && isStoragePermitted) {
+    launchCamera(options, async response => {
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        Alert.alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        Alert.alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        Alert.alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        Alert.alert(response?.errorMessage ?? '');
+        return;
+      }
+      await props.onSelect(response);
+      props.onClose();
+      console.log(response, 'Gallery Picked');
 
-        if (response.didCancel) {
-          Alert.alert('User cancelled camera picker');
-          return;
-        } else if (response.errorCode == 'camera_unavailable') {
-          Alert.alert('Camera not available on device');
-          return;
-        } else if (response.errorCode == 'permission') {
-          Alert.alert('Permission not satisfied');
-          return;
-        } else if (response.errorCode == 'others') {
-          Alert.alert(response?.errorMessage ?? '');
-          return;
-        }
-        await props.onSelect(response);
-        props.onClose();
-        console.log(response, 'Gallery Picked');
-
-        // setFilePath(response);
-      });
-    }
+      // setFilePath(response);
+    });
+    // }
   };
 
   const chooseFile = () => {
@@ -210,6 +229,7 @@ const UploadImageModal = (props: ModalProps) => {
                 paddingHorizontal: 25,
                 paddingVertical: 15,
                 width: '100%',
+                flex: 1,
                 alignItems: 'center',
               }}>
               <Text
@@ -225,25 +245,20 @@ const UploadImageModal = (props: ModalProps) => {
                 style={{
                   width: 45,
                   height: 45,
-                  backgroundColor: COLORS.white,
+                  marginLeft: '45%',
+                  backgroundColor: COLORS.primary,
                   ...SHADOW,
+                  marginTop: '-35%',
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,
-                  marginTop: -80,
-                  right: -SIZES.width * 0.26,
                 }}
                 onPress={props.onClose}>
-                {/* <Icon
-                  type={Icons.FontAwesome}
-                  name={'close'}
-                  color={COLORS.primary}
-                /> */}
                 <Image
                   style={{
                     height: 20,
                     width: 20,
-                    tintColor: COLORS.primary,
+                    tintColor: COLORS.white,
                   }}
                   source={ICONS.CLOSE_ICON}
                 />
