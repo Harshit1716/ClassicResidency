@@ -76,8 +76,9 @@ const NewUserScreen = () => {
       email: email,
       phoneNumber: phoneNo,
       isAOA: AOA,
+      isAdmin: false,
     };
-    dispatch(createUser({...data}));
+    await dispatch(createUser({...data}));
   }
 
   async function handleSubmit() {

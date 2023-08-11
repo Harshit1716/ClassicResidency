@@ -58,17 +58,22 @@ const NoticeCard = ({item, index}: {item: Notice; index: number}) => {
                 flexDirection: 'row',
                 marginTop: 5,
                 marginBottom: 5,
-                alignItems: 'center',
+                // alignItems: 'center',
               }}>
-              <Image
-                style={{height: 25, width: 25, tintColor: COLORS.white}}
-                source={ICONS.MEMBERS_ICON}
-              />
+              <Text
+                style={{
+                  ...FONTS.body4,
+                  color: COLORS.white,
+                  marginTop: 5,
+                }}>
+                Subject :
+              </Text>
               <Text
                 style={{
                   color: COLORS.white,
                   ...FONTS.body4,
-                  marginLeft: 10,
+                  width: '90%',
+                  marginLeft: 5,
                   marginTop: 5,
                 }}>
                 {item.subject}

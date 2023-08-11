@@ -8,10 +8,10 @@ const NoDataFound = () => {
       <Image
         resizeMode="contain"
         style={{
-          height: '50%',
-          width: '50%',
-          marginTop: '20%',
-          marginBottom: '-10%',
+          height: '30%',
+          width: '30%',
+          marginTop: '30%',
+          // marginBottom: '-10%',
         }}
         source={ICONS.NO_DATA_ICON}
       />

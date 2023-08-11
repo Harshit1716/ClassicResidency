@@ -157,7 +157,7 @@ const SelectAssignedToModal = (props: ModalProps) => {
               }}>
               <Text
                 style={{
-                  right: -50,
+                  // right: -50,
                   ...FONTS.h2,
                   color: COLORS.primary,
                   textAlign: 'center',
@@ -173,8 +173,8 @@ const SelectAssignedToModal = (props: ModalProps) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,
-                  marginTop: -70,
-                  right: -SIZES.width * 0.3,
+                  // marginTop: -70,
+                  right: -SIZES.width * 0.1,
                 }}
                 onPress={props.onClose}>
                 {/* <Icon

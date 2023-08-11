@@ -30,20 +30,7 @@ import {
 import MainView from './MainView';
 import SetStatusModal from './SetStatusModal';
 
-const dummy = [
-  {
-    id: 'AOA',
-    text: 'String is here ',
-    date: '12-08-12',
-  },
-  {
-    id: 'IH1702',
-    text: 'String is here ',
-    date: '12-08-12',
-  },
-];
-
-const ComplaintDetail = ({route}: any) => {
+const AdminComplaintDetail = ({route}: any) => {
   const [data, setData] = useState<ComplaintType>(route?.params?.data);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -57,23 +44,24 @@ const ComplaintDetail = ({route}: any) => {
   const dispatch = useAppDispatch();
   const [editable, setEditable] = useState<boolean>(false);
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
+  //   const isAOA = useAppSelector(state => state.userReducer.isAOA);
   const userID = useAppSelector(state => state.userReducer.id);
   const complaintData = useAppSelector(state => state.userReducer.complaints);
 
   useEffect(() => {
-    setSelectedAssigned(route?.params?.data?.assignedTo);
-    setStatus(route?.params?.data?.status);
-    setComplaintID(route?.params?.data?.id);
-    setCommentList(route?.params?.data?.comments);
+    setSelectedAssigned(route.params.data.assignedTo);
+    setStatus(route.params.data.status);
+    setComplaintID(route.params.data.id);
+    setCommentList(route.params.data.comments);
   }, [route.params.data]);
 
   useEffect(() => {
-    let ar = members.filter(item => item?.id === selectedAssigned);
+    let ar = members.filter(item => item.id === selectedAssigned);
     setSelectedMember(ar[0]);
   }, [selectedAssigned]);
   useEffect(() => {
-    let ar = complaintData.findIndex(item => item?.id == complaintID);
-    if (ar != -1) setCommentList(complaintData[ar]?.comments);
+    let ar = complaintData.findIndex(item => item.id == complaintID);
+    if (ar != -1) setCommentList(complaintData[ar].comments);
   }, [complaintData]);
 
   const handleAssignedTo = async () => {
@@ -107,7 +95,7 @@ const ComplaintDetail = ({route}: any) => {
     let obj = {
       id: complaintID,
       text: comment,
-      type: 'personal',
+      type: 'all',
       user: userID,
     };
     await dispatch(updateComplaintComment(obj));
@@ -384,82 +372,87 @@ const ComplaintDetail = ({route}: any) => {
           </View>
           <View
             style={{
-              flexDirection: 'row',
-              marginTop: 20,
-              alignItems: 'center',
-            }}>
+              marginTop: 10,
+              height: 1,
+              backgroundColor: COLORS.lightGray,
+              width: '100%',
+            }}></View>
+          {isAdmin && (
             <View
               style={{
-                ...FONTS.h2,
-                borderWidth: 1,
-                borderColor: COLORS.lightGray,
-                paddingHorizontal: '5%',
-                borderRadius: 10,
-                flex: 1,
-                marginRight: 10,
+                flexDirection: 'row',
+                marginTop: 20,
+                alignItems: 'center',
               }}>
-              <TextInput
-                value={comment}
-                onChangeText={text => setComment(text)}
-                multiline
-                placeholder="Enter your comment ..."
+              <View
                 style={{
-                  maxHeight: SIZES.height * 0.3,
-                  paddingVertical: 10,
-                  width: '100%',
+                  ...FONTS.h2,
+                  borderWidth: 1,
+                  borderColor: COLORS.lightGray,
+                  paddingHorizontal: '5%',
+                  borderRadius: 10,
                   flex: 1,
-                }}
-              />
+                  marginRight: 10,
+                }}>
+                <TextInput
+                  value={comment}
+                  onChangeText={text => setComment(text)}
+                  multiline
+                  placeholder="Enter your comment ..."
+                  style={{
+                    maxHeight: SIZES.height * 0.3,
+                    paddingVertical: 10,
+                    width: '100%',
+                    flex: 1,
+                  }}
+                />
+              </View>
+              <TouchableOpacity onPress={handleSendAction}>
+                <Image
+                  resizeMode="contain"
+                  style={{height: 30, width: 30, tintColor: COLORS.primary}}
+                  source={ICONS.SELECTED_ICON}
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleSendAction}>
-              <Image
-                resizeMode="contain"
-                style={{height: 30, width: 30, tintColor: COLORS.primary}}
-                source={ICONS.SEND_ICON}
-              />
-            </TouchableOpacity>
-          </View>
-          {commentList && (
-            <FlatList
-              style={{marginTop: 20}}
-              data={[...commentList]}
-              renderItem={({item}) => {
-                return (
-                  <View
-                    style={{
-                      backgroundColor: COLORS.lightPrimary,
-                      marginBottom: 15,
-                      padding: '5%',
-                      // width: '80%',
-                      borderRadius: 10,
-                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-                    }}>
-                    {/* <Text
-                    style={{
-                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-                    }}>
-                    By :- {item.id}
-                  </Text> */}
-                    <Text
-                      style={{
-                        alignSelf:
-                          item?.id === userID ? 'flex-end' : 'flex-start',
-                      }}>
-                      {userID !== item?.id ? `${item?.id} :-` : ''} {item?.text}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        alignSelf:
-                          item?.id === userID ? 'flex-end' : 'flex-start',
-                      }}>
-                      -{item?.date}
-                    </Text>
-                  </View>
-                );
-              }}
-            />
           )}
+          <FlatList
+            style={{marginTop: 20}}
+            data={[...commentList]}
+            renderItem={({item}) => {
+              return (
+                <View
+                  style={{
+                    backgroundColor: COLORS.lightPrimary,
+                    marginBottom: 15,
+                    padding: '5%',
+                    // width: '80%',
+                    borderRadius: 10,
+                    alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                  }}>
+                  {/* <Text
+                      style={{
+                        alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                      }}>
+                      By :- {item.id}
+                    </Text> */}
+                  <Text
+                    style={{
+                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                    }}>
+                    {userID !== item.id ? `${item.id} :-` : ''} {item.text}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                    }}>
+                    -{item.date}
+                  </Text>
+                </View>
+              );
+            }}
+          />
         </View>
       </ScrollView>
       {open && (
@@ -487,6 +480,6 @@ const ComplaintDetail = ({route}: any) => {
   );
 };
 
-export default ComplaintDetail;
+export default AdminComplaintDetail;
 
 const styles = StyleSheet.create({});

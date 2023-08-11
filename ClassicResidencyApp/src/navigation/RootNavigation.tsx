@@ -16,6 +16,10 @@ import ComplaintsList from '../screens/ComplaintsList';
 import ComplaintDetail from '../components/ComplaintDetail';
 import AdminComplaints from '../screens/AdminComplaints';
 import NewUserScreen from '../screens/NewUserScreen';
+import DirectoryList from '../screens/DirectoryList';
+import BlockList from '../screens/BlockList';
+import DirectoryDetailProfile from '../screens/DirectoryProfileDetail';
+import AdminComplaintDetail from '../components/AdminComplaintDetail';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -113,6 +117,15 @@ const RootNavigation = () => {
             component={MembersList}
           />
         )}
+        {(admin || AOA) && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="AdminComplaintDetail"
+            component={AdminComplaintDetail}
+          />
+        )}
         {email != '' && (
           <RootStack.Screen
             options={{
@@ -122,13 +135,40 @@ const RootNavigation = () => {
             component={ComplaintDetail}
           />
         )}
-        {(!admin || AOA) && (
+        {(admin || AOA) && (
           <RootStack.Screen
             options={{
               headerShown: false,
             }}
             name="AllComplaints"
             component={AdminComplaints}
+          />
+        )}
+        {(admin || AOA) && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="Directory"
+            component={DirectoryList}
+          />
+        )}
+        {(admin || AOA) && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="BlockList"
+            component={BlockList}
+          />
+        )}
+        {(admin || AOA) && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="DirectoryDetailProfile"
+            component={DirectoryDetailProfile}
           />
         )}
       </RootStack.Navigator>

@@ -40,7 +40,7 @@ const Banner = ({data}) => {
             borderRadius: 10,
           }}
           source={place.image}>
-          <Text
+          {/* <Text
             style={{
               color: COLORS.white,
               fontSize: 20,
@@ -61,7 +61,7 @@ const Banner = ({data}) => {
                 {place.location}
               </Text>
             </View>
-          </View>
+          </View> */}
         </ImageBackground>
       </TouchableOpacity>
     );

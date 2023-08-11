@@ -68,6 +68,7 @@ const places = [
 
 const HomeScreen = ({navigation}: any) => {
   const [open, setOpen] = useState(false);
+  const [flag, setflag] = useState(true);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.userReducer);
@@ -81,6 +82,27 @@ const HomeScreen = ({navigation}: any) => {
     if (user.isAdmin || user.isAOA) dispatch(getAllComplaints());
     dispatch(getComplaintsById({currentUserId: user.id}));
   }, []);
+  useEffect(() => {
+    if (flag) {
+      if (user?.currentUser === user?.phoneNumber) {
+        let no = user.currentUser.split('').reverse().join('');
+        if (no == user.password) {
+          setflag(false);
+          setOpen(true);
+        } else {
+          setOpen(false);
+        }
+      } else if (user?.currentUser === user?.tenantPhoneNumber) {
+        let no = user.currentUser.split('').reverse().join('');
+        if (no == user.tenantPassword) {
+          setflag(false);
+          setOpen(true);
+        } else {
+          setOpen(false);
+        }
+      }
+    }
+  }, [user]);
   useEffect(() => {
     setNoticeFilteredList(noticeList);
   }, [noticeList]);
@@ -120,7 +142,7 @@ const HomeScreen = ({navigation}: any) => {
       ),
     },
     {
-      title: 'SOS',
+      title: 'SOP',
       Icon: (
         <Image
           style={{height: 30, width: 30, tintColor: COLORS.primary}}

@@ -73,6 +73,7 @@ export interface Members {
   phoneNumber: string;
   type: string;
   assignedComplaints: ComplaintType[];
+  designation: string;
 }
 
 export interface ComplaintType {
@@ -89,9 +90,14 @@ export interface ComplaintType {
   assignedTo: string;
   by: string;
   status: string;
-  review?: string;
+  comments: CommentType[];
   hide: boolean;
 }
+export type CommentType = {
+  id: string;
+  text: string;
+  date: string;
+};
 
 export type ServiceType = 'PLUMBER' | 'ELECTRICIAN' | 'CARPENTER' | 'AOA';
 export type MEMBERTYPE =

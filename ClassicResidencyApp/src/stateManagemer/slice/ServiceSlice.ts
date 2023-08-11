@@ -169,6 +169,72 @@ export const uploadProfilePic = createAsyncThunk(
     }
   },
 );
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (
+    {
+      userId,
+      ownerName,
+      email,
+      password,
+      phoneNumber,
+      tenantName,
+      tenantEmail,
+      tenantPassword,
+      tenantPhoneNumber,
+    }: any,
+    {rejectWithValue},
+  ) => {
+    try {
+      const userRef = firestore().collection('Users').doc(userId);
+      const data = {
+        ownerName,
+        email,
+        password,
+        phoneNumber,
+        tenantName,
+        tenantEmail,
+        tenantPassword,
+        tenantPhoneNumber,
+      };
+      await userRef.update(data);
+      // const updatedUserRef = firestore().collection('Users').doc(userId);
+      return true;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
+      return rejectWithValue(error?.message);
+    }
+  },
+);
+export const updatePassword = createAsyncThunk(
+  'user/updatePassword',
+  async (
+    {password, user}: {password: string; user: FlatType},
+    {rejectWithValue},
+  ) => {
+    try {
+      const userRef = firestore().collection('Users').doc(user.id);
+
+      let flag = user.currentUser == user.phoneNumber;
+      const owner = {
+        password: password,
+      };
+      const tenant = {
+        tenantPassword: password,
+      };
+
+      console.log(flag, 'BHSBH');
+      await userRef.update(flag ? owner : tenant);
+
+      return flag ? owner.password : tenant.tenantPassword;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
+      return rejectWithValue(error?.message);
+    }
+  },
+);
 export const createNotice = createAsyncThunk(
   'user/createNotice',
   async ({title, des, subject, user, image}: any, {rejectWithValue}) => {
@@ -352,6 +418,48 @@ export const updateAssignedTo = createAsyncThunk(
     }
   },
 );
+export const updateComplaintComment = createAsyncThunk(
+  'user/updateComments',
+  async (
+    {
+      id,
+      text,
+      user,
+      type,
+    }: {id: string; text: string; user: string; type: string},
+    {rejectWithValue},
+  ) => {
+    try {
+      // const userRef = firestore().collection('complaints').doc(id);
+      // const comments = userRef?.data().comments || [];
+      const complaintsRef = firestore().collection('complaints');
+      const complaintDoc = await complaintsRef.doc(id).get();
+      if (!complaintDoc.exists) {
+        throw new Error('Complaint not found');
+      }
+
+      const comments = complaintDoc?.data().comments || [];
+
+      const updatedComments = [
+        {id: user, text: text, date: new Date().toLocaleDateString()},
+        ...comments,
+      ];
+
+      await complaintsRef.doc(id).update({comments: updatedComments});
+      console.log(comments);
+      let obj = {
+        id: id,
+        comments: updatedComments ?? [],
+        type: type,
+      };
+      return obj;
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR', error?.message + '');
+      return rejectWithValue(error?.message);
+    }
+  },
+);
 
 // method to get all the complaints
 export const getAllComplaints = createAsyncThunk(
@@ -392,7 +500,7 @@ export const getAllNotice = createAsyncThunk(
 
 export const createMember = createAsyncThunk(
   'user/createMember',
-  async ({name, type, number, image}: any, {rejectWithValue}) => {
+  async ({name, type, number, image, designation}: any, {rejectWithValue}) => {
     try {
       const existingMember = await firestore()
         .collection('members')
@@ -414,6 +522,7 @@ export const createMember = createAsyncThunk(
         name: name,
         phoneNumber: number,
         type: type,
+        designation: designation,
         assignedComplaints: [],
       };
 
@@ -483,6 +592,11 @@ const initialState: FlatType = {
   imageUrl: '',
   isTenantAdded: false,
   currentUser: -1 + '',
+  tenantName: '',
+  tenantEmail: '',
+  tenantPhoneNumber: '',
+  tenantPassword: '',
+  tenantImage: '',
 };
 
 export const userSlice = createSlice({
@@ -744,6 +858,59 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    builder.addCase(updateComplaintComment.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateComplaintComment.fulfilled, (state, action) => {
+      state.loading = false;
+      let {payload} = action;
+      if (action.payload != null || action.payload != undefined) {
+        let index = -1;
+        if (payload.type === 'personal') {
+          index = state.complaints.findIndex(item => item.id == payload.id);
+
+          if (index != -1) {
+            state.complaints[index].comments = payload.comments;
+            console.log(state.complaints, 'HERE AA');
+          }
+        } else if (payload.type == 'all') {
+          index = (state?.adminComplaints ?? []).findIndex(
+            item => item.id == payload.id,
+          );
+          if (index != -1) {
+            state.complaints[index].comments = payload.comments;
+          }
+        }
+      }
+      // state.complaints = [action.payload, ...state.complaints];
+    });
+    builder.addCase(updateComplaintComment.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(updatePassword.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updatePassword.fulfilled, (state, action) => {
+      state.loading = false;
+      // if (action.payload != null || action.payload != undefined)
+      console.log(action.payload, 'BHSDK');
+      // state = {...state, ...action.payload};
+      if (state.currentUser === state.phoneNumber) {
+        state.password = action.payload;
+      } else if (state.currentUser === state.tenantPhoneNumber) {
+        state.tenantPassword = action.payload;
+      }
+
+      Alert.alert('Success', 'Password hs been changed ');
+      // state.complaints = [action.payload, ...state.complaints];
+    });
+    builder.addCase(updatePassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
     builder.addCase(addTenant.pending, state => {
       state.loading = true;
       state.error = null;
@@ -772,13 +939,24 @@ export const userSlice = createSlice({
       state.loading = false;
       if (action.payload != null || action.payload != undefined)
         Alert.alert('Success', 'Profile picture has been updated ');
-      if (state.currentUser === state.password) {
+      if (state.currentUser === state.phoneNumber) {
         state.imageUrl = action.payload;
       } else if (state.currentUser === state.tenantPhoneNumber) {
         state.tenantImage = action.payload;
       }
     });
     builder.addCase(uploadProfilePic.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(updateProfile.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateProfile.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

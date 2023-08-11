@@ -31,31 +31,39 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
   const [title, setTitle] = useState('');
   const [description, setDecsription] = useState('');
   const [subject, setSubject] = useState('');
+  const [designation, setDesignation] = useState('');
 
   const [open, setOpen] = useState(false);
+  const [isDesignation, setIsDesignation] = useState(false);
   const [openCatrgory, setOpenCategory] = useState(false);
   const [imageFile, setImageFile] = React.useState<any>(null);
   const dispatch = useAppDispatch();
   const userId = useAppSelector(state => state.userReducer.id);
 
+  useEffect(() => {
+    if (description == 'AOA') {
+      setIsDesignation(true);
+    } else {
+      setIsDesignation(false);
+      setDesignation('');
+    }
+  }, [description]);
   const header = () => {
     return (
       <View style={{}}>
         <View style={styles.headerContainer}>
-          <View style={{marginRight: -40, ...styles.headingContainer}}>
+          <View style={{...styles.headingContainer}}>
             <Text style={styles.headerTitle}>Add Member</Text>
           </View>
           <TouchableOpacity
             style={{
               width: 45,
               height: 45,
-              backgroundColor: COLORS.white,
+              backgroundColor: COLORS.primary,
               ...SHADOW,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
-              marginTop: -50,
-              right: -20,
             }}
             onPress={onClose}>
             {/* <Icon
@@ -67,7 +75,7 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
               style={{
                 height: 20,
                 width: 20,
-                tintColor: COLORS.primary,
+                tintColor: COLORS.white,
               }}
               source={ICONS.CLOSE_ICON}
             />
@@ -96,6 +104,7 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
           name: title,
           number: subject,
           type: description,
+          designation: designation,
           image: imageFile,
         }),
       );
@@ -131,6 +140,10 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
     }
     if (description.length == 0) {
       Alert.alert('Error', 'Please select a valid member type ');
+      return false;
+    }
+    if (designation.length == 0 && isDesignation) {
+      Alert.alert('Error', 'Please select a valid designation  ');
       return false;
     }
     if (imageFile == null || imageFile == undefined) {
@@ -228,6 +241,26 @@ const CreateMemberModal = ({isVisible, onClose, type}: any) => {
                     {description == '' ? ' Select Type' : description}
                   </Text>
                 </TouchableOpacity>
+              )}
+
+              {isDesignation && (
+                <>
+                  <Text
+                    style={{
+                      ...FONTS.h3,
+                      marginLeft: 20,
+                      marginTop: 10,
+                      color: COLORS.gray,
+                    }}>
+                    Designation
+                  </Text>
+                  <ProfileTextInput
+                    title={designation}
+                    disabled={false}
+                    onChangeText={text => setDesignation(text)}
+                    placeholder="Designation"
+                  />
+                </>
               )}
             </View>
             {imageFile == null && (

@@ -15,26 +15,36 @@ import {COLORS, ICONS} from '../resources';
 import {FONTS, SHADOW, SHADOW_PRIMARY, SIZES} from '../resources/Theme';
 import CustomBtn from './CustomBtn';
 // import Icon, {Icons} from './Icons';
-import ImageCropPicker from 'react-native-image-crop-picker';
-import {
-  CameraOptions,
-  ImageLibraryOptions,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+
 import AppTextInput from './AppTextInput';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {updatePassword} from '../stateManagemer/slice/ServiceSlice';
 interface ModalProps {
   isVisible: boolean;
   onClose: () => void;
+  open?: boolean;
 }
 const ChangePasswordModal = (props: ModalProps) => {
+  const [currentPassword, setCurrentPassword] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-
+  const user = useAppSelector(state => state.userReducer);
+  const dispatch = useAppDispatch();
   const validate = () => {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
-
+    let pas =
+      user.phoneNumber == user.currentUser
+        ? user.password
+        : user.tenantPassword;
+    if (currentPassword == '' && props.open) {
+      Alert.alert('Error', 'Please enter current password');
+      return false;
+    }
+    if (currentPassword != pas && props.open) {
+      Alert.alert('Error', 'Please enter valid current password');
+      return false;
+    }
     if (password == '') {
       Alert.alert('Error', 'Please enter a password');
       return false;
@@ -59,8 +69,10 @@ const ChangePasswordModal = (props: ModalProps) => {
     return true;
   };
 
-  const handleSavePassword = () => {
+  const handleSavePassword = async () => {
     if (validate()) {
+      dispatch(updatePassword({password, user}));
+      props.onClose();
     }
   };
 
@@ -100,25 +112,57 @@ const ChangePasswordModal = (props: ModalProps) => {
               }}>
               <Text
                 style={{
+                  flex: 1,
                   ...FONTS.h2,
                   color: COLORS.primary,
                   textAlign: 'center',
                 }}>
-                Weclome to the Classic Residency App
+                {props.open
+                  ? 'Change Password'
+                  : 'Weclome to the Classic Residency App'}
               </Text>
+              {props.open && (
+                <TouchableOpacity
+                  onPress={() => {
+                    props.onClose();
+                  }}
+                  style={{
+                    borderWidth: 1,
+                    padding: '2%',
+                    borderRadius: 5,
+                    borderColor: COLORS.primary,
+                  }}>
+                  <Image
+                    style={{height: 20, width: 20, tintColor: COLORS.primary}}
+                    source={ICONS.CLOSE_ICON}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
-          <Text
-            style={{
-              marginHorizontal: 10,
-              ...FONTS.body4,
-              color: COLORS.black,
-              textAlign: 'center',
-            }}>
-            Currently you are using the default password. To ensure the safety
-            of your data and personal information, we kindly request you to
-            change your password.
-          </Text>
+          {!props?.open && (
+            <Text
+              style={{
+                marginHorizontal: 10,
+                ...FONTS.body4,
+                color: COLORS.black,
+                textAlign: 'center',
+              }}>
+              Currently you are using the default password. To ensure the safety
+              of your data and personal information, we kindly request you to
+              change your password.
+            </Text>
+          )}
+          {props.open && (
+            <AppTextInput
+              value={currentPassword}
+              placeholder={'Current Password'}
+              onChangeText={(text: string) => {
+                setCurrentPassword(text);
+              }}
+              editable={true}
+            />
+          )}
           <AppTextInput
             value={password}
             placeholder={'New Password'}

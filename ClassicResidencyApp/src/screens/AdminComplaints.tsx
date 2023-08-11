@@ -85,7 +85,7 @@ const AdminComplaints = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('ComplaintDetail', {data: item});
+          navigation.navigate('AdminComplaintDetail', {data: item});
         }}
         style={{
           padding: '5%',
@@ -130,7 +130,7 @@ const AdminComplaints = () => {
             }}>
             <Text
               style={{
-                ...FONTS.h6,
+                ...FONTS.body7,
                 textAlign: 'center',
                 marginBottom: -5,
                 color: COLORS.white,

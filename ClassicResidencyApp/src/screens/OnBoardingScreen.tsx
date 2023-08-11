@@ -57,7 +57,7 @@ const OnBoardingScreen = ({navigation}: any) => {
             height: height / 2.5,
           }}
           resizeMode="contain"
-          source={ICONS.MAIN_LOGO_ICON}
+          source={ICONS.LOGO_ICON}
         />
         <View
           style={{
@@ -91,8 +91,7 @@ const OnBoardingScreen = ({navigation}: any) => {
               textAlign: 'center',
               marginTop: SIZES.spacing * 2,
             }}>
-            Explore all the existing job roles based or your interest and study
-            major
+            Empowering Your Community's Tomorrow, Today – With us !
           </Text>
         </View>
         <View
@@ -122,24 +121,16 @@ const OnBoardingScreen = ({navigation}: any) => {
               Start
             </Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
-            style={{
-              paddingVertical: SIZES.spacing * 1,
-              paddingHorizontal: SIZES.spacing * 2,
-              width: '48%',
-              borderRadius: SIZES.spacing,
-            }}>
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: COLORS.black,
-                textAlign: 'center',
-              }}>
-              Register
-            </Text>
-          </TouchableOpacity> */}
         </View>
+        <Text
+          style={{
+            ...FONTS.body4,
+            color: COLORS.black,
+            textAlign: 'center',
+            marginTop: SIZES.spacing * 2,
+          }}>
+          Powered by TechnoSapiens
+        </Text>
       </View>
     </MainView>
     // </SafeAreaView>

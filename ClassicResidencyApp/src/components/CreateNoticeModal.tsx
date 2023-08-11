@@ -40,20 +40,18 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
     return (
       <View style={{}}>
         <View style={styles.headerContainer}>
-          <View style={{marginRight: -40, ...styles.headingContainer}}>
+          <View style={{...styles.headingContainer}}>
             <Text style={styles.headerTitle}>Create Notice</Text>
           </View>
           <TouchableOpacity
             style={{
               width: 50,
               height: 50,
-              backgroundColor: COLORS.white,
+              backgroundColor: COLORS.primary,
               ...SHADOW,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
-              marginTop: -50,
-              right: -20,
             }}
             onPress={() => {
               reset();
@@ -63,7 +61,7 @@ const CreateNoticeModal = ({isVisible, onClose}: any) => {
               style={{
                 height: 20,
                 width: 20,
-                tintColor: COLORS.primary,
+                tintColor: COLORS.white,
               }}
               source={ICONS.CLOSE_ICON}
             />

@@ -240,6 +240,7 @@ const ProfileDetail = () => {
             </Text>
             <View style={{flexDirection: 'row'}}>
               <Image
+                resizeMode="contain"
                 source={
                   user.currentUser === user.phoneNumber
                     ? user.tenantImage && user?.tenantImage != ''

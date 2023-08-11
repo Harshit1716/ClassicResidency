@@ -71,26 +71,26 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
     return (
       <View style={{}}>
         <View style={styles.headerContainer}>
-          <View style={{marginRight: -40, ...styles.headingContainer}}>
+          <View style={{...styles.headingContainer}}>
             <Text style={styles.headerTitle}>Create Complaints</Text>
           </View>
           <TouchableOpacity
             style={{
               width: 50,
               height: 50,
-              backgroundColor: COLORS.white,
+              backgroundColor: COLORS.primary,
               ...SHADOW,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
-              marginTop: -50,
+              // marginTop: -50,
             }}
             onPress={onClose}>
             <Image
               style={{
                 height: 20,
                 width: 20,
-                tintColor: COLORS.primary,
+                tintColor: COLORS.white,
               }}
               source={ICONS.CLOSE_ICON}
             />
@@ -326,7 +326,7 @@ const CreateComplaintsModal = ({isVisible, onClose}: any) => {
                       fontSize: 16,
                       fontFamily: 'Poppins',
                     }}>
-                    Upload Image
+                    Upload Image (Optional)
                   </Text>
                 </View>
               </TouchableOpacity>

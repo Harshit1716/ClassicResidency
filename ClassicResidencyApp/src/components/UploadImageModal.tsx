@@ -231,11 +231,12 @@ const UploadImageModal = (props: ModalProps) => {
                 width: '100%',
                 flex: 1,
                 alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <Text
                 style={{
-                  right: -50,
                   ...FONTS.h2,
+                  flex: 1,
                   color: COLORS.primary,
                   textAlign: 'center',
                 }}>
@@ -245,10 +246,10 @@ const UploadImageModal = (props: ModalProps) => {
                 style={{
                   width: 45,
                   height: 45,
-                  marginLeft: '45%',
+                  marginRight: '-10%',
                   backgroundColor: COLORS.primary,
                   ...SHADOW,
-                  marginTop: '-35%',
+
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,

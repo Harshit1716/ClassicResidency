@@ -17,12 +17,14 @@ import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {logout} from '../stateManagemer/slice/ServiceSlice';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 // import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
 
 const Profile = ({navigation}: any) => {
   const disptach = useAppDispatch();
   const user = useAppSelector(state => state.userReducer);
+  const [open, setOpen] = useState(false);
   const TabArr = [
     {
       route: 'Home',
@@ -45,6 +47,22 @@ const Profile = ({navigation}: any) => {
       },
     },
     {
+      route: 'Directory',
+      label: 'Directory',
+      icon: 'add',
+      onPress: () => {
+        navigation.navigate('Directory');
+      },
+    },
+    {
+      route: 'ChangePassword',
+      label: 'Change Password',
+      icon: 'add',
+      onPress: () => {
+        setOpen(true);
+      },
+    },
+    {
       route: 'Account',
       label: 'Logout',
       icon: 'user-circle-o',
@@ -64,14 +82,14 @@ const Profile = ({navigation}: any) => {
       icon: 'search',
       onPress: () => {},
     },
-    // {
-    //   label: 'All Complaints',
-    //   icon: 'add',
-    //   onPress: () => {
-    //     navigation.navigate('AllComplaints');
-    //   },
-    // },
-
+    {
+      route: 'ChangePassword',
+      label: 'Change Password',
+      icon: 'add',
+      onPress: () => {
+        setOpen(true);
+      },
+    },
     {
       label: 'Logout',
       icon: 'user-circle-o',
@@ -223,6 +241,15 @@ const Profile = ({navigation}: any) => {
         </View>
         <View></View>
       </ScrollView>
+      {open && (
+        <ChangePasswordModal
+          open={true}
+          isVisible={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+        />
+      )}
     </View>
 
     // </MainView>

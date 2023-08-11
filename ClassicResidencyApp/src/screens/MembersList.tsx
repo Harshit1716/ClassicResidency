@@ -126,6 +126,11 @@ const MembersList = ({route}: any) => {
           source={{uri: item.imageUrl + ''}}></Image>
         <View style={{flex: 1, paddingHorizontal: '5%'}}>
           <Text style={{...FONTS.h3, color: COLORS.black}}>{item.name}</Text>
+          {item?.designation != '' && item?.type == 'AOA' && (
+            <Text style={{...FONTS.h3, color: COLORS.black}}>
+              {item.designation}
+            </Text>
+          )}
           <Text style={{...FONTS.body5, color: COLORS.gray}}>
             Contact No:- {item.phoneNumber}
           </Text>

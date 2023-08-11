@@ -59,6 +59,7 @@ const SELECTED_ICON = require('../assets/success.png');
 const COMMING_SOON_ICON = require('../assets/commingSoon.jpeg');
 const NO_DATA_ICON = require('../assets/NoData.png');
 const MAIN_LOGO_ICON = require('../assets/mainLogo.jpeg');
+const SEND_ICON = require('../assets/send.png');
 
 export {
   NO_DATA_ICON,
@@ -66,6 +67,7 @@ export {
   MAIN_LOGO_ICON,
   SELECTED_ICON,
   INTERCOM_ICON,
+  SEND_ICON,
   AOA_ICON,
   PLUMBER_ICON,
   CARPENTER_ICON,
