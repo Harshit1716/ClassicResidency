@@ -420,6 +420,7 @@ const AdminComplaintDetail = ({route}: any) => {
             style={{marginTop: 20}}
             data={[...commentList]}
             renderItem={({item}) => {
+              console.log(item);
               return (
                 <View
                   style={{

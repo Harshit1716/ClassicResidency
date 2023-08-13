@@ -20,6 +20,7 @@ import DirectoryList from '../screens/DirectoryList';
 import BlockList from '../screens/BlockList';
 import DirectoryDetailProfile from '../screens/DirectoryProfileDetail';
 import AdminComplaintDetail from '../components/AdminComplaintDetail';
+import AddDetail from '../screens/AddDetail';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -115,6 +116,15 @@ const RootNavigation = () => {
             }}
             name="MembersList"
             component={MembersList}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="AddDetail"
+            component={AddDetail}
           />
         )}
         {(admin || AOA) && (

@@ -6,6 +6,7 @@ const LOCATION_ICON = require('../assets/location.png');
 const PROFILE_ICON = require('../assets/profile.jpg');
 const PROFILE_MEMBER_ICON = require('../assets/profileImageMember.jpeg');
 const SEARCH_ICON = require('../assets/search.png');
+const MENU_ICON = require('../assets/Menu.png');
 const BANNER_ICON = require('../assets/banner1.jpg');
 const BANNER_ICON2 = require('../assets/banner3.png');
 const BANNER_ICON3 = require('../assets/banner2.png');
@@ -80,6 +81,7 @@ export {
   PAINTER_ICON,
   MAIN_GATE_ICON,
   EDIT_ICON,
+  MENU_ICON,
   BUILDING_ICON,
   SHOPS_ICON,
   CANCEL_ICON,
