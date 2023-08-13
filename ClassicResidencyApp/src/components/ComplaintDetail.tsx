@@ -442,6 +442,7 @@ const ComplaintDetail = ({route}: any) => {
                   </Text> */}
                     <Text
                       style={{
+                        color: COLORS.black,
                         alignSelf:
                           item?.id === userID ? 'flex-end' : 'flex-start',
                       }}>
@@ -449,6 +450,7 @@ const ComplaintDetail = ({route}: any) => {
                     </Text>
                     <Text
                       style={{
+                        color: COLORS.black,
                         fontSize: 10,
                         alignSelf:
                           item?.id === userID ? 'flex-end' : 'flex-start',

@@ -139,8 +139,8 @@ const LoginScreen = () => {
   const [open, setOpen] = useState(false);
   const [password, setPasssword] = useState('');
   useEffect(() => {
-    setNumber('9355209292');
-    setPasssword('Password@321');
+    // setNumber('9355209292');
+    // setPasssword('Atmaram@321');
     // setNumber('9355209292');
     // setPasssword('Harry');
   }, []);

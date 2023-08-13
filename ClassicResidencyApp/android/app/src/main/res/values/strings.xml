@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ClassicResidencyApp</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">fupvPATT23CMY06x_snAqDoIxGnrTAn-TbObT</string>
 </resources>

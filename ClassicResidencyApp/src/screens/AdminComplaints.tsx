@@ -105,7 +105,7 @@ const AdminComplaints = () => {
             marginBottom: 10,
           }}>
           <View style={{justifyContent: 'center'}}>
-            <Text style={{...FONTS.h3}}>{item.type}</Text>
+            <Text style={{...FONTS.h3, color: COLORS.black}}>{item.type}</Text>
             {item.assignedTo != '' && (
               <TouchableOpacity
                 style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -113,7 +113,7 @@ const AdminComplaints = () => {
                   style={{height: 20, width: 20, marginRight: 10}}
                   source={ICONS.PROFILE_ICON}
                 />
-                <Text style={{...FONTS.body7}}>
+                <Text style={{...FONTS.body7, color: COLORS.black}}>
                   {members.filter(obj => obj?.id === item.assignedTo)[0]?.name}
                 </Text>
               </TouchableOpacity>
@@ -139,8 +139,8 @@ const AdminComplaints = () => {
             </Text>
           </View>
         </View>
-        <Text style={{...FONTS.h3}}>{item.title}</Text>
-        <Text numberOfLines={3} style={{...FONTS.body4}}>
+        <Text style={{...FONTS.h3, color: COLORS.black}}>{item.title}</Text>
+        <Text numberOfLines={3} style={{...FONTS.body4, color: COLORS.black}}>
           {item.description}
         </Text>
         <View
@@ -152,13 +152,19 @@ const AdminComplaints = () => {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View>
-              <Text style={{...FONTS.body4}}>By : {item.by}</Text>
-              <Text numberOfLines={3} style={{...FONTS.body5}}>
+              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+                By : {item.by}
+              </Text>
+              <Text
+                numberOfLines={3}
+                style={{...FONTS.body5, color: COLORS.gray}}>
                 Flat : {item.flatNo}
               </Text>
             </View>
           </View>
-          <Text style={{...FONTS.body5}}>{item.createdOn}</Text>
+          <Text style={{...FONTS.body5, color: COLORS.gray}}>
+            {item.createdOn}
+          </Text>
         </View>
       </TouchableOpacity>
     );
