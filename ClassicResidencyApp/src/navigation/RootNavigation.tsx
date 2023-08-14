@@ -21,12 +21,14 @@ import BlockList from '../screens/BlockList';
 import DirectoryDetailProfile from '../screens/DirectoryProfileDetail';
 import AdminComplaintDetail from '../components/AdminComplaintDetail';
 import AddDetail from '../screens/AddDetail';
+import CreateAddScreen from '../screens/CreateAddScreen';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const email = useAppSelector(state => state.userReducer.id);
   const AOA = useAppSelector(state => state.userReducer.isAOA);
   const admin = useAppSelector(state => state.userReducer.isAdmin);
+  const block = useAppSelector(state => state.userReducer.block);
 
   return (
     <NavigationContainer>
@@ -116,6 +118,15 @@ const RootNavigation = () => {
             }}
             name="MembersList"
             component={MembersList}
+          />
+        )}
+        {email != '' && block == 'Z' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="CreateAdd"
+            component={CreateAddScreen}
           />
         )}
         {email != '' && (

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -12,22 +12,29 @@ import {
   Platform,
 } from 'react-native';
 import {COLORS, ICONS, SIZES} from '../resources';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {getAllAds} from '../stateManagemer/slice/ServiceSlice';
+import {Ads} from '../stateManagemer/models/SocietyAppModal';
+import Carousel from 'react-native-snap-carousel';
+import {useNavigation} from '@react-navigation/native';
 
-const Banner = ({data}) => {
+const Banner = ({data}: any) => {
   const scrollX = new Animated.Value(0);
   let position = Animated.divide(scrollX, SIZES.width);
   const [dataList, setDataList] = useState(data);
-
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+  const ads = useAppSelector(item => item.userReducer.adsList);
+  const flatListRef = useRef(null);
   useEffect(() => {
-    setDataList(data);
-  });
+    dispatch(getAllAds());
+  }, []);
 
-  const Card = ({place}) => {
+  const Card = ({item, index}: {item: Ads; index: number}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        // onPress={() => navigation.navigate('DetailsScreen', place)}>
-      >
+        onPress={() => navigation.navigate('AddDetail', {data: item})}>
         <ImageBackground
           resizeMode="stretch"
           style={{
@@ -39,84 +46,36 @@ const Banner = ({data}) => {
             overflow: 'hidden',
             borderRadius: 10,
           }}
-          source={place.image}>
+          source={{uri: item.banner + ''}}>
           {/* <Text
             style={{
-              color: COLORS.white,
+              color: COLORS.black,
               fontSize: 20,
               fontWeight: 'bold',
               marginTop: 10,
             }}>
-            {place.name}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-            }}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={{marginLeft: 5, color: COLORS.white}}>
-                {place.location}
-              </Text>
-            </View>
-          </View> */}
+            {item.name}
+          </Text> */}
         </ImageBackground>
       </TouchableOpacity>
     );
   };
-  if (data && data.length) {
-    return (
-      <View>
-        <FlatList
-          data={data}
-          keyExtractor={(item, index) => 'key' + index}
-          horizontal
-          pagingEnabled
-          scrollEnabled
-          snapToAlignment="center"
-          scrollEventThrottle={16}
-          decelerationRate={'fast'}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item}) => {
-            return <Card place={item} />;
-          }}
-          onScroll={Animated.event([
-            {nativeEvent: {contentOffset: {x: scrollX}}},
-          ])}
-        />
-        <View style={styles.dotView}>
-          {data.map((_, i) => {
-            let opacity = position.interpolate({
-              inputRange: [i - 1, i, i + 1],
-              outputRange: [0.3, 1, 0.3],
-              extrapolate: 'clamp',
-            });
-            return (
-              <Animated.View
-                key={i}
-                style={{
-                  opacity,
-                  height: 10,
-                  width: 10,
-                  backgroundColor: '#595959',
-                  margin: 8,
-                  borderRadius: 5,
-                }}
-              />
-            );
-          })}
-        </View>
-      </View>
-    );
-  }
 
-  return null;
+  const SLIDER_WIDTH = Dimensions.get('window').width;
+  const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
+
+  return (
+    <View>
+      <Carousel
+        autoplay={true}
+        loop={ads.length > 1 ? true : false}
+        data={ads}
+        renderItem={Card}
+        sliderWidth={SLIDER_WIDTH}
+        itemWidth={ITEM_WIDTH}
+      />
+    </View>
+  );
 };
-
-const styles = StyleSheet.create({
-  dotView: {flexDirection: 'row', justifyContent: 'center'},
-});
 
 export default Banner;

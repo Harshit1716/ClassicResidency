@@ -8,13 +8,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MainView from '../components/MainView';
 import Header from '../components/Header';
 import {COLORS, FONTS, ICONS, SHADOW, SIZES} from '../resources';
 import {getStatusColor} from '../resources/Utils';
-import {useAppSelector} from '../stateManagemer/Store';
-import {useNavigation} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Discussion from './Discussion';
+import {Ads} from '../stateManagemer/models/SocietyAppModal';
+import {getAllAds} from '../stateManagemer/slice/ServiceSlice';
+import NoDataFound from '../components/NoDataFound';
 
 interface Message {
   name: string;
@@ -24,34 +28,6 @@ interface Message {
   createdOn: string;
 }
 
-const dataSet = [
-  {date: '8/13/2023', id: 'ZSUPER000', text: 'This is super admin app'},
-  {date: '8/13/2023', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-  {date: '8/13/2023', id: 'ZSUPER000', text: 'This is super admin app'},
-  {date: '8/13/2023', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-];
 const dataSet3 = [
   {
     date: '8/13/2023',
@@ -92,22 +68,22 @@ const dataSet3 = [
     text: 'Currenctly dont have any memeber so cant process',
   },
 ];
-const dataSet2 = [
-  [
-    {
-      date: '8/13/2023',
-      name: 'Prakash Raj',
-      id: 'Z-SUPER-000',
 
-      text: 'This is super admin app',
-    },
-  ],
-];
 const Engage = () => {
   const [postScreen, setPostScreen] = useState(false);
   const [comment, setComment] = useState('');
   const navigation = useNavigation();
   const userID = useAppSelector(item => item.userReducer.id);
+  const user = useAppSelector(item => item.userReducer);
+
+  const dispatch = useAppDispatch();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getAllAds());
+    }, []),
+  );
+
   const selectorBtn = () => {
     return (
       <View
@@ -166,7 +142,7 @@ const Engage = () => {
               ...FONTS.h3,
               color: postScreen ? COLORS.white : COLORS.primary,
             }}>
-            Posts
+            Chat
           </Text>
         </TouchableOpacity>
       </View>
@@ -214,7 +190,7 @@ const Engage = () => {
       </View>
     );
   };
-  const renderItem = ({item, index}: {item: any; index: number}) => {
+  const renderItem = ({item, index}: {item: Ads; index: number}) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -240,9 +216,11 @@ const Engage = () => {
             marginBottom: 10,
           }}>
           <View style={{justifyContent: 'center'}}>
-            <Text style={{...FONTS.h3, color: COLORS.red}}>{item.name}</Text>
+            <Text style={{...FONTS.h2, color: COLORS.primary}}>
+              {item.name}
+            </Text>
           </View>
-          <View
+          {/* <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -260,11 +238,13 @@ const Engage = () => {
               }}>
               {item.id}
             </Text>
-          </View>
+          </View> */}
         </View>
-        <Text style={{...FONTS.h3, color: COLORS.black}}>{item.text}</Text>
+        <Text numberOfLines={2} style={{...FONTS.h4, color: COLORS.black}}>
+          {item.text1}
+        </Text>
         <Image
-          source={index % 2 == 0 ? ICONS.BANNER_ICON : ICONS.BANNER_ICON3}
+          source={{uri: item.banner + ''}}
           resizeMode="cover"
           style={{
             height: 200,
@@ -283,107 +263,56 @@ const Engage = () => {
           <View style={{flexDirection: 'row'}}>
             <View>
               <Text style={{...FONTS.body4, color: COLORS.black}}>
-                Contact : 9355209292
+                Contact : {item.number}
               </Text>
             </View>
           </View>
-          <Text style={{...FONTS.body5, color: COLORS.black}}>{item.date}</Text>
         </View>
-        <Text style={{...FONTS.body5, color: COLORS.black}}>
+        {/* <Text style={{...FONTS.body5, color: COLORS.black}}>
           Visits :{' '}
           <Image
             style={{height: 20, width: 20}}
             source={ICONS.ACCOUNT_TAB_ICON}
           />{' '}
           90
-        </Text>
+        </Text> */}
       </TouchableOpacity>
     );
   };
 
-  const renderPostScreen = () => {
-    return (
-      <View style={{flex: 1, padding: '5%'}}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={dataSet3}
-          ListFooterComponent={() => {
-            return <View style={{height: SIZES.height * 0.45}}></View>;
-          }}
-          renderItem={renderItem2}
-        />
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '20%',
-            alignSelf: 'center',
-            flexDirection: 'row',
-            marginTop: 20,
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              ...FONTS.h2,
-              borderWidth: 1,
-              borderColor: COLORS.lightGray,
-              paddingHorizontal: '5%',
-              backgroundColor: COLORS.white,
-              borderRadius: 10,
-              flex: 1,
-              marginRight: 10,
-            }}>
-            <TextInput
-              value={comment}
-              onChangeText={text => setComment(text)}
-              multiline
-              placeholder="Enter your comment ..."
-              style={{
-                backgroundColor: COLORS.white,
-                maxHeight: SIZES.height * 0.3,
-                paddingVertical: 10,
-                width: '100%',
-                flex: 1,
-              }}
-            />
-          </View>
-          <TouchableOpacity onPress={() => {}}>
-            <Image
-              resizeMode="contain"
-              style={{height: 30, width: 30, tintColor: COLORS.primary}}
-              source={ICONS.SEND_ICON}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
   const renderAdsScreen = () => {
     return (
-      <View style={{flex: 1}}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={dataSet3}
-          ListFooterComponent={() => {
-            return <View style={{height: SIZES.height * 0.45}}></View>;
-          }}
-          renderItem={renderItem}
-        />
-      </View>
+      <MainView style={{flex: 1}}>
+        <StatusBar translucent={false} backgroundColor={COLORS.primary} />
+        {user.adsList.length != 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={[...user.adsList]}
+            ListFooterComponent={() => {
+              return <View style={{height: SIZES.height * 0.45}}></View>;
+            }}
+            renderItem={renderItem}
+          />
+        ) : (
+          <>{renderNoData()}</>
+        )}
+      </MainView>
     );
   };
+
   const renderNoData = () => {
     return (
       <View
         style={{
           flex: 1,
-          backgroundColor: COLORS.lightPrimary,
+          backgroundColor: COLORS.white,
           justifyContent: 'center',
           alignItems: 'center',
         }}>
         <Image
           resizeMode="contain"
-          style={{height: '50%', width: '100%', marginTop: '-20%'}}
-          source={ICONS.COMMING_SOON_ICON}
+          style={{height: '20%', width: '50%', marginTop: '-20%'}}
+          source={ICONS.NO_DATA_ICON}
         />
       </View>
     );
@@ -392,9 +321,26 @@ const Engage = () => {
   return (
     <MainView>
       <StatusBar translucent={false} backgroundColor={COLORS.primary} />
-      <Header hideBackIcon={true} title={'Engage'} rightIconType="NONE" />
+      <Header
+        hideBackIcon={true}
+        title={'Engage'}
+        iconPress={() => {
+          if (!postScreen) {
+            navigation.navigate('CreateAdd');
+          }
+        }}
+        rightIconType={
+          user.block == 'Z' ? (postScreen ? 'NONE' : 'CREATE') : 'NONE'
+        }
+      />
       {selectorBtn()}
-      {!postScreen ? <>{renderAdsScreen()}</> : <>{renderPostScreen()}</>}
+      {!postScreen ? (
+        <>{renderAdsScreen()}</>
+      ) : (
+        <View style={{flex: 1}}>
+          <Discussion />
+        </View>
+      )}
     </MainView>
   );
 };

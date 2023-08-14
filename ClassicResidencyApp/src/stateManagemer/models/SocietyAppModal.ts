@@ -26,6 +26,7 @@ export interface FlatType {
   notice: Notice[];
   error: any;
   members: Members[];
+  adsList: Ads[];
 
   currentUser: string;
 }
@@ -92,6 +93,19 @@ export interface ComplaintType {
   status: string;
   comments: CommentType[];
   hide: boolean;
+}
+
+export interface Ads {
+  id: string;
+  name: string;
+  address: string;
+  text1: string;
+  text2: string;
+  img1: string;
+  img2: string;
+  number: string;
+  banner: string;
+  createdAt: string;
 }
 export type CommentType = {
   id: string;

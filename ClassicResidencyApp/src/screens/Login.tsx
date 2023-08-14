@@ -23,126 +23,36 @@ import AddProfileModal from '../components/AddProfileModal';
 import AddNewProfile from '../components/AddNewProfile';
 import {useNavigation} from '@react-navigation/native';
 import Loader from '../components/Loader';
-
+const flatData = [];
+interface DATATYPE {
+  flatNumber: string;
+  flatType: string;
+  block: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  isAdmin: boolean;
+  isAOA: boolean;
+}
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
-    // const data = [
-    //   {
-    //     flatNumber: '802',
-    //     flatType: 'H2',
-    //     block: 'B',
-    //     name: 'ANIL KUMAR',
-    //     email: 'anilyadav2209@gmail.com',
-    //     phoneNumber: '9891811988',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '601',
-    //     flatType: 'B1',
-    //     block: 'G',
-    //     name: 'OM CHAUHAN',
-    //     email: '',
-    //     phoneNumber: '9837373669',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '706',
-    //     flatType: 'H1',
-    //     block: 'I',
-    //     name: 'ANURAG ANAND',
-    //     email: 'aanurag754@gmail.com',
-    //     phoneNumber: '9811442680',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '302',
-    //     flatType: 'B1',
-    //     block: 'H',
-    //     name: 'MAHENDER SINGH',
-    //     email: 'msingh01959@gmail.com',
-    //     phoneNumber: '8057813640',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '1101',
-    //     flatType: 'P1',
-    //     block: 'B',
-    //     name: 'MANOJ KUMAR',
-    //     email: 'mkasana89@gmail.com',
-    //     phoneNumber: '9871823143',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '001',
-    //     flatType: 'H2',
-    //     block: 'B',
-    //     name: 'MANISH MEHROTRA',
-    //     email: '',
-    //     phoneNumber: '9312210860',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '1203',
-    //     flatType: 'H3',
-    //     block: 'G',
-    //     name: 'VISHAL VERMA',
-    //     email: '',
-    //     phoneNumber: '9999236315',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '803',
-    //     flatType: 'H3',
-    //     block: 'H',
-    //     name: 'VIKASH CHAUDHARY',
-    //     email: '',
-    //     phoneNumber: '9711264667',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '601',
-    //     flatType: 'B2',
-    //     block: 'J',
-    //     name: 'MANOJ KUMAR SRIVASTAVAv',
-    //     email: 'mks_dyna@hotmail.com',
-    //     phoneNumber: '9910003156',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    //   {
-    //     flatNumber: '402',
-    //     flatType: 'B1',
-    //     block: 'E',
-    //     name: 'AJAY KR. JHA',
-    //     email: 'ajayrealy@gmail.com',
-    //     phoneNumber: '9990255776',
-    //     isAdmin: false,
-    //     isAOA: true,
-    //   },
-    // ];
+    // const data: DATATYPE[] = []
+    // console.log(data.length);
     // data.forEach(async item => {
-    //   console.log(item);
+    //   await dispatch(createUser(item));
     // });
     await dispatch(
       createUser({
         flatNumber: '000',
         flatType: 'H1',
-        block: 'A',
-        name: 'Technopians',
-        email: 'technopiens@gmail.com',
-        phoneNumber: '8383921635',
-        isAdmin: false,
-        isAOA: false,
+        block: 'Z',
+        name: 'technopians',
+        email: 'technopians@yopmail.com',
+        phoneNumber: '9355209292',
+        isAdmin: true,
+        isAOA: true,
       }),
     );
   }

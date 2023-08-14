@@ -3,6 +3,7 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 import {
   AddedMember,
+  Ads,
   ComplaintType,
   FlatType,
   Members,
@@ -97,22 +98,18 @@ export const createUser = createAsyncThunk(
         Alert.alert('Error', 'Flat already exists');
         throw new Error('Flat already exists');
       }
-      const query = firestore()
-        .collection('Users')
-        .where('phoneNumber', '==', phoneNumber)
-        .get();
+      // const query = firestore()
+      //   .collection('Users')
+      //   .where('phoneNumber', '==', phoneNumber)
+      //   .get();
 
-      const query2 = firestore()
-        .collection('Users')
-        .where('tenantPhoneNumber', '==', phoneNumber)
-        .get();
+      // const query2 = firestore()
+      //   .collection('Users')
+      //   .where('tenantPhoneNumber', '==', phoneNumber)
+      //   .get();
 
-      const [snapshot, snapshot2] = await Promise.all([query, query2]);
+      // const [snapshot, snapshot2] = await Promise.all([query, query2]);
 
-      if (!snapshot.empty || !snapshot2.empty) {
-        // Alert.alert('Error', 'Phone number already exists');
-        throw new Error('Phone number already exists');
-      }
       const password = await phoneNumber.split('').reverse().join('');
       const user: AddedMember = {
         id: id,
@@ -497,6 +494,21 @@ export const getAllNotice = createAsyncThunk(
     }
   },
 );
+export const getAllAds = createAsyncThunk(
+  'user/getAllAds',
+  async (_, {rejectWithValue}) => {
+    try {
+      const complaintsRef = firestore()
+        .collection('Ads')
+        .orderBy('createdAt', 'desc');
+      const snapshot = await complaintsRef.get();
+      const complaints: Ads[] = snapshot.docs.map(doc => doc.data() as Ads);
+      return complaints;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 export const createMember = createAsyncThunk(
   'user/createMember',
@@ -597,6 +609,7 @@ const initialState: FlatType = {
   tenantPhoneNumber: '',
   tenantPassword: '',
   tenantImage: '',
+  adsList: [],
 };
 
 export const userSlice = createSlice({
@@ -751,6 +764,20 @@ export const userSlice = createSlice({
       state.notice = action.payload;
     });
     builder.addCase(getAllNotice.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(getAllAds.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getAllAds.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+
+      state.adsList = action.payload;
+    });
+    builder.addCase(getAllAds.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

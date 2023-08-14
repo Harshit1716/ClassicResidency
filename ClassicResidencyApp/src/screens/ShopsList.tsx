@@ -192,13 +192,13 @@ const ShopsList = () => {
           shadow={'LIGHT'}
         />
       </View>
-      {filterdList.length > 0 ? (
+      {[].length != 0 ? (
         <FlatList
           style={{}}
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.1}}></View>
           )}
-          data={filterdList}
+          data={[]}
           renderItem={renderItem}
         />
       ) : (
