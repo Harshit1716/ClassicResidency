@@ -40,7 +40,7 @@ const AdminComplaintDetail = ({route}: any) => {
   const [comment, setComment] = useState('');
   const [commentList, setCommentList] = useState<CommentType[]>([]);
   const [selectedMember, setSelectedMember] = useState();
-  const members = useAppSelector(state => state.userReducer.members);
+  const members = useAppSelector(state => state?.userReducer?.members);
   const dispatch = useAppDispatch();
   const [editable, setEditable] = useState<boolean>(false);
   const isAdmin = useAppSelector(state => state.userReducer.isAdmin);
@@ -52,16 +52,16 @@ const AdminComplaintDetail = ({route}: any) => {
     setSelectedAssigned(route.params.data.assignedTo);
     setStatus(route.params.data.status);
     setComplaintID(route.params.data.id);
-    setCommentList(route.params.data.comments);
-  }, [route.params.data]);
+    setCommentList(route?.params?.data?.comments);
+  }, [route?.params?.data]);
 
   useEffect(() => {
     let ar = members.filter(item => item.id === selectedAssigned);
     setSelectedMember(ar[0]);
   }, [selectedAssigned]);
   useEffect(() => {
-    let ar = complaintData.findIndex(item => item.id == complaintID);
-    if (ar != -1) setCommentList(complaintData[ar].comments);
+    let ar = complaintData.findIndex(item => item?.id == complaintID);
+    if (ar != -1) setCommentList(complaintData[ar]?.comments);
   }, [complaintData]);
 
   const handleAssignedTo = async () => {
@@ -404,6 +404,7 @@ const AdminComplaintDetail = ({route}: any) => {
                     paddingVertical: 10,
                     width: '100%',
                     flex: 1,
+                    color: COLORS.black,
                   }}
                 />
               </View>
@@ -411,16 +412,15 @@ const AdminComplaintDetail = ({route}: any) => {
                 <Image
                   resizeMode="contain"
                   style={{height: 30, width: 30, tintColor: COLORS.primary}}
-                  source={ICONS.SELECTED_ICON}
+                  source={ICONS.SEND_ICON}
                 />
               </TouchableOpacity>
             </View>
           )}
           <FlatList
             style={{marginTop: 20}}
-            data={[...commentList]}
+            data={commentList}
             renderItem={({item}) => {
-              console.log(item);
               return (
                 <View
                   style={{
@@ -429,7 +429,7 @@ const AdminComplaintDetail = ({route}: any) => {
                     padding: '5%',
                     // width: '80%',
                     borderRadius: 10,
-                    alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                    alignSelf: item?.id === userID ? 'flex-end' : 'flex-start',
                   }}>
                   {/* <Text
                       style={{
@@ -439,16 +439,20 @@ const AdminComplaintDetail = ({route}: any) => {
                     </Text> */}
                   <Text
                     style={{
-                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                      alignSelf:
+                        item?.id === userID ? 'flex-end' : 'flex-start',
+                      color: COLORS.black,
                     }}>
-                    {userID !== item.id ? `${item.id} :-` : ''} {item.text}
+                    {userID !== item?.id ? `${item?.id} :-` : ''} {item?.text}
                   </Text>
                   <Text
                     style={{
                       fontSize: 10,
-                      alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
+                      color: COLORS.black,
+                      alignSelf:
+                        item?.id === userID ? 'flex-end' : 'flex-start',
                     }}>
-                    -{item.date}
+                    -{item?.date}
                   </Text>
                 </View>
               );
@@ -458,7 +462,7 @@ const AdminComplaintDetail = ({route}: any) => {
       </ScrollView>
       {open && (
         <SelectAssignedToModal
-          type={data.type}
+          type={data?.type}
           selected={selectedAssigned}
           isVisible={open}
           onClose={() => setOpen(false)}

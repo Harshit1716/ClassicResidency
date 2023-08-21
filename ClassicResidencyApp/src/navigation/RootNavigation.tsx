@@ -22,6 +22,8 @@ import DirectoryDetailProfile from '../screens/DirectoryProfileDetail';
 import AdminComplaintDetail from '../components/AdminComplaintDetail';
 import AddDetail from '../screens/AddDetail';
 import CreateAddScreen from '../screens/CreateAddScreen';
+import AboutUs from '../screens/AboutUs';
+import ContactUs from '../screens/ContactUs';
 
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
@@ -136,6 +138,24 @@ const RootNavigation = () => {
             }}
             name="AddDetail"
             component={AddDetail}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="AboutUs"
+            component={AboutUs}
+          />
+        )}
+        {email != '' && (
+          <RootStack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="ContactUs"
+            component={ContactUs}
           />
         )}
         {(admin || AOA) && (

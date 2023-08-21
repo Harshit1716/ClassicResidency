@@ -23,6 +23,8 @@ import AddProfileModal from '../components/AddProfileModal';
 import AddNewProfile from '../components/AddNewProfile';
 import {useNavigation} from '@react-navigation/native';
 import Loader from '../components/Loader';
+import ProfileTextInput from '../components/ProfileTextInput';
+import {redirectToPhoneNumber} from '../resources/Utils';
 const flatData = [];
 interface DATATYPE {
   flatNumber: string;
@@ -31,45 +33,57 @@ interface DATATYPE {
   name: string;
   email: string;
   phoneNumber: string;
-  isAdmin: boolean;
-  isAOA: boolean;
 }
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
-    // const data: DATATYPE[] = []
     // console.log(data.length);
+    console.log('INSIDE BHSDK');
     // data.forEach(async item => {
-    //   await dispatch(createUser(item));
-    // });
     await dispatch(
       createUser({
         flatNumber: '000',
-        flatType: 'H1',
-        block: 'Z',
-        name: 'technopians',
-        email: 'technopians@yopmail.com',
-        phoneNumber: '9355209292',
-        isAdmin: true,
-        isAOA: true,
+        flatType: 'AOA',
+        block: 'A',
+        name: 'Shivam singh',
+        email: 'thesocietease@gmail.com',
+        phoneNumber: '9599104926',
       }),
     );
+    // });
   }
   const [number, setNumber] = useState('');
   const [open, setOpen] = useState(false);
   const [password, setPasssword] = useState('');
+  const [block, setblock] = useState('Z');
+  const [flatType, setflatType] = useState('H1');
+  const [faltNo, setfaltNo] = useState('000');
   useEffect(() => {
-    // setNumber('9355209292');
-    // setPasssword('Atmaram@321');
-    // setNumber('9355209292');
-    // setPasssword('Harry');
+    // setNumber('9968212577');
+    // setPasssword('7752128699');
+    // let ar = '9599104926'.split('').reverse().join('');
+    setNumber('9355209292');
+    setPasssword('Harry');
+    // console.log(ar);
   }, []);
   const navigation = useNavigation();
 
   const validate = () => {
     const phoneNumberRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
     // !phoneNumberRegex.test(number)
+    if (block.length == 0) {
+      Alert.alert('Error', 'Please enter block');
+      return false;
+    }
+    if (flatType.length == 0) {
+      Alert.alert('Error', 'Please enter  flat type ');
+      return false;
+    }
+    if (faltNo.length == 0) {
+      Alert.alert('Error', 'Please enter flat number ');
+      return false;
+    }
     if (number.length == 0) {
       Alert.alert('Error', 'Please enter a number ');
       return false;
@@ -116,8 +130,8 @@ const LoginScreen = () => {
             <Image
               resizeMode="contain"
               style={{
-                height: 270,
-                width: 270,
+                height: 200,
+                width: 200,
                 marginTop: SIZES.spacing,
                 marginLeft: '5%',
               }}
@@ -155,6 +169,40 @@ const LoginScreen = () => {
             style={{
               marginVertical: SIZES.spacing * 3,
             }}>
+            <View style={{width: '90%', alignSelf: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                }}>
+                <View style={{width: SIZES.width * 0.3}}>
+                  <ProfileTextInput
+                    title={block}
+                    disabled={false}
+                    onChangeText={text => setblock(text)}
+                    placeholder="BLock"
+                  />
+                </View>
+
+                <View style={{width: SIZES.width * 0.3}}>
+                  <ProfileTextInput
+                    title={flatType}
+                    disabled={false}
+                    onChangeText={text => setflatType(text)}
+                    placeholder="Flat Type"
+                  />
+                </View>
+                <View style={{width: SIZES.width * 0.3}}>
+                  <ProfileTextInput
+                    title={faltNo}
+                    disabled={false}
+                    onChangeText={text => setfaltNo(text)}
+                    placeholder="Flat No"
+                  />
+                </View>
+              </View>
+            </View>
+
             <AppTextInput
               editable={!isLoading}
               placeholder="number"
@@ -178,6 +226,17 @@ const LoginScreen = () => {
               Alert.alert(
                 'Alert',
                 'Please connect with AOA to reset your password',
+                [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Connet',
+                    onPress: () => {
+                      redirectToPhoneNumber('9599104926');
+                    },
+                  },
+                ],
               );
             }}>
             <Text
@@ -193,12 +252,21 @@ const LoginScreen = () => {
             title="Login"
             onPress={() => {
               if (validate()) {
-                dispatch(login({phoneNumber: number, password: password}));
+                dispatch(
+                  login({
+                    phoneNumber: number,
+                    password: password,
+                    flatNo:
+                      block.toUpperCase() +
+                      flatType.toUpperCase() +
+                      faltNo.toUpperCase(),
+                  }),
+                );
               }
             }}
             disabled={isLoading}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               handleCreateAccount();
               // navigation.navigate('NewUserScreen');
@@ -214,7 +282,7 @@ const LoginScreen = () => {
               }}>
               Create new account
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {open && (
           <AddNewProfile isVisible={open} onClose={() => setOpen(false)} />

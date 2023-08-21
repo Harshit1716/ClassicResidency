@@ -21,42 +21,39 @@ import {
 export const login = createAsyncThunk(
   'user/login',
   async (
-    {phoneNumber, password}: {phoneNumber: string; password: string},
+    {
+      phoneNumber,
+      password,
+      flatNo,
+    }: {phoneNumber: string; password: string; flatNo: string},
     {rejectWithValue},
   ) => {
     try {
       const flatsRef = firestore().collection('Users');
-      const phoneNumberQuery = flatsRef.where('phoneNumber', '==', phoneNumber);
-      const tenantPhoneNumberQuery = flatsRef.where(
-        'tenantPhoneNumber',
-        '==',
-        phoneNumber,
-      );
-      const passwordQuery = flatsRef.where('password', '==', password);
 
-      const snapshot = await phoneNumberQuery
-        .where('password', '==', password)
-        .get();
+      const flatQuery = flatsRef.where('id', '==', flatNo).limit(1);
+      const flatSnapshot = await flatQuery.get();
 
-      if (snapshot.empty) {
-        const snapshot2 = await tenantPhoneNumberQuery
-          .where('tenantPassword', '==', password)
-          .get();
+      if (flatSnapshot.empty) {
+        Alert.alert('Error', 'Invalid flat number');
+        throw new Error('Invalid flat number');
+      }
 
-        if (snapshot2.empty) {
-          Alert.alert('Error', 'Invalid phone number or password');
-          throw new Error('Invalid phone number or password');
-        }
-
-        // User found with tenantPhoneNumber and password
-        const user = snapshot2.docs[0].data();
-        user['currentUser'] = user.tenantPhoneNumber;
+      const userDoc = flatSnapshot.docs[0];
+      const user = userDoc.data();
+      if (
+        (user.phoneNumber === phoneNumber && user.password === password) ||
+        (user.tenantPhoneNumber === phoneNumber &&
+          user.tenantPassword === password)
+      ) {
+        user.currentUser =
+          user.tenantPhoneNumber === phoneNumber
+            ? user.tenantPhoneNumber
+            : user.phoneNumber;
         return user;
       } else {
-        // User found with phoneNumber and password
-        const user = snapshot.docs[0].data();
-        user['currentUser'] = user.phoneNumber;
-        return user;
+        Alert.alert('Error', 'Invalid phone number or password');
+        throw new Error('Invalid phone number or password');
       }
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -75,8 +72,6 @@ export const createUser = createAsyncThunk(
       name,
       email,
       phoneNumber,
-      isAOA,
-      isAdmin,
     }: {
       flatNumber: string;
       flatType: string;
@@ -84,8 +79,6 @@ export const createUser = createAsyncThunk(
       name: string;
       email: string;
       phoneNumber: string;
-      isAOA: boolean;
-      isAdmin: boolean;
     },
     {rejectWithValue},
   ) => {
@@ -122,10 +115,10 @@ export const createUser = createAsyncThunk(
         imageUrl: '',
         complaints: [],
         isTenantAdded: false,
-        isAdmin: isAdmin,
-        isAOA: isAOA,
-        tenantName: '',
-        tenantEmail: '',
+        isAdmin: false,
+        isAOA: false,
+        tenantName: 'Monika',
+        tenantEmail: '8920592552',
         tenantPhoneNumber: '',
         tenantPassword: '',
         tenantImage: '',
@@ -500,10 +493,15 @@ export const getAllAds = createAsyncThunk(
     try {
       const complaintsRef = firestore()
         .collection('Ads')
-        .orderBy('createdAt', 'desc');
+        .orderBy('createdAt', 'asc');
       const snapshot = await complaintsRef.get();
       const complaints: Ads[] = snapshot.docs.map(doc => doc.data() as Ads);
-      return complaints;
+      const bannerRef = firestore()
+        .collection('Banners')
+        .orderBy('createdAt', 'asc');
+      const snapshot2 = await bannerRef.get();
+      const banners: Ads[] = snapshot2.docs.map(doc => doc.data() as Ads);
+      return {ads: complaints, banner: banners};
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -610,6 +608,7 @@ const initialState: FlatType = {
   tenantPassword: '',
   tenantImage: '',
   adsList: [],
+  bannerList: [],
 };
 
 export const userSlice = createSlice({
@@ -695,13 +694,16 @@ export const userSlice = createSlice({
       let user = {
         phoneNumber: '',
         password: '',
+        id: '',
       };
       if (state.currentUser === state.phoneNumber) {
         user.password = state.password;
         user.phoneNumber = state.phoneNumber;
+        user.id = state.id;
       } else if (state.currentUser === state.tenantPhoneNumber) {
         user.password = state.tenantPassword;
         user.phoneNumber = state.tenantPhoneNumber;
+        user.id = state.id;
       }
       // }
       state.error = null;
@@ -774,8 +776,9 @@ export const userSlice = createSlice({
     builder.addCase(getAllAds.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-
-      state.adsList = action.payload;
+      state.adsList = action.payload.ads;
+      console.log(action.payload.banner, 'BHSdK@');
+      state.bannerList = action.payload.banner;
     });
     builder.addCase(getAllAds.rejected, (state, action) => {
       state.loading = false;

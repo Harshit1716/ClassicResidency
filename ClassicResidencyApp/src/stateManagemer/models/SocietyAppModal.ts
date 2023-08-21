@@ -27,7 +27,7 @@ export interface FlatType {
   error: any;
   members: Members[];
   adsList: Ads[];
-
+  bannerList: Ads[];
   currentUser: string;
 }
 

@@ -6,6 +6,10 @@ import {store} from './src/stateManagemer/Store';
 import NetInfo from '@react-native-community/netinfo';
 import NoDataFound from './src/components/NoDataFound';
 import CodePush from 'react-native-code-push';
+import NoInterNet from './src/components/NoInternet';
+
+import firestore, {Filter} from '@react-native-firebase/firestore';
+import UpdateRequired from './src/components/UpdateRequired';
 
 let CodePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
@@ -18,15 +22,28 @@ let CodePushOptions = {
 const MainComponent = ({status}: {status: boolean}) => {
   return (
     <View style={{flex: 1}}>
-      {status ? <RootNavigation /> : <NoDataFound />}
+      {status ? <RootNavigation /> : <NoInterNet />}
     </View>
   );
 };
 
 const App = () => {
   const [status, setStatus] = useState(true);
+  const [updateRequired, setUpdateRequired] = useState(false);
+  const currentVersion = '2.0';
+  const checkVersion = async () => {
+    const complaintsRef = firestore().collection('AppInfo').doc('version');
+    const snapshot = (await complaintsRef.get()).data();
+    // const complaints = snapshot.docs.map(doc => doc.data());
+    // const complaints = snapshot.docs?.[0]?.data();
+    console.log(snapshot, 'BAWA');
+    if (snapshot?.no && snapshot?.no != currentVersion) {
+      setUpdateRequired(true);
+    }
+  };
 
   useEffect(() => {
+    checkVersion();
     CodePush.sync(
       {
         deploymentKey: 'fupvPATT23CMY06x_snAqDoIxGnrTAn-TbObT',
@@ -52,7 +69,13 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <MainComponent status={status} />
+      {updateRequired ? (
+        <>
+          <UpdateRequired />
+        </>
+      ) : (
+        <MainComponent status={status} />
+      )}
     </Provider>
   );
 };

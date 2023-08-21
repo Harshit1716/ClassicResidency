@@ -152,17 +152,17 @@ const AdminComplaints = () => {
           }}>
           <View style={{flexDirection: 'row'}}>
             <View>
-              <Text style={{...FONTS.body4, color: COLORS.gray}}>
+              <Text style={{...FONTS.body4, color: COLORS.black}}>
                 By : {item.by}
               </Text>
               <Text
                 numberOfLines={3}
-                style={{...FONTS.body5, color: COLORS.gray}}>
+                style={{...FONTS.body5, color: COLORS.black}}>
                 Flat : {item.flatNo}
               </Text>
             </View>
           </View>
-          <Text style={{...FONTS.body5, color: COLORS.gray}}>
+          <Text style={{...FONTS.body5, color: COLORS.black}}>
             {item.createdOn}
           </Text>
         </View>

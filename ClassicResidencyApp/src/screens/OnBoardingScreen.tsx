@@ -25,9 +25,14 @@ const OnBoardingScreen = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const checkUserExists = async () => {
     const user = await getData(userDataSKeys);
+    console.log(user);
     if (user != null) {
       dispatch(
-        login({phoneNumber: user?.phoneNumber, password: user?.password}),
+        login({
+          phoneNumber: user?.phoneNumber,
+          password: user?.password,
+          flatNo: user?.id,
+        }),
       );
     }
   };
@@ -129,7 +134,7 @@ const OnBoardingScreen = ({navigation}: any) => {
             textAlign: 'center',
             marginTop: SIZES.spacing * 2,
           }}>
-          Powered by TechnoSapiens
+          Powered by Technopiens
         </Text>
       </View>
     </MainView>

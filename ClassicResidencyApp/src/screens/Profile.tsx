@@ -30,14 +30,18 @@ const Profile = ({navigation}: any) => {
       route: 'Home',
       label: 'About Us',
       icon: 'house',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('AboutUs');
+      },
     },
-    {
-      route: 'Search',
-      label: 'Contact Us',
-      icon: 'search',
-      onPress: () => {},
-    },
+    // {
+    //   route: 'Search',
+    //   label: 'Contact Us',
+    //   icon: 'search',
+    //   onPress: () => {
+    //     navigation.navigate('ContactUs');
+    //   },
+    // },
     {
       route: 'AllComplaints',
       label: 'All Complaints',
@@ -75,13 +79,18 @@ const Profile = ({navigation}: any) => {
     {
       label: 'About Us',
       icon: 'house',
-      onPress: () => {},
+      onPress: () => {
+        console.log('AboutUs');
+        navigation.navigate('AboutUs');
+      },
     },
-    {
-      label: 'Contact Us',
-      icon: 'search',
-      onPress: () => {},
-    },
+    // {
+    //   label: 'Contact Us',
+    //   icon: 'search',
+    //   onPress: () => {
+    //     navigation.navigate('ContactUs');
+    //   },
+    // },
     {
       route: 'ChangePassword',
       label: 'Change Password',

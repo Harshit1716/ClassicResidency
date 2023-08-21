@@ -24,7 +24,7 @@ const Banner = ({data}: any) => {
   const [dataList, setDataList] = useState(data);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
-  const ads = useAppSelector(item => item.userReducer.adsList);
+  const ads = useAppSelector(item => item.userReducer.bannerList);
   const flatListRef = useRef(null);
   useEffect(() => {
     dispatch(getAllAds());
