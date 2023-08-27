@@ -51,7 +51,7 @@ const CreateAddScreen = () => {
   const [imageFile, setImageFile] = React.useState<any>(null);
   const [imageFile2, setImageFile2] = React.useState<any>(null);
   const [imageFileBanner, setImageFileBanner] = React.useState<any>(null);
-  const adsList = useAppSelector(state => state.userReducer.adsList);
+  const adsList = useAppSelector(state => state.userReducer.bannerList);
 
   const dispatch = useAppDispatch();
   function deleteImage(type: string) {
@@ -133,52 +133,29 @@ const CreateAddScreen = () => {
       }
     }
   };
-  const handleAddBanner = async () => {
-    console.log(adsList[0], 'Here');
-    const noticeData: Ads = {
-      id: adsList[1].name + Date.now(),
-      name: adsList[1].name,
-      address: adsList[1].address,
-      text1: adsList[1].text1,
-      text2: adsList[1].text2,
-      img1: adsList[1].img1,
-      img2: adsList[1].img2,
-      banner: adsList[1].banner,
-      number: adsList[1].number,
-      createdAt: new Date().toLocaleDateString(),
-    };
+  const handleBanner = async () => {
+    if (true) {
+      setloading(true);
+      try {
+        let data = adsList[0];
 
-    const noticesCollectionRef = firestore()
-      .collection('Banners')
-      .doc(name + Date.now());
-    await noticesCollectionRef.set(noticeData);
-    // adsList.map(async item => {
-    //   console.log(item, 'Here');
-    //   //   const noticeData: Ads = {
-    //   //     id: item.name + Date.now(),
-    //   //     name: item.name,
-    //   //     address: item.address,
-    //   //     text1: item.text1,
-    //   //     text2: item.text2,
-    //   //     img1: item.img1,
-    //   //     img2: item.img2,
-    //   //     banner: item.banner,
-    //   //     number: item.number,
-    //   //     createdAt: new Date().toLocaleDateString(),
-    //   //   };
-
-    //   //   const noticesCollectionRef = firestore()
-    //   //     .collection('Banners')
-    //   //     .doc(name + Date.now());
-    //   //   await noticesCollectionRef.set(noticeData);
-    // });
+        const noticesCollectionRef = firestore()
+          .collection('Banners')
+          .doc(Date.now() + '');
+        await noticesCollectionRef.set(data);
+      } catch (error) {
+        console.log(error);
+        setloading(false);
+        return Alert.alert(error?.message);
+      }
+    }
   };
 
   const SubmitButton = () => {
     return (
       <TouchableOpacity
         onPress={async () => {
-          handleAddBanner();
+          handleAddAds();
         }}
         style={{
           width: '50%',

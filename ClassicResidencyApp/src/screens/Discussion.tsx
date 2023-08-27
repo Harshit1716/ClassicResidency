@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import Database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '../components/Loader';
+import SuspendedService from '../components/SuspendedService';
 interface Message {
   name: string;
   flatNo: string;
@@ -26,51 +27,9 @@ interface Message {
   createdOn: any;
 }
 
-const dataSet3 = [
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'ZSUPER000',
-    text: 'This is super admin app',
-  },
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'ZSUPER000',
-    text: 'This is super admin app',
-  },
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-];
-
 const Discussion = () => {
-  const [postScreen, setPostScreen] = useState(false);
-  const [comment, setComment] = useState('');
-  const navigation = useNavigation();
+  const [suspendedService, setSuspendedScreen] = useState(false);
+
   const userID = useAppSelector(item => item.userReducer.id);
   const user = useAppSelector(item => item.userReducer);
   const [messages, setMessages] = useState([]);
@@ -80,10 +39,8 @@ const Discussion = () => {
   const flatListRef = useRef(null);
   useEffect(() => {
     const messagesRef = Database().ref('messages');
-
+    handleSuspendedScreen();
     const query = messagesRef.orderByKey();
-    // .limitToLast(10) // Load the latest 10 messages
-    // .endAt(paginationKey);
     const messageListener = query.on('value', snapshot => {
       const newMessages: any = [];
       snapshot.forEach(childSnapshot => {
@@ -106,12 +63,12 @@ const Discussion = () => {
       query.off('value', messageListener);
     };
   }, [paginationKey]);
-
-  const loadMoreMessages = () => {
-    if (messages.length > 0) {
-      setIsLoading(true);
-      setPaginationKey(messages[messages.length - 1].key);
-    }
+  const handleSuspendedScreen = async () => {
+    const banRef = Database().ref('ban');
+    banRef.on('value', snapshot => {
+      const isBanned = snapshot.val(); // This will be a boolean value (true or false)
+      setSuspendedScreen(isBanned ?? false);
+    });
   };
 
   const sendMessage = async () => {
@@ -187,76 +144,97 @@ const Discussion = () => {
   };
 
   return (
-    // <LinearGradient
-    //   colors={['#606c88', '#3f4c6b']}
-    //   style={{flex: 1}}
-    //   start={{x: 0, y: 0.5}}
-    //   end={{x: 1, y: 0.5}}
-    //   locations={[0, 0.7]}>
-    <View
-      style={{
-        flex: 1,
-        padding: '5%',
-      }}>
-      <FlatList
-        ref={flatListRef}
-        style={{height: SIZES.width * 0.5}}
-        showsVerticalScrollIndicator={false}
-        data={[...messages]}
-        initialScrollIndex={messages.length - 1}
-        ListFooterComponent={() => {
-          return <View style={{height: SIZES.height * 0.35}}></View>;
-        }}
-        renderItem={renderItem2}
-      />
+    <View style={{flex: 1}}>
       <View
         style={{
-          position: 'absolute',
-          bottom: SIZES.height * 0.15,
-          alignSelf: 'center',
-          flexDirection: 'row',
-          marginTop: 20,
-          alignItems: 'center',
+          flex: 1,
+          padding: '5%',
         }}>
+        <FlatList
+          ref={flatListRef}
+          style={{height: SIZES.width * 0.5}}
+          showsVerticalScrollIndicator={false}
+          data={[...messages]}
+          initialScrollIndex={messages?.length > 0 ? messages.length - 1 : 0}
+          ListFooterComponent={() => {
+            return <View style={{height: SIZES.height * 0.35}}></View>;
+          }}
+          onScrollToIndexFailed={info => {
+            const wait = new Promise(resolve => setTimeout(resolve, 500));
+            wait.then(async () => {
+              console.log('inside', messages.length);
+              const length = messages?.length
+                ? (await messages?.length) - 2
+                : 0;
+              flatListRef.current?.scrollToIndex({
+                index: length,
+                animated: true,
+              });
+            });
+          }}
+          renderItem={renderItem2}
+        />
         <View
           style={{
-            ...FONTS.h2,
-            borderWidth: 1,
-            borderColor: COLORS.lightGray,
-            paddingHorizontal: '5%',
-            backgroundColor: COLORS.white,
-            borderRadius: 10,
-            flex: 1,
-            marginRight: 10,
+            position: 'absolute',
+            bottom: SIZES.height * 0.15,
+            alignSelf: 'center',
+            flexDirection: 'row',
+            marginTop: 20,
+            alignItems: 'center',
           }}>
-          <TextInput
-            value={newMessage}
-            onChangeText={text => setNewMessage(text)}
-            multiline
-            placeholder="Enter your comment ..."
+          <View
             style={{
+              ...FONTS.h2,
+              borderWidth: 1,
+              borderColor: COLORS.lightGray,
+              paddingHorizontal: '5%',
               backgroundColor: COLORS.white,
-              maxHeight: SIZES.height * 0.3,
-              paddingVertical: 10,
-              width: '100%',
+              borderRadius: 10,
               flex: 1,
-            }}
-          />
+              marginRight: 10,
+            }}>
+            <TextInput
+              value={newMessage}
+              onChangeText={text => setNewMessage(text)}
+              multiline
+              placeholder="Enter your comment ..."
+              style={{
+                backgroundColor: COLORS.white,
+                maxHeight: SIZES.height * 0.3,
+                paddingVertical: 10,
+                width: '100%',
+                flex: 1,
+                color: COLORS.black,
+              }}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              sendMessage();
+            }}>
+            <Image
+              resizeMode="contain"
+              style={{height: 30, width: 30, tintColor: COLORS.primary}}
+              source={ICONS.SEND_ICON}
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            sendMessage();
-          }}>
-          <Image
-            resizeMode="contain"
-            style={{height: 30, width: 30, tintColor: COLORS.primary}}
-            source={ICONS.SEND_ICON}
-          />
-        </TouchableOpacity>
+        {isLoading && <Loader />}
       </View>
-      {isLoading && <Loader />}
+      {suspendedService && (
+        <View
+          style={{
+            position: 'absolute',
+            backgroundColor: 'white',
+            height: '100%',
+            width: '100%',
+            flex: 1,
+          }}>
+          <SuspendedService />
+        </View>
+      )}
     </View>
-    // </LinearGradient>
   );
 };
 

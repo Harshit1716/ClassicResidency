@@ -66,6 +66,7 @@ const places = [
   },
 ];
 
+import messaging from '@react-native-firebase/messaging';
 const HomeScreen = ({navigation}: any) => {
   const [open, setOpen] = useState(false);
   const [flag, setflag] = useState(true);
@@ -174,6 +175,11 @@ const HomeScreen = ({navigation}: any) => {
       </View>
     );
   };
+  const getDeviceToken = async () => {
+    await messaging().registerDeviceForRemoteMessages();
+    const token = await messaging().getToken();
+    console.log(token);
+  };
 
   return (
     <MainView>
@@ -210,7 +216,11 @@ const HomeScreen = ({navigation}: any) => {
                       : ICONS.PROFILE_ICON
                   }
                 />
-                <Text style={{color: COLORS.white, ...FONTS.h3}}>
+                <Text
+                  onPress={() => {
+                    getDeviceToken();
+                  }}
+                  style={{color: COLORS.white, ...FONTS.h3}}>
                   {new Date().toDateString()}
                 </Text>
                 {/* <TouchableOpacity>

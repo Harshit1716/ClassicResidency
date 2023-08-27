@@ -27,9 +27,11 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getStatusColor} from '../resources/Utils';
 import ComplaintsFilterModal from '../components/ComplaintsFilterModal';
 import NoDataFound from '../components/NoDataFound';
+import {RefreshControl} from 'react-native';
 
 const AdminComplaints = () => {
   const [input, setInput] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   const [open, setOpen] = useState(false);
   const userId = useAppSelector(state => state.userReducer.id);
   const complaints = useAppSelector(state => state.userReducer.adminComplaints);
@@ -104,7 +106,7 @@ const AdminComplaints = () => {
             justifyContent: 'space-between',
             marginBottom: 10,
           }}>
-          <View style={{justifyContent: 'center'}}>
+          <View style={{justifyContent: 'center', width: '70%'}}>
             <Text style={{...FONTS.h3, color: COLORS.black}}>{item.type}</Text>
             {item.assignedTo != '' && (
               <TouchableOpacity
@@ -170,6 +172,10 @@ const AdminComplaints = () => {
     );
   };
 
+  const onRefresh = () => {
+    dispatch(getAllComplaints());
+  };
+
   return (
     <MainView>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
@@ -212,6 +218,9 @@ const AdminComplaints = () => {
       </View>
       {filterdList.length > 0 ? (
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           style={{}}
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.1}}></View>

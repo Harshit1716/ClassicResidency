@@ -56,15 +56,15 @@ const LoginScreen = () => {
   const [number, setNumber] = useState('');
   const [open, setOpen] = useState(false);
   const [password, setPasssword] = useState('');
-  const [block, setblock] = useState('Z');
-  const [flatType, setflatType] = useState('H1');
-  const [faltNo, setfaltNo] = useState('000');
+  const [block, setblock] = useState('');
+  const [flatType, setflatType] = useState('');
+  const [faltNo, setfaltNo] = useState('');
   useEffect(() => {
     // setNumber('9968212577');
     // setPasssword('7752128699');
     // let ar = '9599104926'.split('').reverse().join('');
-    setNumber('9355209292');
-    setPasssword('Harry');
+    // setNumber('9355209292');
+    // setPasssword('Harry');
     // console.log(ar);
   }, []);
   const navigation = useNavigation();

@@ -1,4 +1,11 @@
-import {Alert, LogBox, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  LogBox,
+  PermissionsAndroid,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootNavigation from './src/navigation/RootNavigation';
 import {Provider} from 'react-redux';
@@ -7,7 +14,7 @@ import NetInfo from '@react-native-community/netinfo';
 import NoDataFound from './src/components/NoDataFound';
 import CodePush from 'react-native-code-push';
 import NoInterNet from './src/components/NoInternet';
-
+import messaging from '@react-native-firebase/messaging';
 import firestore, {Filter} from '@react-native-firebase/firestore';
 import UpdateRequired from './src/components/UpdateRequired';
 
@@ -41,7 +48,6 @@ const App = () => {
       setUpdateRequired(true);
     }
   };
-
   useEffect(() => {
     checkVersion();
     CodePush.sync(
@@ -59,11 +65,27 @@ const App = () => {
       console.log('Is connected?', state.isConnected);
       setStatus(state?.isConnected ?? false);
     });
-
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
     return () => {
       unsubscribe();
     };
   }, []);
+
+  messaging().onMessage(async remoteMessage => {
+    testFunction(remoteMessage);
+  });
+  const testFunction = async (remoteMessage: any) => {
+    const data = await {
+      id: 0,
+      title: remoteMessage?.notification?.title ?? 'notification',
+      message: remoteMessage?.notification?.body ?? 'notification',
+      // picture: remoteMessage?.notification?.smallIcon ?? ICONS.SMALL_ICON,
+    };
+    console.log(remoteMessage, 'HIIIIII');
+    // PushNotification.localNotification(data);
+  };
 
   LogBox.ignoreAllLogs();
 

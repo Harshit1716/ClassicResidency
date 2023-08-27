@@ -145,7 +145,7 @@ const AdminComplaintDetail = ({route}: any) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{}}>
+            <View style={{width: '70%'}}>
               <Text style={{...FONTS.body4, color: COLORS.gray}}>
                 By : {data.by}
               </Text>

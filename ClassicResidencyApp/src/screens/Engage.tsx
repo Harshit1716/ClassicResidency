@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   StatusBar,
@@ -19,56 +20,7 @@ import Discussion from './Discussion';
 import {Ads} from '../stateManagemer/models/SocietyAppModal';
 import {getAllAds} from '../stateManagemer/slice/ServiceSlice';
 import NoDataFound from '../components/NoDataFound';
-
-interface Message {
-  name: string;
-  flatNo: string;
-  message: string;
-  image: string;
-  createdOn: string;
-}
-
-const dataSet3 = [
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'ZSUPER000',
-    text: 'This is super admin app',
-  },
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'ZSUPER000',
-    text: 'This is super admin app',
-  },
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Pppppp'},
-  {date: '8/13/2023', name: 'Prakash Raj', id: 'AAOA000', text: 'Hahaha'},
-  {
-    date: '8/13/2023',
-    name: 'Prakash Raj',
-    id: 'AAOA000',
-    text: 'Aoa meeting is going on so everybody else have to wait 😎',
-  },
-  {
-    date: '8/11/2023',
-    id: 'AAOA000',
-    text: 'Currenctly dont have any memeber so cant process',
-  },
-];
-
+import Database from '@react-native-firebase/database';
 const Engage = () => {
   const [postScreen, setPostScreen] = useState(false);
   const [comment, setComment] = useState('');
@@ -149,47 +101,6 @@ const Engage = () => {
     );
   };
 
-  const renderItem2 = ({item, index}: {item: any; index: number}) => {
-    return (
-      <View
-        style={{
-          backgroundColor: COLORS.lightPrimary,
-          marginBottom: 15,
-          maxWidth: '80%',
-          padding: '5%',
-          // width: '80%',
-          borderRadius: 10,
-          alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-        }}>
-        <Text
-          style={{
-            alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-            ...FONTS.h3,
-            color:
-              item.id === userID
-                ? COLORS.headerSecond
-                : index % 2 == 0
-                ? COLORS.green
-                : COLORS.secondary,
-          }}>
-          {item.name}
-        </Text>
-        <Text
-          style={{
-            alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-          }}>
-          {userID !== item.id ? `${item.id} :-` : ''} {item.text}
-        </Text>
-        <Text
-          style={{
-            fontSize: 10,
-            alignSelf: item.id === userID ? 'flex-end' : 'flex-start',
-          }}>
-          -{item.date}
-        </Text>
-      </View>
-    );
-  };
   const renderItem = ({item, index}: {item: Ads; index: number}) => {
     return (
       <TouchableOpacity
@@ -318,6 +229,45 @@ const Engage = () => {
     );
   };
 
+  const suspendChat = async () => {
+    const banRef = Database().ref('ban');
+    let isBanned = false;
+    banRef.on('value', async snapshot => {
+      isBanned = await snapshot.val(); // This will be a boolean value (true or false)
+      console.log('Is user banned?', isBanned);
+    });
+    const message = isBanned
+      ? 'UN-Ban the chat service'
+      : 'Ban the chat service';
+    Alert.alert(
+      'Alert',
+      'Do you want to ' + message,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'destructive',
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            banRef
+              .set(!isBanned)
+              .then(() => {
+                console.log('User is now banned.', !isBanned);
+              })
+              .catch(error => {
+                console.error('Error updating ban status:', error);
+              });
+          },
+          style: 'default',
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    );
+  };
   return (
     <MainView>
       <StatusBar translucent={false} backgroundColor={COLORS.primary} />
@@ -327,10 +277,12 @@ const Engage = () => {
         iconPress={() => {
           if (!postScreen) {
             navigation.navigate('CreateAdd');
+          } else if (postScreen) {
+            suspendChat();
           }
         }}
         rightIconType={
-          user.block == 'Z' ? (postScreen ? 'NONE' : 'CREATE') : 'NONE'
+          user.block == 'Z' ? (postScreen ? 'EDIT' : 'CREATE') : 'NONE'
         }
       />
       {selectorBtn()}

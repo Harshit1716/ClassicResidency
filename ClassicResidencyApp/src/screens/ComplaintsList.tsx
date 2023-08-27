@@ -1,6 +1,7 @@
 import {
   Alert,
   FlatList,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -32,8 +33,13 @@ const ComplaintsList = () => {
   const members = useAppSelector(state => state.userReducer.members);
   const dispatch = useAppDispatch();
   const [filterdList, setFilterdList] = useState<ComplaintType[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
+  const onRefresh = async () => {
+    await dispatch(getComplaintsById({currentUserId: userId}));
+    setRefreshing(false);
+  };
   React.useEffect(() => {
     setFilterdList(complaints ?? []);
   }, [complaints]);
@@ -187,11 +193,9 @@ const ComplaintsList = () => {
         <FlatList
           style={{}}
           refreshing={true}
-          // onRefresh={() => {
-          //  <View>
-          //   <Acti
-          //  </View>
-          // }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           ListFooterComponent={() => (
             <View style={{height: SIZES.height * 0.2}}></View>
           )}

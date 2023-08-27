@@ -2,6 +2,7 @@ import {
   Alert,
   FlatList,
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -31,8 +32,13 @@ const NoticeList = () => {
   const isAOA = useAppSelector(state => state.userReducer.isAOA);
   const noticeList = useAppSelector(state => state.userReducer.notice);
   const [noticeFilteredList, setNoticeFilteredList] = useState<Notice[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
 
+  const onRefresh = async () => {
+    await dispatch(getAllNotice());
+    setRefreshing(false);
+  };
   useEffect(() => {
     dispatch(getAllNotice());
   }, []);
@@ -141,6 +147,12 @@ const NoticeList = () => {
               <>
                 <View style={{marginTop: 20}}></View>
                 <SwipeListView
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                   data={noticeFilteredList}
                   renderItem={({item, index}) => (
                     <NoticeCard item={item} index={index} />
@@ -166,6 +178,12 @@ const NoticeList = () => {
           <>
             {noticeFilteredList.length ? (
               <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
                 contentContainerStyle={{marginTop: 20, marginHorizontal: '2%'}}
                 data={noticeFilteredList}
                 renderItem={({item, index}) => {
