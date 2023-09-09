@@ -175,11 +175,6 @@ const HomeScreen = ({navigation}: any) => {
       </View>
     );
   };
-  const getDeviceToken = async () => {
-    await messaging().registerDeviceForRemoteMessages();
-    const token = await messaging().getToken();
-    console.log(token);
-  };
 
   return (
     <MainView>
@@ -217,8 +212,9 @@ const HomeScreen = ({navigation}: any) => {
                   }
                 />
                 <Text
-                  onPress={() => {
-                    getDeviceToken();
+                  onPress={async () => {
+                    const data = await messaging().getToken();
+                    console.log(data);
                   }}
                   style={{color: COLORS.white, ...FONTS.h3}}>
                   {new Date().toDateString()}

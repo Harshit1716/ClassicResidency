@@ -50,9 +50,10 @@ const Discussion = () => {
           name: childSnapshot.val().name,
           flatNo: childSnapshot.val().flatNo,
           flatId: childSnapshot.val().flatId,
-          createdOn: childSnapshot.val().timestamp,
+          createdOn: childSnapshot.val().createdOn,
         });
       });
+      console.log(newMessage, 'RECEIVED');
       setMessages(newMessages.reverse());
       if (flatListRef != null) {
       }
@@ -93,6 +94,7 @@ const Discussion = () => {
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
   const renderItem2 = ({item, index}: {item: Message; index: number}) => {
+    console.log(item, 'HAHAH');
     return (
       <View
         style={{
@@ -137,7 +139,7 @@ const Discussion = () => {
             fontSize: 10,
             alignSelf: item.flatId === userID ? 'flex-end' : 'flex-start',
           }}>
-          -{formatTimestamp(item.createdOn)}
+          -{item.createdOn}
         </Text>
       </View>
     );

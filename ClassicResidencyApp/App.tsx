@@ -12,20 +12,21 @@ import {Provider} from 'react-redux';
 import {store} from './src/stateManagemer/Store';
 import NetInfo from '@react-native-community/netinfo';
 import NoDataFound from './src/components/NoDataFound';
-import CodePush from 'react-native-code-push';
+// import CodePush from 'react-native-code-push';
 import NoInterNet from './src/components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
 import firestore, {Filter} from '@react-native-firebase/firestore';
 import UpdateRequired from './src/components/UpdateRequired';
-
-let CodePushOptions = {
-  checkFrequency: CodePush.CheckFrequency.ON_APP_START,
-  mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
-  updateDialog: {
-    appendReleaseDescription: true,
-    title: 'a new update is available!',
-  },
-};
+import PushNotification from 'react-native-push-notification';
+import {ICONS} from './src/resources';
+// let CodePushOptions = {
+//   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
+//   mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
+//   updateDialog: {
+//     appendReleaseDescription: true,
+//     title: 'a new update is available!',
+//   },
+// };
 const MainComponent = ({status}: {status: boolean}) => {
   return (
     <View style={{flex: 1}}>
@@ -50,41 +51,48 @@ const App = () => {
   };
   useEffect(() => {
     checkVersion();
-    CodePush.sync(
-      {
-        deploymentKey: 'fupvPATT23CMY06x_snAqDoIxGnrTAn-TbObT',
-        installMode: CodePush.InstallMode.IMMEDIATE,
-        mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
-      },
-      status => {
-        console.log(status);
-      },
-    );
+    // CodePush.sync(
+    //   {
+    //     deploymentKey: 'fupvPATT23CMY06x_snAqDoIxGnrTAn-TbObT',
+    //     installMode: CodePush.InstallMode.IMMEDIATE,
+    //     mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
+    //   },
+    //   status => {
+    //     console.log(status);
+    //   },
+    // );
+
     const unsubscribe = NetInfo.addEventListener(state => {
       console.log('Connection type', state.type);
       console.log('Is connected?', state.isConnected);
       setStatus(state?.isConnected ?? false);
     });
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
+
     return () => {
       unsubscribe();
+      // unsubscribe2();
     };
   }, []);
-
+  // messaging().onTokenRefresh(newToken => {
+  //   // Handle the token refresh event
+  //   // Typically, you would send the newToken to your server
+  //   // to ensure that it has the latest registration token for the device.
+  //   console.log('Token refreshed:', newToken);
+  // });
   messaging().onMessage(async remoteMessage => {
+    console.log('message', remoteMessage);
     testFunction(remoteMessage);
   });
+
   const testFunction = async (remoteMessage: any) => {
     const data = await {
       id: 0,
       title: remoteMessage?.notification?.title ?? 'notification',
       message: remoteMessage?.notification?.body ?? 'notification',
-      // picture: remoteMessage?.notification?.smallIcon ?? ICONS.SMALL_ICON,
+      picture: ICONS.LOGO_ICON,
     };
     console.log(remoteMessage, 'HIIIIII');
-    // PushNotification.localNotification(data);
+    PushNotification.localNotification(data);
   };
 
   LogBox.ignoreAllLogs();
@@ -102,6 +110,6 @@ const App = () => {
   );
 };
 
-export default CodePush(App);
+export default App;
 
 const styles = StyleSheet.create({});

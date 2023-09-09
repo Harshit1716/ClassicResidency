@@ -42,7 +42,7 @@ const DirectoryDetailProfile = ({route}: any) => {
   async function fetchUser(id: string) {
     const userRef = firestore().collection('Users').doc(id);
     let data = await (await userRef.get()).data();
-    console.log(data, 'BBBBBCCCC');
+
     if (data != null) {
       setName(data.ownerName);
       setPhoneNo(data.phoneNumber);

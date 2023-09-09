@@ -16,7 +16,7 @@ import MainView from '../components/MainView';
 import {FONTS, SHADOW, SHADOW_PRIMARY} from '../resources/Theme';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
-import {logout} from '../stateManagemer/slice/ServiceSlice';
+import {logout, logoutUser} from '../stateManagemer/slice/ServiceSlice';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 // import Icon, {Icons} from '../components/Icons';
 const {width} = Dimensions.get('screen');
@@ -71,7 +71,7 @@ const Profile = ({navigation}: any) => {
       label: 'Logout',
       icon: 'user-circle-o',
       onPress: () => {
-        disptach(logout());
+        disptach(logoutUser(user.id));
       },
     },
   ];
@@ -103,165 +103,164 @@ const Profile = ({navigation}: any) => {
       label: 'Logout',
       icon: 'user-circle-o',
       onPress: () => {
-        disptach(logout());
+        disptach(logoutUser(user.id));
       },
     },
   ];
   return (
-    // <MainView>
-    <View style={{flex: 1}}>
-      <StatusBar translucent={false} backgroundColor={COLORS.primary} />
+    <MainView>
+      <View style={{flex: 1}}>
+        <StatusBar translucent={false} backgroundColor={COLORS.primary} />
 
-      <View style={style.header}>
-        <LinearGradient
-          colors={[COLORS.primary, COLORS.headerSecond]}
-          style={{flex: 1}}
-          start={{x: 0, y: 0.5}}
-          end={{x: 1, y: 0.5}}
-          locations={[0, 0.7]}>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingTop: Platform.OS == 'ios' ? 40 : 25,
-              paddingBottom: 10,
-              height: SIZES.height * 0.15,
-              paddingHorizontal: 20,
-              justifyContent: 'space-between',
-              // alignItems: 'center',
-            }}>
+        <View style={style.header}>
+          <LinearGradient
+            colors={[COLORS.primary, COLORS.headerSecond]}
+            style={{flex: 1}}
+            start={{x: 0, y: 0.5}}
+            end={{x: 1, y: 0.5}}
+            locations={[0, 0.7]}>
             <View
               style={{
                 flexDirection: 'row',
-                alignItems: 'center',
+                paddingTop: Platform.OS == 'ios' ? 40 : 25,
+                paddingBottom: 10,
+                height: SIZES.height * 0.15,
+                paddingHorizontal: 20,
+                justifyContent: 'space-between',
+                // alignItems: 'center',
               }}>
-              <Image
-                resizeMode="contain"
+              <View
                 style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 20,
-                  marginRight: 10,
-                }}
-                source={
-                  user.currentUser === user.phoneNumber
-                    ? user.imageUrl
-                      ? {uri: user.imageUrl + ''}
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    marginRight: 10,
+                  }}
+                  source={
+                    user.currentUser === user.phoneNumber
+                      ? user.imageUrl
+                        ? {uri: user.imageUrl + ''}
+                        : ICONS.PROFILE_ICON
+                      : user.tenantImage
+                      ? {uri: user.tenantImage + ''}
                       : ICONS.PROFILE_ICON
-                    : user.tenantImage
-                    ? {uri: user.tenantImage + ''}
-                    : ICONS.PROFILE_ICON
-                }
-              />
-              <View>
-                <Text style={style.headerTitle}>
-                  {user.block + '-' + user.flatType + '-' + user.flatNumber}
-                </Text>
-                <Text style={{color: COLORS.white, ...FONTS.h3}}>
-                  {user.currentUser === user.phoneNumber
-                    ? user.ownerName
-                    : user.tenantName}
-                </Text>
+                  }
+                />
+                <View>
+                  <Text style={style.headerTitle}>
+                    {user.block + '-' + user.flatType + '-' + user.flatNumber}
+                  </Text>
+                  <Text style={{color: COLORS.white, ...FONTS.h3}}>
+                    {user.currentUser === user.phoneNumber
+                      ? user.ownerName
+                      : user.tenantName}
+                  </Text>
+                </View>
               </View>
-            </View>
-            <Text style={{color: COLORS.white, ...FONTS.h3}}>
-              {new Date().toDateString()}
-            </Text>
-            {/* <TouchableOpacity>
+              <Text style={{color: COLORS.white, ...FONTS.h3}}>
+                {new Date().toDateString()}
+              </Text>
+              {/* <TouchableOpacity>
               <Image
                 style={{height: 40, width: 40, tintColor: COLORS.white}}
                 source={ICONS.NOTIFICATION_ICON}
               />
             </TouchableOpacity> */}
-          </View>
-        </LinearGradient>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Profile');
-        }}
-        activeOpacity={0.9}
-        style={style.inputContainer}>
-        <Image
-          style={{
-            height: 30,
-            width: 30,
-            marginRight: 10,
-
-            tintColor: COLORS.primary,
-          }}
-          source={ICONS.ACCOUNT_TAB_ICON}
-        />
-        <Text style={{color: COLORS.primary, ...FONTS.h3, flex: 1}}>
-          Personal Details
-        </Text>
-        <Image
-          style={{
-            height: 30,
-            width: 30,
-            marginRight: 10,
-            tintColor: COLORS.primary,
-          }}
-          source={ICONS.FORWARD_ICON}
-        />
-      </TouchableOpacity>
-
-      <ScrollView
-        style={{flex: 1, backgroundColor: COLORS.lightGray1, marginTop: 10}}>
-        <View
-          style={{
-            width: '95%',
-            borderRadius: 20,
-            backgroundColor: COLORS.white,
-            alignSelf: 'center',
-            marginBottom: SIZES.height * 0.18,
-            padding: '5%',
-            ...SHADOW,
-          }}>
-          {(user.isAOA || user.isAdmin ? TabArr : TabArr2).map(item => {
-            return (
-              <TouchableOpacity
-                onPress={item.onPress}
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  flexDirection: 'row',
-                  paddingVertical: '5%',
-                  // borderBottomWidth: 1,
-                  alignItems: 'center',
-                }}>
-                {/* <Icon type={item.type} name={item.icon} color={COLORS.gray} /> */}
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    ...FONTS.body3,
-                    color: COLORS.gray,
-                    flex: 1,
-                  }}>
-                  {item.label}
-                </Text>
-                <Image
-                  source={ICONS.FORWARD_ICON}
-                  style={{height: 20, width: 20, tintColor: COLORS.gray}}
-                />
-              </TouchableOpacity>
-            );
-          })}
+            </View>
+          </LinearGradient>
         </View>
-        <View></View>
-      </ScrollView>
-      {open && (
-        <ChangePasswordModal
-          open={true}
-          isVisible={open}
-          onClose={() => {
-            setOpen(false);
-          }}
-        />
-      )}
-    </View>
 
-    // </MainView>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}
+          activeOpacity={0.9}
+          style={style.inputContainer}>
+          <Image
+            style={{
+              height: 30,
+              width: 30,
+              marginRight: 10,
+
+              tintColor: COLORS.primary,
+            }}
+            source={ICONS.ACCOUNT_TAB_ICON}
+          />
+          <Text style={{color: COLORS.primary, ...FONTS.h3, flex: 1}}>
+            Personal Details
+          </Text>
+          <Image
+            style={{
+              height: 30,
+              width: 30,
+              marginRight: 10,
+              tintColor: COLORS.primary,
+            }}
+            source={ICONS.FORWARD_ICON}
+          />
+        </TouchableOpacity>
+
+        <ScrollView
+          style={{flex: 1, backgroundColor: COLORS.lightGray1, marginTop: 10}}>
+          <View
+            style={{
+              width: '95%',
+              borderRadius: 20,
+              backgroundColor: COLORS.white,
+              alignSelf: 'center',
+              marginBottom: SIZES.height * 0.18,
+              padding: '5%',
+              ...SHADOW,
+            }}>
+            {(user.isAOA || user.isAdmin ? TabArr : TabArr2).map(item => {
+              return (
+                <TouchableOpacity
+                  onPress={item.onPress}
+                  style={{
+                    width: '95%',
+                    alignSelf: 'center',
+                    flexDirection: 'row',
+                    paddingVertical: '5%',
+                    // borderBottomWidth: 1,
+                    alignItems: 'center',
+                  }}>
+                  {/* <Icon type={item.type} name={item.icon} color={COLORS.gray} /> */}
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      ...FONTS.body3,
+                      color: COLORS.gray,
+                      flex: 1,
+                    }}>
+                    {item.label}
+                  </Text>
+                  <Image
+                    source={ICONS.FORWARD_ICON}
+                    style={{height: 20, width: 20, tintColor: COLORS.gray}}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <View></View>
+        </ScrollView>
+        {open && (
+          <ChangePasswordModal
+            open={true}
+            isVisible={open}
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
+        )}
+      </View>
+    </MainView>
   );
 };
 

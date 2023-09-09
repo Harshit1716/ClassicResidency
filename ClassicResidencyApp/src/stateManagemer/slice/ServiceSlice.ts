@@ -12,10 +12,13 @@ import {
 import firestore, {Filter} from '@react-native-firebase/firestore';
 import {
   clearAll,
+  sendAllNotification,
+  sendNotification,
   storeData,
   uploadImageToFirebase,
   userDataSKeys,
 } from '../../resources/Utils';
+import messaging from '@react-native-firebase/messaging';
 
 // method for userlogin
 export const login = createAsyncThunk(
@@ -50,11 +53,53 @@ export const login = createAsyncThunk(
           user.tenantPhoneNumber === phoneNumber
             ? user.tenantPhoneNumber
             : user.phoneNumber;
+
+        // updating the users collection to add the device token to handle the notificaitons
+        // currently we are going for peer to peer only
+        const userRef = firestore().collection('Users').doc(user.id);
+        await messaging().registerDeviceForRemoteMessages();
+        const data = await messaging().getToken();
+        const tokenArray = user?.token ?? [];
+        if (!tokenArray.includes(data)) {
+          const tokens = {
+            token: [...(user?.token ?? []), data],
+          };
+          await userRef.update(tokens);
+        }
+
         return user;
       } else {
         Alert.alert('Error', 'Invalid phone number or password');
         throw new Error('Invalid phone number or password');
       }
+    } catch (error: any) {
+      console.log(error.message);
+      return rejectWithValue(error.message);
+    }
+  },
+);
+export const logoutUser = createAsyncThunk(
+  'user/logoutUser',
+  async (userId: string, {rejectWithValue}) => {
+    try {
+      const flatsRef = firestore().collection('Users');
+
+      const flatQuery = flatsRef.where('id', '==', userId).limit(1);
+      const flatSnapshot = await flatQuery.get();
+      if (flatSnapshot.empty) {
+        Alert.alert('Error', 'Invalid flat number');
+        throw new Error('Invalid flat number');
+      }
+      const userDoc = flatSnapshot.docs[0];
+      const user = userDoc.data();
+
+      const userRef = firestore().collection('Users').doc(userId);
+      await messaging().registerDeviceForRemoteMessages();
+      const data = await messaging().getToken();
+      const tokens = (user?.token ?? []).filter((item: string) => item != data);
+      console.log(tokens);
+      await userRef.update({token: tokens});
+      return;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -134,6 +179,7 @@ export const createUser = createAsyncThunk(
     }
   },
 );
+
 export const uploadProfilePic = createAsyncThunk(
   'user/uploadProfilePic',
   async ({image, flag, userId}: any, {rejectWithValue}) => {
@@ -214,7 +260,6 @@ export const updatePassword = createAsyncThunk(
         tenantPassword: password,
       };
 
-      console.log(flag, 'BHSBH');
       await userRef.update(flag ? owner : tenant);
 
       return flag ? owner.password : tenant.tenantPassword;
@@ -244,6 +289,7 @@ export const createNotice = createAsyncThunk(
       const noticesCollectionRef = firestore()
         .collection('notice')
         .doc(title + Date.now());
+      sendAllNotification('Notice Added', 'New Notice has been added ' + title);
       await noticesCollectionRef.set(noticeData);
       return noticeData;
     } catch (error) {
@@ -319,6 +365,7 @@ export const createComplaint = createAsyncThunk(
         assignedTo: '',
         status: 'Pending',
         hide: false,
+        comments: [],
       };
 
       const noticesCollectionRef = firestore().collection('complaints').doc(id);
@@ -327,6 +374,14 @@ export const createComplaint = createAsyncThunk(
       await userRef.update({
         complaints: firestore.FieldValue.arrayUnion(id),
       });
+      // if (flatNo != 'AAOA000')
+      if (userRef.id !== 'AAOA000') {
+        await sendNotification(
+          'AAOA000',
+          'New Complaints',
+          'New Complaint has been Added by' + flatNo,
+        );
+      }
       return noticeData;
     } catch (error) {
       console.log(error);
@@ -400,6 +455,24 @@ export const updateAssignedTo = createAsyncThunk(
         assignedTo: assignedTo,
         status: status,
       });
+
+      const snapshot = await userRef.get();
+      // const complaints = snapshot.docs.map(doc => doc.data());
+      const complaintsRef = firestore().collection('complaints');
+      const complaintDoc = await complaintsRef.doc(id).get();
+      if (!complaintDoc.exists) {
+        throw new Error('Complaint not found');
+      }
+
+      const complaints = complaintDoc?.data() ?? {};
+
+      if (complaints.flatId !== 'AAOA000') {
+        await sendNotification(
+          complaints.flatId ?? '',
+          'Complaint Update',
+          'There is an update in ' + complaints.title + ' complaint',
+        );
+      }
       return userRef;
     } catch (error) {
       console.log(error);
@@ -442,6 +515,7 @@ export const updateComplaintComment = createAsyncThunk(
         comments: updatedComments ?? [],
         type: type,
       };
+
       return obj;
     } catch (error) {
       console.log(error);
@@ -659,7 +733,7 @@ export const userSlice = createSlice({
         (state.email = ''),
         (state.imageUrl = ''),
         (state.isTenantAdded = false),
-        (state.currentUser = -1);
+        (state.currentUser = '');
       clearAll();
     },
   },
@@ -713,6 +787,37 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    builder.addCase(logoutUser.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(logoutUser.fulfilled, (state, action) => {
+      (state.password = ''),
+        (state.id = ''),
+        (state.block = ''),
+        (state.flatNumber = ''),
+        (state.ownerName = ''),
+        (state.flatType = ''),
+        (state.phoneNumber = ''),
+        (state.complaints = []),
+        (state.adminComplaints = []),
+        (state.notice = []),
+        (state.isAdmin = false),
+        (state.isAOA = false),
+        (state.loading = false),
+        (state.error = null),
+        (state.members = []),
+        (state.email = ''),
+        (state.imageUrl = ''),
+        (state.isTenantAdded = false),
+        (state.currentUser = '');
+      clearAll();
+      state.loading = false;
+    });
+    builder.addCase(logoutUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
     builder.addCase(createUser.pending, state => {
       state.loading = true;
       state.error = null;
@@ -747,7 +852,7 @@ export const userSlice = createSlice({
     builder.addCase(getComplaintsById.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      console.log(action.payload, 'BHSDK');
+
       state.complaints = action.payload;
     });
     builder.addCase(getComplaintsById.rejected, (state, action) => {
@@ -777,7 +882,6 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = null;
       state.adsList = action.payload.ads;
-      console.log(action.payload.banner, 'BHSdK@');
       state.bannerList = action.payload.banner;
     });
     builder.addCase(getAllAds.rejected, (state, action) => {
@@ -867,7 +971,7 @@ export const userSlice = createSlice({
     builder.addCase(createComplaint.fulfilled, (state, action) => {
       state.loading = false;
       if (action.payload != null || action.payload != undefined)
-        Alert.alert('Success', 'Complaints has been registed successfully');
+        Alert.alert('Success', 'Complaints has been registered successfully');
       state.complaints = [action.payload, ...state.complaints];
     });
     builder.addCase(createComplaint.rejected, (state, action) => {
@@ -926,7 +1030,6 @@ export const userSlice = createSlice({
     builder.addCase(updatePassword.fulfilled, (state, action) => {
       state.loading = false;
       // if (action.payload != null || action.payload != undefined)
-      console.log(action.payload, 'BHSDK');
       // state = {...state, ...action.payload};
       if (state.currentUser === state.phoneNumber) {
         state.password = action.payload;

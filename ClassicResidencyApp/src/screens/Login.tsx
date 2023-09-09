@@ -39,7 +39,7 @@ const LoginScreen = () => {
   const isLoading = useAppSelector(state => state.userReducer.loading);
   async function handleCreateAccount() {
     // console.log(data.length);
-    console.log('INSIDE BHSDK');
+
     // data.forEach(async item => {
     await dispatch(
       createUser({
@@ -63,8 +63,8 @@ const LoginScreen = () => {
     // setNumber('9968212577');
     // setPasssword('7752128699');
     // let ar = '9599104926'.split('').reverse().join('');
-    // setNumber('9355209292');
-    // setPasssword('Harry');
+    // setNumber('9599104926');
+    // setPasssword('Shivamsingh455');
     // console.log(ar);
   }, []);
   const navigation = useNavigation();

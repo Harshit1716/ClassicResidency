@@ -22,7 +22,11 @@ import {useAppDispatch, useAppSelector} from '../stateManagemer/Store';
 import {getComplaintsById} from '../stateManagemer/slice/ServiceSlice';
 import {ComplaintType} from '../stateManagemer/models/SocietyAppModal';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {getStatusColor} from '../resources/Utils';
+import {
+  getStatusColor,
+  sendAllNotification,
+  sendNotification,
+} from '../resources/Utils';
 import NoDataFound from '../components/NoDataFound';
 
 const ComplaintsList = () => {
@@ -151,7 +155,9 @@ const ComplaintsList = () => {
       <Header
         title="Complaints"
         rightIconType="CREATE"
-        iconPress={() => setOpen(true)}
+        iconPress={() => {
+          setOpen(true);
+        }}
       />
       <View
         style={{
