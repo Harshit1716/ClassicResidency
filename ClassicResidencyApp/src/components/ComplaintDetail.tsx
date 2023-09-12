@@ -105,10 +105,10 @@ const ComplaintDetail = ({route}: any) => {
     }
 
     let obj = {
-      id: complaintID,
+      id: complaintID, //complaints for which the comment is
       text: comment,
       type: 'personal',
-      user: userID,
+      user: userID, //user which is sending the data
     };
     await dispatch(updateComplaintComment(obj));
     setComment('');

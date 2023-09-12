@@ -516,6 +516,21 @@ export const updateComplaintComment = createAsyncThunk(
         type: type,
       };
 
+      const title = complaintDoc?.data().title || [];
+      if (user == 'AAOA000') {
+        await sendNotification(
+          user,
+          'New comment added',
+          'New comment has been added in Complaints :- ' + title,
+        );
+      } else {
+        await sendNotification(
+          'AAOA000',
+          'New comment added',
+          'New comment has been added in Complaints :- ' + title,
+        );
+      }
+
       return obj;
     } catch (error) {
       console.log(error);
